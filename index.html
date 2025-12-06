@@ -1175,32 +1175,8 @@
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v3.0 -
+        v3.1 - Build: 6 dec 2025 23:40
     </div>
-
-    <script>
-        // Update versie met huidige tijd tot op de minuut
-        function updateVersion() {
-            const now = new Date();
-            const dag = now.getDate();
-            const maanden = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
-            const maand = maanden[now.getMonth()];
-            const jaar = now.getFullYear();
-            const uur = String(now.getHours()).padStart(2, '0');
-            const minuut = String(now.getMinutes()).padStart(2, '0');
-
-            const versionElement = document.getElementById('version-info');
-            if (versionElement) {
-                versionElement.textContent = `v3.0 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
-            }
-        }
-
-        // Update meteen bij laden
-        updateVersion();
-
-        // Update elke minuut
-        setInterval(updateVersion, 60000);
-    </script>
 
 </body>
 </html>
