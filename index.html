@@ -247,7 +247,9 @@
             if (!sound || isMuted) return;
 
             try {
-                // Reset naar begin als het al speelde
+                // Pauzeer eerst als het al speelt
+                sound.pause();
+                // Reset naar begin
                 sound.currentTime = 0;
                 // Speel af (promise-based)
                 const playPromise = sound.play();
@@ -322,10 +324,16 @@
                 }
             });
 
-            // Bewaar mute voorkeur in localStorage
+            // Bewaar mute voorkeur in localStorage en pauzeer audio bij mute
             useEffect(() => {
                 try {
                     localStorage.setItem('sintspel-muted', isMuted);
+
+                    // Pauzeer alle audio als we muten
+                    if (isMuted) {
+                        if (correctSound) correctSound.pause();
+                        if (wrongSound) wrongSound.pause();
+                    }
                 } catch (error) {
                     console.log('LocalStorage niet beschikbaar');
                 }
@@ -635,7 +643,7 @@
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 9999; background: rgba(139, 21, 56, 0.7); padding: 4px 8px; border-radius: 4px;">
-        v1.8 -
+        v1.9 -
     </div>
 
     <script>
@@ -651,7 +659,7 @@
 
             const versionElement = document.getElementById('version-info');
             if (versionElement) {
-                versionElement.textContent = `v1.8 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
+                versionElement.textContent = `v1.9 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
             }
         }
 
