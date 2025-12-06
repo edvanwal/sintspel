@@ -410,6 +410,9 @@
             const [alarmPaused, setAlarmPaused] = useState(false); // Pauze status
             const [alarmTriggered, setAlarmTriggered] = useState(false); // Of het alarm is afgegaan
             const [gameLocked, setGameLocked] = useState(false); // Spel vergrendeld na alarm
+            const [showAlarmQuestion, setShowAlarmQuestion] = useState(true); // Toon vraag om wekker te gebruiken
+            const [alarmEnabled, setAlarmEnabled] = useState(false); // Of de gebruiker de wekker wil gebruiken
+            const [showAlarmMinimized, setShowAlarmMinimized] = useState(false); // Of de wekker als icoon getoond moet worden
 
             // Mute state - laad voorkeur uit localStorage
             const [isMuted, setIsMuted] = useState(() => {
@@ -537,6 +540,26 @@
                 setAlarmPaused(false);
                 setAlarmTimeLeft(null);
                 stopAlarmSound();
+            };
+
+            // Functie om "Ja" te kiezen (wekker gebruiken)
+            const handleAlarmYes = () => {
+                setShowAlarmQuestion(false);
+                setAlarmEnabled(true);
+                setShowAlarmMinimized(false);
+            };
+
+            // Functie om "Nee" te kiezen (wekker niet gebruiken)
+            const handleAlarmNo = () => {
+                setShowAlarmQuestion(false);
+                setAlarmEnabled(false);
+                setShowAlarmMinimized(true);
+            };
+
+            // Functie om wekker te heropenen vanuit icoon
+            const handleAlarmReopen = () => {
+                setShowAlarmMinimized(false);
+                setAlarmEnabled(true);
             };
 
             // Functie om naar volgende/vorige te gaan
@@ -930,93 +953,146 @@
                     </AnimatePresence>
                 </div>
 
-                {/* WEKKER SECTIE - Linksonder */}
-                <div className="fixed bottom-4 left-4 z-40 bg-[#F5E6D3] rounded-xl shadow-2xl p-4 border-4 border-[#D4A574] max-w-xs">
-                    <h3 className="text-lg font-bold text-[#8B1538] mb-3 text-center">⏰ WEKKER</h3>
+                {/* WEKKER SECTIE */}
 
-                    {/* Als wekker NIET actief - Toon instelling en START knop */}
-                    {!alarmActive && !alarmTriggered && (
-                        <div className="space-y-3">
-                            <div>
-                                <label className="block text-xs font-bold text-[#8B6F47] mb-1">
-                                    Max. tijd (minuten):
-                                </label>
-                                <input
-                                    type="number"
-                                    min="3"
-                                    max="60"
-                                    value={alarmMaxTime}
-                                    onChange={(e) => setAlarmMaxTime(Math.max(3, parseInt(e.target.value) || 3))}
-                                    className="w-full px-3 py-2 border-2 border-[#D4A574] rounded-lg text-[#3E2723] font-bold text-center"
-                                />
-                                <p className="text-xs text-[#8B6F47] mt-1 italic">
-                                    (Wekker gaat af tussen {Math.max(alarmMaxTime - 2, 3)}-{alarmMaxTime} min)
-                                </p>
+                {/* Vraag dialog - Centraal popup */}
+                {showAlarmQuestion && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                        <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] max-w-md w-full">
+                            <div className="text-center mb-6">
+                                <div className="text-6xl mb-4">⏰</div>
+                                <h3 className="text-xl md:text-2xl font-bold text-[#8B1538] mb-4">
+                                    Wil je de wekker op je telefoon gebruiken?
+                                </h3>
                             </div>
-                            <button
-                                onClick={startGameAlarm}
-                                className="w-full px-4 py-3 bg-[#A0253B] text-white rounded-xl font-bold text-base shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
-                            >
-                                🚀 START WEKKER
-                            </button>
+                            <div className="flex gap-4 justify-center">
+                                <button
+                                    onClick={handleAlarmYes}
+                                    className="px-8 py-4 bg-[#6B8E23] text-white rounded-xl font-bold text-lg shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
+                                >
+                                    Ja
+                                </button>
+                                <button
+                                    onClick={handleAlarmNo}
+                                    className="px-8 py-4 bg-[#A0253B] text-white rounded-xl font-bold text-lg shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                                >
+                                    Nee
+                                </button>
+                            </div>
                         </div>
-                    )}
+                    </div>
+                )}
 
-                    {/* Als wekker ACTIEF - Toon timer en controle knoppen */}
-                    {alarmActive && !alarmTriggered && alarmTimeLeft !== null && (
-                        <div className="space-y-3">
-                            {/* Timer display - altijd zichtbaar */}
-                            <div className="text-center mb-3">
-                                <div className={`inline-block px-4 py-3 rounded-lg font-bold shadow-xl border-2 transition-all ${
-                                    alarmTimeLeft <= 30
-                                        ? 'bg-[#A0253B] text-white border-[#A0253B] text-4xl animate-pulse scale-110'
-                                        : alarmTimeLeft <= 60
-                                        ? 'bg-[#A0253B] text-white border-[#A0253B] text-2xl'
-                                        : 'bg-[#6B8E23] text-white border-[#6B8E23] text-xl'
-                                }`}>
-                                    ⏱️ {Math.floor(alarmTimeLeft / 60)}:{String(alarmTimeLeft % 60).padStart(2, '0')}
+                {/* Klein icoon om wekker te heropenen (rechtsonder) */}
+                {showAlarmMinimized && (
+                    <button
+                        onClick={handleAlarmReopen}
+                        className="fixed bottom-4 right-4 z-40 bg-[#F5E6D3] text-[#8B1538] rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-110 border-4 border-[#D4A574]"
+                        aria-label="Open wekker"
+                    >
+                        <span className="text-3xl md:text-4xl">⏰</span>
+                    </button>
+                )}
+
+                {/* Volledige wekker - Onderaan over volle breedte */}
+                {alarmEnabled && !showAlarmMinimized && (
+                    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#F5E6D3] shadow-2xl p-4 md:p-6 border-t-4 border-[#D4A574]">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-lg md:text-xl font-bold text-[#8B1538]">⏰ WEKKER</h3>
+                                <button
+                                    onClick={() => setShowAlarmMinimized(true)}
+                                    className="px-3 py-1 bg-[#8B6F47] text-white rounded-lg font-bold text-sm shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                >
+                                    Minimaliseer
+                                </button>
+                            </div>
+
+                            {/* Als wekker NIET actief - Toon instelling en START knop */}
+                            {!alarmActive && !alarmTriggered && (
+                                <div className="flex flex-col md:flex-row gap-4 items-center">
+                                    <div className="flex-1 w-full">
+                                        <label className="block text-sm font-bold text-[#8B6F47] mb-2">
+                                            Max. tijd (minuten):
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min="3"
+                                            max="60"
+                                            value={alarmMaxTime}
+                                            onChange={(e) => setAlarmMaxTime(Math.max(3, parseInt(e.target.value) || 3))}
+                                            className="w-full px-4 py-3 border-2 border-[#D4A574] rounded-lg text-[#3E2723] font-bold text-center text-2xl"
+                                        />
+                                        <p className="text-sm text-[#8B6F47] mt-2 text-center">
+                                            De wekker gaat af tussen {Math.max(alarmMaxTime - 2, 1)} en {alarmMaxTime} minuten.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={startGameAlarm}
+                                        className="px-8 py-4 bg-[#A0253B] text-white rounded-xl font-bold text-lg shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105 whitespace-nowrap"
+                                    >
+                                        🚀 START WEKKER
+                                    </button>
                                 </div>
-                            </div>
+                            )}
 
-                            {/* Controle knoppen */}
-                            <div className="grid grid-cols-2 gap-2">
-                                {!alarmPaused ? (
-                                    <button
-                                        onClick={pauseGameAlarm}
-                                        className="px-3 py-2 bg-[#D4A574] text-gray-900 rounded-lg font-bold text-sm shadow-lg hover:bg-[#C4956A] transition-all"
-                                    >
-                                        ⏸️ Pauzeer
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={resumeGameAlarm}
-                                        className="px-3 py-2 bg-[#6B8E23] text-white rounded-lg font-bold text-sm shadow-lg hover:bg-[#556B1D] transition-all"
-                                    >
-                                        ▶️ Hervat
-                                    </button>
-                                )}
-                                <button
-                                    onClick={resetGameAlarm}
-                                    className="px-3 py-2 bg-[#8B6F47] text-white rounded-lg font-bold text-sm shadow-lg hover:bg-[#7A5F3C] transition-all"
-                                >
-                                    🔄 Reset
-                                </button>
-                                <button
-                                    onClick={stopGameAlarm}
-                                    className="px-3 py-2 bg-[#A0253B] text-white rounded-lg font-bold text-sm shadow-lg hover:bg-[#8B1538] transition-all col-span-2"
-                                >
-                                    ⏹️ Stop
-                                </button>
-                            </div>
+                            {/* Als wekker ACTIEF - Toon timer en controle knoppen */}
+                            {alarmActive && !alarmTriggered && alarmTimeLeft !== null && (
+                                <div className="flex flex-col md:flex-row gap-4 items-center">
+                                    {/* Timer display - altijd zichtbaar */}
+                                    <div className="flex-1 text-center">
+                                        <div className={`inline-block px-6 py-4 rounded-lg font-bold shadow-xl border-2 transition-all ${
+                                            alarmTimeLeft <= 30
+                                                ? 'bg-[#A0253B] text-white border-[#A0253B] text-4xl md:text-5xl animate-pulse scale-110'
+                                                : alarmTimeLeft <= 60
+                                                ? 'bg-[#A0253B] text-white border-[#A0253B] text-3xl md:text-4xl'
+                                                : 'bg-[#6B8E23] text-white border-[#6B8E23] text-2xl md:text-3xl'
+                                        }`}>
+                                            ⏱️ {Math.floor(alarmTimeLeft / 60)}:{String(alarmTimeLeft % 60).padStart(2, '0')}
+                                        </div>
+                                    </div>
 
-                            {alarmPaused && (
-                                <p className="text-xs text-[#A0253B] text-center font-bold">
-                                    ⏸️ GEPAUZEERD
-                                </p>
+                                    {/* Controle knoppen */}
+                                    <div className="flex gap-3">
+                                        {!alarmPaused ? (
+                                            <button
+                                                onClick={pauseGameAlarm}
+                                                className="px-4 py-3 bg-[#D4A574] text-gray-900 rounded-lg font-bold text-sm md:text-base shadow-lg hover:bg-[#C4956A] transition-all"
+                                            >
+                                                ⏸️ Pauzeer
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={resumeGameAlarm}
+                                                className="px-4 py-3 bg-[#6B8E23] text-white rounded-lg font-bold text-sm md:text-base shadow-lg hover:bg-[#556B1D] transition-all"
+                                            >
+                                                ▶️ Hervat
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={resetGameAlarm}
+                                            className="px-4 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-sm md:text-base shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                        >
+                                            🔄 Reset
+                                        </button>
+                                        <button
+                                            onClick={stopGameAlarm}
+                                            className="px-4 py-3 bg-[#A0253B] text-white rounded-lg font-bold text-sm md:text-base shadow-lg hover:bg-[#8B1538] transition-all"
+                                        >
+                                            ⏹️ Stop
+                                        </button>
+                                    </div>
+
+                                    {alarmPaused && (
+                                        <p className="text-sm md:text-base text-[#A0253B] font-bold">
+                                            ⏸️ GEPAUZEERD
+                                        </p>
+                                    )}
+                                </div>
                             )}
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
 
                 <p className="mt-8 text-[#F5E6D3] text-xs md:text-sm font-medium drop-shadow">
                     Tip: Gebruik pijltjestoetsen, spatiebalk of swipe!
