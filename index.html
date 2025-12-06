@@ -231,13 +231,21 @@
         // Audio setup - Laad geluidsbestanden
         let correctSound = null;
         let wrongSound = null;
+        let timerSound = null;
+        let timeUpSound = null;
 
         try {
             correctSound = new Audio('Goed.mp3');
             wrongSound = new Audio('Fout.mp3');
+            timerSound = new Audio('Timer.mp3');
+            timeUpSound = new Audio('TimeUp.mp3');
             // Preload de audio bestanden
             correctSound.load();
             wrongSound.load();
+            timerSound.load();
+            timeUpSound.load();
+            // Maak Timer.mp3 loopable
+            timerSound.loop = true;
         } catch (error) {
             console.log('Audio kon niet worden geladen, spel gaat door zonder geluid');
         }
@@ -263,6 +271,53 @@
             } catch (error) {
                 // Spel gaat door zonder geluid bij errors
                 console.log('Fout bij afspelen geluid:', error);
+            }
+        };
+
+        // Functie om timer geluid te starten
+        const startTimerSound = (isMuted) => {
+            if (!timerSound || isMuted) return;
+
+            try {
+                timerSound.currentTime = 0;
+                const playPromise = timerSound.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Timer geluid kon niet worden afgespeeld:', error);
+                    });
+                }
+            } catch (error) {
+                console.log('Fout bij afspelen timer geluid:', error);
+            }
+        };
+
+        // Functie om timer geluid te stoppen en TimeUp af te spelen
+        const stopTimerAndPlayTimeUp = (isMuted) => {
+            // Stop Timer.mp3
+            if (timerSound) {
+                try {
+                    timerSound.pause();
+                    timerSound.currentTime = 0;
+                } catch (error) {
+                    console.log('Fout bij stoppen timer geluid:', error);
+                }
+            }
+
+            // Speel TimeUp.mp3 af
+            if (!timeUpSound || isMuted) return;
+
+            try {
+                timeUpSound.currentTime = 0;
+                const playPromise = timeUpSound.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('TimeUp geluid kon niet worden afgespeeld:', error);
+                    });
+                }
+            } catch (error) {
+                console.log('Fout bij afspelen TimeUp geluid:', error);
             }
         };
 
@@ -333,6 +388,8 @@
                     if (isMuted) {
                         if (correctSound) correctSound.pause();
                         if (wrongSound) wrongSound.pause();
+                        if (timerSound) timerSound.pause();
+                        if (timeUpSound) timeUpSound.pause();
                     }
                 } catch (error) {
                     console.log('LocalStorage niet beschikbaar');
@@ -353,6 +410,15 @@
                 setIsFlipped(false);
                 setTimerActive(false);
                 setTimeLeft(null);
+                // Stop timer geluid als het nog speelt
+                if (timerSound) {
+                    try {
+                        timerSound.pause();
+                        timerSound.currentTime = 0;
+                    } catch (error) {
+                        console.log('Fout bij stoppen timer geluid:', error);
+                    }
+                }
             }, [page]);
 
             // Timer countdown logica
@@ -364,8 +430,10 @@
                     return () => clearTimeout(timer);
                 } else if (timerActive && timeLeft === 0) {
                     setTimerActive(false);
+                    // Stop Timer.mp3 en speel TimeUp.mp3 af
+                    stopTimerAndPlayTimeUp(isMuted);
                 }
-            }, [timerActive, timeLeft]);
+            }, [timerActive, timeLeft, isMuted]);
 
             // Functie om naar volgende/vorige te gaan
             const paginate = useCallback((newDirection) => {
@@ -380,11 +448,23 @@
                 if (!isFlipped && currentQuestion.timeLimit) {
                     setTimeLeft(currentQuestion.timeLimit);
                     setTimerActive(true);
+                    // Start Timer.mp3 loop
+                    startTimerSound(isMuted);
                 }
             };
 
             // Handler voor GOED antwoord
             const handleCorrect = () => {
+                // Stop timer geluid als het nog speelt
+                if (timerSound) {
+                    try {
+                        timerSound.pause();
+                        timerSound.currentTime = 0;
+                    } catch (error) {
+                        console.log('Fout bij stoppen timer geluid:', error);
+                    }
+                }
+
                 // Speel "Goed" geluid af
                 playSound(correctSound, isMuted);
 
@@ -403,6 +483,16 @@
 
             // Handler voor FOUT antwoord
             const handleWrong = () => {
+                // Stop timer geluid als het nog speelt
+                if (timerSound) {
+                    try {
+                        timerSound.pause();
+                        timerSound.currentTime = 0;
+                    } catch (error) {
+                        console.log('Fout bij stoppen timer geluid:', error);
+                    }
+                }
+
                 // Speel "Fout" geluid af
                 playSound(wrongSound, isMuted);
 
@@ -643,7 +733,7 @@
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 9999; background: rgba(139, 21, 56, 0.7); padding: 4px 8px; border-radius: 4px;">
-        v1.9 -
+        v2.0 -
     </div>
 
     <script>
@@ -659,7 +749,7 @@
 
             const versionElement = document.getElementById('version-info');
             if (versionElement) {
-                versionElement.textContent = `v1.9 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
+                versionElement.textContent = `v2.0 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
             }
         }
 
