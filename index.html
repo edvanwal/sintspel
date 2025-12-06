@@ -228,6 +228,42 @@
         const { useState, useEffect, useCallback } = React;
         const { motion, AnimatePresence } = window.Motion;
 
+        // Audio setup - Laad geluidsbestanden
+        let correctSound = null;
+        let wrongSound = null;
+
+        try {
+            correctSound = new Audio('Goed.mp3');
+            wrongSound = new Audio('Fout.mp3');
+            // Preload de audio bestanden
+            correctSound.load();
+            wrongSound.load();
+        } catch (error) {
+            console.log('Audio kon niet worden geladen, spel gaat door zonder geluid');
+        }
+
+        // Functie om geluid af te spelen (met error handling)
+        const playSound = (sound, isMuted) => {
+            if (!sound || isMuted) return;
+
+            try {
+                // Reset naar begin als het al speelde
+                sound.currentTime = 0;
+                // Speel af (promise-based)
+                const playPromise = sound.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        // Spel gaat door zonder geluid bij errors
+                        console.log('Geluid kon niet worden afgespeeld:', error);
+                    });
+                }
+            } catch (error) {
+                // Spel gaat door zonder geluid bij errors
+                console.log('Fout bij afspelen geluid:', error);
+            }
+        };
+
         // Instellingen voor hoe ver je moet swipen
         const swipeConfidenceThreshold = 10000;
         const swipePower = (offset, velocity) => {
@@ -276,6 +312,30 @@
             const [timeLeft, setTimeLeft] = useState(null); // Timer countdown
             const [timerActive, setTimerActive] = useState(false); // Of timer actief is
 
+            // Mute state - laad voorkeur uit localStorage
+            const [isMuted, setIsMuted] = useState(() => {
+                try {
+                    const saved = localStorage.getItem('sintspel-muted');
+                    return saved === 'true';
+                } catch (error) {
+                    return false;
+                }
+            });
+
+            // Bewaar mute voorkeur in localStorage
+            useEffect(() => {
+                try {
+                    localStorage.setItem('sintspel-muted', isMuted);
+                } catch (error) {
+                    console.log('LocalStorage niet beschikbaar');
+                }
+            }, [isMuted]);
+
+            // Toggle mute functie
+            const toggleMute = () => {
+                setIsMuted(!isMuted);
+            };
+
             // Zorg dat we oneindig door de vragen kunnen loopen
             const questionIndex = Math.abs(page % VRAGEN.length);
             const currentQuestion = VRAGEN[questionIndex];
@@ -317,6 +377,9 @@
 
             // Handler voor GOED antwoord
             const handleCorrect = () => {
+                // Speel "Goed" geluid af
+                playSound(correctSound, isMuted);
+
                 const newScore = score + 1;
 
                 if (newScore === 3) {
@@ -332,6 +395,9 @@
 
             // Handler voor FOUT antwoord
             const handleWrong = () => {
+                // Speel "Fout" geluid af
+                playSound(wrongSound, isMuted);
+
                 setShowTransition('wrong');
             };
 
@@ -397,6 +463,17 @@
             // NORMAAL SPEL SCHERM
             return (
                 <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative overflow-hidden" style={{position: 'relative', zIndex: 1}}>
+
+                {/* Mute/Unmute knop rechtsboven */}
+                <button
+                    onClick={toggleMute}
+                    className="absolute top-4 right-4 z-50 bg-[#F5E6D3] text-[#8B1538] rounded-full w-12 h-12 md:w-14 md:h-14 flex items-center justify-center shadow-xl hover:bg-[#FAF0E6] transition-all transform hover:scale-110 border-2 border-[#D4A574]"
+                    aria-label={isMuted ? 'Geluid aanzetten' : 'Geluid uitzetten'}
+                >
+                    <span className="text-2xl md:text-3xl">
+                        {isMuted ? '🔇' : '🔊'}
+                    </span>
+                </button>
 
                 {/* Titel */}
                 <h1 className="absolute top-4 text-2xl md:text-3xl font-bold text-[#F5E6D3] tracking-wide px-4 text-center drop-shadow-lg">
@@ -558,7 +635,7 @@
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 9999; background: rgba(139, 21, 56, 0.7); padding: 4px 8px; border-radius: 4px;">
-        v1.7 -
+        v1.8 -
     </div>
 
     <script>
@@ -574,7 +651,7 @@
 
             const versionElement = document.getElementById('version-info');
             if (versionElement) {
-                versionElement.textContent = `v1.7 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
+                versionElement.textContent = `v1.8 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
             }
         }
 
