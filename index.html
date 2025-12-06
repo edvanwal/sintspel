@@ -861,7 +861,7 @@
                 </h1>
 
                 {/* --- DE KAART (Met 3D Flip) --- */}
-                <div className="relative w-[90%] max-w-md h-auto flex items-center justify-center mt-20">
+                <div className="relative w-[94%] max-w-lg h-auto flex items-center justify-center mt-16">
                     <AnimatePresence initial={false} custom={direction} mode="popLayout">
 
                     <motion.div
@@ -889,23 +889,23 @@
                         className="absolute w-full cursor-grab active:cursor-grabbing"
                     >
                         {/* Flip Card Container */}
-                        <div className="flip-card w-full min-h-[450px]">
+                        <div className="flip-card w-full min-h-[480px]">
                             <div className={`flip-card-inner ${isFlipped ? 'flipped' : ''}`}>
 
                                 {/* VOORKANT VAN DE KAART */}
                                 <div className="flip-card-front">
-                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[400px] flex flex-col justify-between">
+                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-8 md:p-10 border-4 border-[#D4A574] min-h-[480px] flex flex-col justify-between">
 
                                         {/* Vraagtype label */}
-                                        <div className="text-center mb-4">
+                                        <div className="text-center mb-3">
                                             <span className={`inline-block px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase shadow-md ${getTypeColor(currentQuestion.type)}`}>
                                                 {currentQuestion.type}
                                             </span>
                                         </div>
 
                                         {/* Vraag */}
-                                        <div className="flex-1 flex items-center justify-center mb-4">
-                                            <h2 className="text-2xl md:text-3xl font-bold text-[#3E2723] text-center select-none leading-relaxed px-2">
+                                        <div className="flex-1 flex items-center justify-center mb-3">
+                                            <h2 className="text-3xl md:text-4xl font-bold text-[#3E2723] text-center select-none leading-tight px-2">
                                                 {currentQuestion.text}
                                             </h2>
                                         </div>
@@ -914,7 +914,7 @@
                                         <div className="text-center">
                                             <button
                                                 onClick={handleFlip}
-                                                className="w-full px-8 py-3 md:py-4 bg-[#A0253B] text-white rounded-xl font-bold text-base md:text-lg shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                                                className="w-full px-8 py-4 md:py-5 bg-[#A0253B] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                                                 onPointerDownCapture={(e) => e.stopPropagation()}
                                             >
                                                 Bekijk antwoord
@@ -926,7 +926,7 @@
 
                                 {/* ACHTERKANT VAN DE KAART */}
                                 <div className="flip-card-back">
-                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[400px] flex flex-col justify-between">
+                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-8 md:p-10 border-4 border-[#D4A574] min-h-[480px] flex flex-col justify-between">
 
                                         {/* Timer (alleen als actief) */}
                                         {timerActive && timeLeft !== null && (
