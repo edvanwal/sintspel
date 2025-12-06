@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinterklaas Cadeau Quiz</title>
+    <title>Sinterklaas Quiz</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -665,10 +665,10 @@
                             {/* Titel */}
                             <div className="text-center mb-2">
                                 <p className="text-sm md:text-base text-[#8B1538] mb-0.5 leading-tight">
-                                    Welkom bij het
+                                    Welkom bij de
                                 </p>
                                 <h1 className="text-xl md:text-2xl font-bold text-[#8B1538] leading-tight">
-                                    Sinterklaas Cadeau Spel
+                                    Sinterklaas Quiz
                                 </h1>
                             </div>
 
@@ -806,22 +806,11 @@
 
                 {/* Titel */}
                 <h1 className="absolute top-4 text-2xl md:text-3xl font-bold text-[#F5E6D3] tracking-wide px-4 text-center drop-shadow-lg">
-                    Sinterklaas Cadeau Quiz
+                    Sinterklaas Quiz
                 </h1>
 
-                {/* Progress Bar */}
-                <div className="absolute top-16 w-64 md:w-80 h-3 bg-[#F5E6D3] rounded-full overflow-hidden border-2 border-[#D4A574]">
-                    <div
-                    className="h-full bg-[#D4A574] transition-all duration-300 ease-out"
-                    style={{ width: `${((questionIndex + 1) / VRAGEN.length) * 100}%` }}
-                    />
-                </div>
-                <p className="absolute top-20 text-xs text-[#F5E6D3] font-bold mt-1 drop-shadow">
-                    Vraag {questionIndex + 1} van {VRAGEN.length}
-                </p>
-
                 {/* --- DE KAART (Met 3D Flip) --- */}
-                <div className="relative w-[90%] max-w-md h-auto flex items-center justify-center mt-16">
+                <div className="relative w-[90%] max-w-md h-auto flex items-center justify-center mt-20">
                     <AnimatePresence initial={false} custom={direction} mode="popLayout">
 
                     <motion.div
@@ -865,7 +854,7 @@
 
                                         {/* Vraag */}
                                         <div className="flex-1 flex items-center justify-center mb-6">
-                                            <h2 className="text-xl md:text-2xl font-bold text-[#3E2723] text-center select-none leading-relaxed px-2">
+                                            <h2 className="text-2xl md:text-3xl font-bold text-[#3E2723] text-center select-none leading-relaxed px-2">
                                                 {currentQuestion.text}
                                             </h2>
                                         </div>
@@ -917,7 +906,7 @@
                                         <div className="flex-1 flex items-center justify-center mb-6">
                                             <div className="text-center p-5 md:p-6 bg-[#F5E6D3] rounded-xl border-3 border-[#D4A574] shadow-inner">
                                                 <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">Antwoord:</p>
-                                                <p className="text-lg md:text-xl text-[#3E2723] font-bold leading-relaxed">
+                                                <p className="text-xl md:text-2xl text-[#3E2723] font-bold leading-relaxed">
                                                     {currentQuestion.answer}
                                                 </p>
                                             </div>
