@@ -13,7 +13,11 @@
 
     <style>
         /* Zorgt dat je niet per ongeluk de pagina ververst bij het swipen */
-        body { overflow: hidden; touch-action: none; background-color: #fca5a5; }
+        body {
+            overflow: hidden;
+            touch-action: none;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+        }
     </style>
 </head>
 <body>
@@ -25,16 +29,16 @@
         // DE VRAGENLIJST
         // ==========================================
         const VRAGEN = [
-            { id: 1, text: "Hoe heet het paard van Sinterklaas?", answer: "Ozosnel" },
-            { id: 2, text: "In welke maand komt de Sint aan?", answer: "November" },
-            { id: 3, text: "Wat zit er in de zak van Sinterklaas?", answer: "Cadeautjes & Snoepgoed" },
-            { id: 4, text: "Wie zijn de helpers van de Sint?", answer: "De Pieten" },
-            { id: 5, text: "Uit welk land komt Sinterklaas?", answer: "Spanje" },
-            { id: 6, text: "Wat doe je in je schoen?", answer: "Een wortel of tekening" },
-            { id: 7, text: "Wat is de staf van Sinterklaas?", answer: "Een kromstaf (goud)" },
-            { id: 8, text: "Hoe oud is Sinterklaas?", answer: "Heel erg oud!" },
-            { id: 9, text: "Wat eten we met Sinterklaas?", answer: "Pepernoten & Speculaas" },
-            { id: 10, text: "Wanneer is het Pakjesavond?", answer: "5 december" },
+            { id: 1, text: "🐴 Hoe heet het paard van Sinterklaas?", answer: "Ozosnel" },
+            { id: 2, text: "📅 In welke maand komt de Sint aan?", answer: "November" },
+            { id: 3, text: "🎁 Wat zit er in de zak van Sinterklaas?", answer: "Cadeautjes & Snoepgoed" },
+            { id: 4, text: "👨‍🎤 Wie zijn de helpers van de Sint?", answer: "De Pieten" },
+            { id: 5, text: "🇪🇸 Uit welk land komt Sinterklaas?", answer: "Spanje" },
+            { id: 6, text: "👞 Wat doe je in je schoen?", answer: "Een wortel of tekening" },
+            { id: 7, text: "✨ Wat is de staf van Sinterklaas?", answer: "Een kromstaf (goud)" },
+            { id: 8, text: "🎅 Hoe oud is Sinterklaas?", answer: "Heel erg oud!" },
+            { id: 9, text: "🍪 Wat eten we met Sinterklaas?", answer: "Pepernoten & Speculaas" },
+            { id: 10, text: "🎉 Wanneer is het Pakjesavond?", answer: "5 december" },
         ];
 
         // ==========================================
@@ -102,21 +106,21 @@
             }, [paginate]);
 
             return (
-                <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative bg-red-50">
+                <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative">
 
                 {/* Titel */}
-                <h1 className="absolute top-6 text-2xl font-bold text-red-600 tracking-wide">
-                    Sinterklaas Quiz
+                <h1 className="absolute top-6 text-3xl font-bold text-yellow-300 tracking-wide drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
+                    🎅 Sinterklaas Quiz 🎁
                 </h1>
 
                 {/* Progress Bar */}
-                <div className="absolute top-16 w-64 h-3 bg-red-200 rounded-full overflow-hidden border border-red-300">
+                <div className="absolute top-16 w-64 h-3 bg-white/30 rounded-full overflow-hidden border-2 border-yellow-400">
                     <div
-                    className="h-full bg-red-600 transition-all duration-300 ease-out"
+                    className="h-full bg-gradient-to-r from-yellow-300 to-yellow-500 transition-all duration-300 ease-out"
                     style={{ width: `${((questionIndex + 1) / VRAGEN.length) * 100}%` }}
                     />
                 </div>
-                <p className="absolute top-20 text-xs text-red-400 font-bold mt-1">
+                <p className="absolute top-20 text-xs text-yellow-200 font-bold mt-1">
                     Vraag {questionIndex + 1} van {VRAGEN.length}
                 </p>
 
@@ -160,41 +164,41 @@
 
                         {/* VOORKANT (Vraag) */}
                         <div
-                            className="absolute inset-0 bg-white rounded-xl shadow-xl flex flex-col items-center justify-center p-6 text-center border border-red-100"
+                            className="absolute inset-0 bg-white rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 text-center border-4 border-red-600"
                             style={{ backfaceVisibility: "hidden" }}
                         >
-                            <h2 className="text-xl font-bold text-gray-800 mb-6 select-none">
+                            <h2 className="text-xl font-bold text-red-800 mb-6 select-none">
                             {currentQuestion.text}
                             </h2>
                             <button
                             onClick={() => setShowAnswer(true)}
-                            className="px-6 py-2 text-sm text-white bg-red-500 rounded-full shadow-md hover:bg-red-600 transition cursor-pointer"
+                            className="px-6 py-2 text-sm text-white bg-gradient-to-r from-red-600 to-red-700 rounded-full shadow-lg hover:from-red-700 hover:to-red-800 transition cursor-pointer font-bold"
                             onPointerDownCapture={(e) => e.stopPropagation()}
                             >
-                            Bekijk antwoord
+                            ✨ Bekijk antwoord
                             </button>
                         </div>
 
                         {/* ACHTERKANT (Antwoord) */}
                         <div
-                            className="absolute inset-0 bg-yellow-50 rounded-xl shadow-xl flex flex-col items-center justify-center p-6 text-center border-4 border-yellow-200"
+                            className="absolute inset-0 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl shadow-2xl flex flex-col items-center justify-center p-6 text-center border-4 border-yellow-500"
                             style={{
                             backfaceVisibility: "hidden",
                             transform: "rotateY(180deg)"
                             }}
                         >
-                            <span className="text-xs text-yellow-600 uppercase tracking-widest font-bold mb-2 block">
-                            Het antwoord is:
+                            <span className="text-xs text-yellow-700 uppercase tracking-widest font-bold mb-2 block">
+                            ⭐ Het antwoord is:
                             </span>
-                            <h2 className="text-2xl font-bold text-gray-800 select-none mb-6">
+                            <h2 className="text-2xl font-bold text-red-700 select-none mb-6">
                             {currentQuestion.answer}
                             </h2>
                             <button
                             onClick={() => setShowAnswer(false)}
-                            className="text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer"
+                            className="text-xs text-yellow-700 hover:text-yellow-900 underline cursor-pointer font-bold"
                             onPointerDownCapture={(e) => e.stopPropagation()}
                             >
-                            Terug draaien
+                            🔄 Terug draaien
                             </button>
                         </div>
 
@@ -206,21 +210,21 @@
                 {/* Knoppen onderin */}
                 <div className="flex gap-8 mt-12 z-10">
                     <button
-                    className="px-6 py-3 bg-white text-red-500 border border-red-200 rounded-full font-bold shadow-sm hover:bg-red-50 transition flex items-center gap-2"
+                    className="px-6 py-3 bg-white text-red-600 border-2 border-yellow-400 rounded-full font-bold shadow-lg hover:bg-yellow-50 transition flex items-center gap-2"
                     onClick={() => paginate(-1)}
                     >
                     <span>←</span> Vorige
                     </button>
                     <button
-                    className="px-6 py-3 bg-red-500 text-white rounded-full font-bold shadow-lg hover:bg-red-600 transition flex items-center gap-2"
+                    className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-800 rounded-full font-bold shadow-lg hover:from-yellow-500 hover:to-yellow-600 transition flex items-center gap-2"
                     onClick={() => paginate(1)}
                     >
                     Volgende <span>→</span>
                     </button>
                 </div>
 
-                <p className="mt-6 text-red-300 text-xs">
-                    Tip: Gebruik pijltjestoetsen, spatie of swipe!
+                <p className="mt-6 text-yellow-200 text-sm font-semibold drop-shadow-md">
+                    💡 Tip: Gebruik pijltjestoetsen, spatie of swipe!
                 </p>
                 </div>
             );
