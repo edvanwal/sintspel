@@ -637,6 +637,9 @@
             const handleCorrect = () => {
                 if (gameLocked) return; // Spel vergrendeld - geen actie
 
+                // Speel "Goed" geluid af - direct voor snelle feedback
+                playSound(correctSound, isMuted);
+
                 // Stop timer geluid als het nog speelt
                 if (timerSound) {
                     try {
@@ -646,9 +649,6 @@
                         console.log('Fout bij stoppen timer geluid:', error);
                     }
                 }
-
-                // Speel "Goed" geluid af
-                playSound(correctSound, isMuted);
 
                 const newScore = score + 1;
 
@@ -656,16 +656,19 @@
                     // 3 goed! Toon success scherm
                     setShowTransition('success');
                 } else {
-                    // Nog niet 3, ga naar volgende vraag
+                    // Nog niet 3, ga direct naar volgende vraag (snelle response)
                     setScore(newScore);
                     setIsFlipped(false); // Reset flip
-                    setTimeout(() => paginate(1), 300); // Kleine delay voor vloeiende overgang
+                    paginate(1); // Direct, zonder delay voor betere responsiviteit
                 }
             };
 
             // Handler voor FOUT antwoord
             const handleWrong = () => {
                 if (gameLocked) return; // Spel vergrendeld - geen actie
+
+                // Speel "Fout" geluid af - direct voor snelle feedback
+                playSound(wrongSound, isMuted);
 
                 // Stop timer geluid als het nog speelt
                 if (timerSound) {
@@ -676,9 +679,6 @@
                         console.log('Fout bij stoppen timer geluid:', error);
                     }
                 }
-
-                // Speel "Fout" geluid af
-                playSound(wrongSound, isMuted);
 
                 setShowTransition('wrong');
             };
