@@ -241,16 +241,27 @@
             timerSound = new Audio('Timer.mp3');
             timeUpSound = new Audio('TimeUp.mp3');
             alarmClockSound = new Audio('Alarm_clock.mp3');
+
+            console.log('🔊 Audio bestanden aangemaakt:');
+            console.log('- Goed.mp3:', !!correctSound);
+            console.log('- Fout.mp3:', !!wrongSound);
+            console.log('- Timer.mp3:', !!timerSound);
+            console.log('- TimeUp.mp3:', !!timeUpSound);
+            console.log('- Alarm_clock.mp3:', !!alarmClockSound);
+
             // Preload de audio bestanden
             correctSound.load();
             wrongSound.load();
             timerSound.load();
             timeUpSound.load();
             alarmClockSound.load();
+
             // Maak Timer.mp3 loopable
             timerSound.loop = true;
+
+            console.log('✅ Alle audio bestanden geladen');
         } catch (error) {
-            console.log('Audio kon niet worden geladen, spel gaat door zonder geluid');
+            console.error('❌ Audio kon niet worden geladen:', error);
         }
 
         // Functie om geluid af te spelen (met error handling)
@@ -297,35 +308,49 @@
 
         // Functie om timer geluid te stoppen en TimeUp af te spelen
         const stopTimerAndPlayTimeUp = (isMuted) => {
+            console.log('🔊 stopTimerAndPlayTimeUp aangeroepen, isMuted:', isMuted);
+
             // Stop Timer.mp3
             if (timerSound) {
                 try {
                     timerSound.pause();
                     timerSound.currentTime = 0;
+                    console.log('✓ Timer geluid gestopt');
                 } catch (error) {
                     console.log('Fout bij stoppen timer geluid:', error);
                 }
             }
 
             // Speel TimeUp.mp3 af
-            if (isMuted) return; // Alleen skippen als gemute
+            if (isMuted) {
+                console.log('⚠️ TimeUp overgeslagen: geluid is gemute');
+                return;
+            }
+
+            console.log('🔊 Probeer TimeUp.mp3 af te spelen...');
+            console.log('timeUpSound bestaat:', !!timeUpSound);
 
             if (timeUpSound) {
                 try {
-                    timeUpSound.pause(); // Eerst pauzeren als het al speelt
+                    timeUpSound.pause();
                     timeUpSound.currentTime = 0;
+                    console.log('🎵 TimeUp.mp3 play() aanroepen...');
                     const playPromise = timeUpSound.play();
 
                     if (playPromise !== undefined) {
-                        playPromise.catch(error => {
-                            console.log('TimeUp geluid kon niet worden afgespeeld:', error);
-                        });
+                        playPromise
+                            .then(() => {
+                                console.log('✅ TimeUp.mp3 speelt!');
+                            })
+                            .catch(error => {
+                                console.error('❌ TimeUp geluid kon niet worden afgespeeld:', error);
+                            });
                     }
                 } catch (error) {
-                    console.log('Fout bij afspelen TimeUp geluid:', error);
+                    console.error('❌ Fout bij afspelen TimeUp geluid:', error);
                 }
             } else {
-                console.log('TimeUp geluid niet geladen');
+                console.error('❌ TimeUp geluid niet geladen! Check of TimeUp.mp3 bestaat.');
             }
         };
 
@@ -480,6 +505,7 @@
                     }, 1000);
                     return () => clearTimeout(timer);
                 } else if (timerActive && timeLeft === 0) {
+                    console.log('⏰ Timer bereikt 0! Speel TimeUp geluid...');
                     setTimerActive(false);
                     // Stop Timer.mp3 en speel TimeUp.mp3 af
                     stopTimerAndPlayTimeUp(isMuted);
