@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Het Grote Sinterklaas Spel</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <style>
+        /* Zorgt dat je niet per ongeluk de pagina ververst bij het swipen */
+        body { overflow: hidden; touch-action: none; background-color: #fca5a5; }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // ==========================================
+        // DE VRAGENLIJST
+        // ==========================================
+        const VRAGEN = [
+            { id: 1, text: "Hoe heet het paard van Sinterklaas?", answer: "Ozosnel" },
+            { id: 2, text: "In welke maand komt de Sint aan?", answer: "November" },
+            { id: 3, text: "Wat zit er in de zak van Sinterklaas?", answer: "Cadeautjes & Snoepgoed" },
+            { id: 4, text: "Wie zijn de helpers van de Sint?", answer: "De Pieten" },
+            { id: 5, text: "Uit welk land komt Sinterklaas?", answer: "Spanje" },
+            { id: 6, text: "Wat doe je in je schoen?", answer: "Een wortel of tekening" },
+            { id: 7, text: "Wat is de staf van Sinterklaas?", answer: "Een kromstaf (goud)" },
+            { id: 8, text: "Hoe oud is Sinterklaas?", answer: "Heel erg oud!" },
+            { id: 9, text: "Wat eten we met Sinterklaas?", answer: "Pepernoten & Speculaas" },
+            { id: 10, text: "Wanneer is het Pakjesavond?", answer: "5 december" },
+        ];
+
+        // ==========================================
+        // DE SPEL CODE
+        // ==========================================
+
+        const { useState, useEffect, useCallback } = React;
+        const { motion, AnimatePresence } = window.Motion;
+
+        // Instellingen voor hoe ver je moet swipen
+        const swipeConfidenceThreshold = 10000;
+        const swipePower = (offset, velocity) => {
+            return Math.abs(offset) * velocity;
+        };
+
+        // De animatie-regels
+        const variants = {
+            enter: (direction) => ({
+                x: direction > 0 ? 300 : -300,
+                opacity: 0,
+                scale: 0.5,
+            }),
+            center: {
+                zIndex: 1,
+                x: 0,
+                opacity: 1,
+                scale: 1,
+            },
+            exit: (direction) => ({
+                zIndex: 0,
+                x: direction < 0 ? 300 : -300,
+                opacity: 0,
+                scale: 0.5,
+            })
+        };
+
+        function FlashCardQuiz() {
+            const [[page, direction], setPage] = useState([0, 0]);
+            const [showAnswer, setShowAnswer] = useState(false);
+
+            // Zorg dat we oneindig door de vragen kunnen loopen
+            const questionIndex = Math.abs(page % VRAGEN.length);
+            const currentQuestion = VRAGEN[questionIndex];
+
+            // Functie om naar volgende/vorige te gaan
+            const paginate = useCallback((newDirection) => {
+                setPage((prev) => [prev[0] + newDirection, newDirection]);
+                setShowAnswer(false); // Draai kaart altijd terug naar vraag
+            }, []);
+
+            // Toetsenbord bediening (Pijltjes + Spatie)
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === 'ArrowLeft') {
+                        paginate(-1);
+                    } else if (e.key === 'ArrowRight') {
+                        paginate(1);
+                    } else if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        setShowAnswer((prev) => !prev);
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [paginate]);
+
+            return (
+                <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative bg-red-50">
+
+                {/* Titel */}
+                <h1 className="absolute top-6 text-2xl font-bold text-red-600 tracking-wide">
+                    Sinterklaas Quiz
+                </h1>
+
+                {/* Progress Bar */}
+                <div className="absolute top-16 w-64 h-3 bg-red-200 rounded-full overflow-hidden border border-red-300">
+                    <div
+                    className="h-full bg-red-600 transition-all duration-300 ease-out"
+                    style={{ width: `${((questionIndex + 1) / VRAGEN.length) * 100}%` }}
+                    />
+                </div>
+                <p className="absolute top-20 text-xs text-red-400 font-bold mt-1">
+                    Vraag {questionIndex + 1} van {VRAGEN.length}
+                </p>
+
+                {/* --- DE KAART (Swipe + 3D Flip) --- */}
+                <div className="relative w-80 h-64 flex items-center justify-center" style={{ perspective: 1000 }}>
+                    <AnimatePresence initial={false} custom={direction} mode="popLayout">
+
+                    {/* 1. Swipe Wrapper: Regelt links/rechts beweging */}
+                    <motion.div
+                        key={page}
+                        custom={direction}
+                        variants={variants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{
+                        x: { type: "spring", stiffness: 300, damping: 30 },
+                        opacity: { duration: 0.2 }
+                        }}
+                        drag="x"
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={1}
+                        onDragEnd={(e, { offset, velocity }) => {
+                        const swipe = swipePower(offset.x, velocity.x);
+                        if (swipe < -swipeConfidenceThreshold) {
+                            paginate(1);
+                        } else if (swipe > swipeConfidenceThreshold) {
+                            paginate(-1);
+                        }
+                        }}
+                        className="absolute w-full h-full cursor-grab active:cursor-grabbing"
+                        style={{ transformStyle: "preserve-3d" }}
+                    >
+                        {/* 2. Flip Wrapper: Regelt het omdraaien */}
+                        <motion.div
+                        className="relative w-full h-full"
+                        animate={{ rotateY: showAnswer ? 180 : 0 }}
+                        transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+                        style={{ transformStyle: "preserve-3d" }}
+                        >
+
+                        {/* VOORKANT (Vraag) */}
+                        <div
+                            className="absolute inset-0 bg-white rounded-xl shadow-xl flex flex-col items-center justify-center p-6 text-center border border-red-100"
+                            style={{ backfaceVisibility: "hidden" }}
+                        >
+                            <h2 className="text-xl font-bold text-gray-800 mb-6 select-none">
+                            {currentQuestion.text}
+                            </h2>
+                            <button
+                            onClick={() => setShowAnswer(true)}
+                            className="px-6 py-2 text-sm text-white bg-red-500 rounded-full shadow-md hover:bg-red-600 transition cursor-pointer"
+                            onPointerDownCapture={(e) => e.stopPropagation()}
+                            >
+                            Bekijk antwoord
+                            </button>
+                        </div>
+
+                        {/* ACHTERKANT (Antwoord) */}
+                        <div
+                            className="absolute inset-0 bg-yellow-50 rounded-xl shadow-xl flex flex-col items-center justify-center p-6 text-center border-4 border-yellow-200"
+                            style={{
+                            backfaceVisibility: "hidden",
+                            transform: "rotateY(180deg)"
+                            }}
+                        >
+                            <span className="text-xs text-yellow-600 uppercase tracking-widest font-bold mb-2 block">
+                            Het antwoord is:
+                            </span>
+                            <h2 className="text-2xl font-bold text-gray-800 select-none mb-6">
+                            {currentQuestion.answer}
+                            </h2>
+                            <button
+                            onClick={() => setShowAnswer(false)}
+                            className="text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer"
+                            onPointerDownCapture={(e) => e.stopPropagation()}
+                            >
+                            Terug draaien
+                            </button>
+                        </div>
+
+                        </motion.div>
+                    </motion.div>
+                    </AnimatePresence>
+                </div>
+
+                {/* Knoppen onderin */}
+                <div className="flex gap-8 mt-12 z-10">
+                    <button
+                    className="px-6 py-3 bg-white text-red-500 border border-red-200 rounded-full font-bold shadow-sm hover:bg-red-50 transition flex items-center gap-2"
+                    onClick={() => paginate(-1)}
+                    >
+                    <span>←</span> Vorige
+                    </button>
+                    <button
+                    className="px-6 py-3 bg-red-500 text-white rounded-full font-bold shadow-lg hover:bg-red-600 transition flex items-center gap-2"
+                    onClick={() => paginate(1)}
+                    >
+                    Volgende <span>→</span>
+                    </button>
+                </div>
+
+                <p className="mt-6 text-red-300 text-xs">
+                    Tip: Gebruik pijltjestoetsen, spatie of swipe!
+                </p>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<FlashCardQuiz />);
+    </script>
+</body>
+</html>
