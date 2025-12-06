@@ -293,6 +293,7 @@
             if (!timerSound || isMuted) return;
 
             try {
+                // Start Timer.mp3
                 timerSound.currentTime = 0;
                 const playPromise = timerSound.play();
 
@@ -300,6 +301,26 @@
                     playPromise.catch(error => {
                         console.log('Timer geluid kon niet worden afgespeeld:', error);
                     });
+                }
+
+                // BELANGRIJK: Unlock TimeUp.mp3 voor iOS Safari
+                // iOS Safari blokkeert audio die niet direct door gebruikersactie wordt getriggerd
+                // Door TimeUp.mp3 hier kort af te spelen (en meteen te pauzeren),
+                // "unlocken" we het voor later automatisch afspelen
+                if (timeUpSound) {
+                    console.log('🔓 Unlock TimeUp.mp3 voor iOS Safari...');
+                    timeUpSound.volume = 0; // Tijdelijk volume op 0
+                    timeUpSound.play()
+                        .then(() => {
+                            timeUpSound.pause();
+                            timeUpSound.currentTime = 0;
+                            timeUpSound.volume = 1; // Volume terug naar normaal
+                            console.log('✅ TimeUp.mp3 unlocked voor iOS');
+                        })
+                        .catch(error => {
+                            console.log('⚠️ TimeUp unlock gefaald:', error);
+                            timeUpSound.volume = 1; // Volume toch terugzetten
+                        });
                 }
             } catch (error) {
                 console.log('Fout bij afspelen timer geluid:', error);
