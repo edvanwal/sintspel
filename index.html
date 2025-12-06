@@ -712,58 +712,57 @@
             // WELKOMSTSCHERM - INSTRUCTIES
             if (showWelcome) {
                 return (
-                    <div className="flex flex-col items-start justify-start min-h-screen w-screen bg-[#8B1538] text-white p-2 md:p-3 relative overflow-auto pt-2">
-                        <div className="max-w-2xl w-full bg-[#F5E6D3] text-[#3E2723] rounded-3xl shadow-2xl p-4 md:p-5 border-4 border-[#D4A574]">
+                    <div className="flex flex-col items-center justify-center min-h-screen w-screen bg-[#8B1538] text-white p-4 md:p-6 relative overflow-auto">
+                        <div className="max-w-2xl w-full bg-[#F5E6D3] text-[#3E2723] rounded-3xl shadow-2xl p-5 md:p-8 border-4 border-[#D4A574]">
                             {/* Titel */}
-                            <div className="text-center mb-2">
-                                <p className="text-sm md:text-base text-[#8B1538] mb-0.5 leading-tight">
+                            <div className="text-center mb-4">
+                                <p className="text-base md:text-lg text-[#8B1538] mb-1 leading-snug">
                                     Welkom bij de
                                 </p>
-                                <h1 className="text-xl md:text-2xl font-bold text-[#8B1538] leading-tight">
+                                <h1 className="text-2xl md:text-3xl font-bold text-[#8B1538] leading-tight">
                                     Sinterklaas Quiz
                                 </h1>
                             </div>
 
                             {/* Instructies */}
-                            <div className="space-y-2 mb-2">
+                            <div className="space-y-3 mb-4">
                                 <div>
-                                    <h2 className="text-base md:text-lg font-bold text-[#A0253B] mb-1">
-                                        🎁 HOE SPEEL JE?
+                                    <h2 className="text-lg md:text-xl font-bold text-[#A0253B] mb-2 flex items-center justify-center gap-2">
+                                        <span className="text-2xl">🎁</span>
+                                        <span>HOE SPEEL JE?</span>
                                     </h2>
-                                    <ul className="space-y-0.5 text-sm md:text-base text-[#3E2723] leading-tight">
+                                    <ul className="space-y-1.5 text-sm md:text-base text-[#3E2723] leading-relaxed">
                                         <li className="flex items-start">
-                                            <span className="mr-3 text-[#A0253B] font-bold">•</span>
-                                            <span>Een pakje met een wekker erin gaat rond</span>
+                                            <span className="mr-2 text-[#A0253B] font-bold text-lg flex-shrink-0">•</span>
+                                            <span>Pakje met wekker gaat rond</span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="mr-3 text-[#A0253B] font-bold">•</span>
-                                            <span>Beantwoord de vragen</span>
+                                            <span className="mr-2 text-[#A0253B] font-bold text-lg flex-shrink-0">•</span>
+                                            <span>Beantwoord vragen correct</span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="mr-3 text-[#A0253B] font-bold">•</span>
-                                            <span>Bij een <strong>GOED</strong> antwoord: ga door (max 3 goed per beurt)</span>
+                                            <span className="mr-2 text-[#A0253B] font-bold text-lg flex-shrink-0">•</span>
+                                            <span><strong>GOED</strong>? Ga door (max 3)</span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="mr-3 text-[#A0253B] font-bold">•</span>
-                                            <span>Bij een <strong>FOUT</strong> antwoord of na 3 GOEDE antwoorden: geef het pakje door naar <strong>LINKS</strong></span>
+                                            <span className="mr-2 text-[#A0253B] font-bold text-lg flex-shrink-0">•</span>
+                                            <span><strong>FOUT</strong> of 3 goed? Geef pakje door naar <strong>LINKS</strong></span>
                                         </li>
                                         <li className="flex items-start">
-                                            <span className="mr-3 text-[#A0253B] font-bold">•</span>
-                                            <span>De spelleider start de wekker</span>
-                                        </li>
-                                        <li className="flex items-start">
-                                            <span className="mr-3 text-[#A0253B] font-bold">•</span>
-                                            <span>Wie het pakje heeft als de wekker afgaat, <strong>WINT</strong>! 🎉</span>
+                                            <span className="mr-2 text-[#A0253B] font-bold text-lg flex-shrink-0">•</span>
+                                            <span>Wie het pakje heeft als de wekker afgaat, <strong>WINT!</strong> 🎉</span>
                                         </li>
                                     </ul>
                                 </div>
 
-                                <div>
-                                    <h2 className="text-base md:text-lg font-bold text-[#A0253B] mb-1">
-                                        ⏰ WEKKER
+                                <div className="bg-[#D4A574] bg-opacity-30 rounded-xl p-3 border-2 border-[#D4A574]">
+                                    <h2 className="text-lg md:text-xl font-bold text-[#A0253B] mb-1.5 flex items-center justify-center gap-2">
+                                        <span className="text-2xl">⏰</span>
+                                        <span>WEKKER</span>
                                     </h2>
-                                    <p className="text-sm md:text-base text-[#3E2723] leading-tight">
-                                        Heb je geen wekker in je pakje? Gebruik de wekker in deze app!
+                                    <p className="text-sm md:text-base text-[#3E2723] text-center leading-relaxed">
+                                        Geen wekker in je pakje?<br/>
+                                        Gebruik de wekker in deze app!
                                     </p>
                                 </div>
                             </div>
@@ -772,9 +771,9 @@
                             <div className="text-center">
                                 <button
                                     onClick={() => setShowWelcome(false)}
-                                    className="px-6 py-2.5 bg-[#A0253B] text-white rounded-full font-bold text-base shadow-2xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                                    className="w-full px-8 py-4 bg-[#A0253B] text-white rounded-xl font-bold text-lg md:text-xl shadow-2xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                                 >
-                                    Start het spel!
+                                    🎮 Start het spel!
                                 </button>
                             </div>
                         </div>
