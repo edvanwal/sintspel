@@ -16,11 +16,11 @@
         body {
             overflow: hidden;
             touch-action: none;
-            background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%);
+            background: #C41E3A;
             position: relative;
         }
 
-        /* Subtiel Sinterklaas patroon op achtergrond */
+        /* Sinterklaas mijter patroon op achtergrond */
         body::before {
             content: '';
             position: fixed;
@@ -28,18 +28,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.08;
+            opacity: 1;
             z-index: 0;
             pointer-events: none;
-            background-image:
-                /* Mijtertjes */
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path d="M30 10 L40 35 L20 35 Z M28 37 h4 v8 h-4 z" fill="%238B1538" opacity="0.5"/><circle cx="30" cy="20" r="2" fill="%23D4AF37"/></svg>'),
-                /* Staven */
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect x="38" y="15" width="4" height="50" fill="%23D4AF37" opacity="0.5"/><path d="M35 15 Q30 15 30 20 Q30 25 35 25 L35 15" fill="%23D4AF37" opacity="0.5"/></svg>'),
-                /* Pepernoten */
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><circle cx="25" cy="25" r="6" fill="%238B7355" opacity="0.6"/></svg>');
-            background-position: 0 0, 40px 40px, 20px 60px;
-            background-size: 60px 60px, 80px 80px, 50px 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="120" viewBox="0 0 80 120"><g><path d="M20 25 L30 50 L10 50 Z" fill="%23C41E3A" stroke="%23FFD700" stroke-width="1.5"/><rect x="17" y="50" width="6" height="12" fill="%23C41E3A" stroke="%23FFD700" stroke-width="1.5"/><rect x="14" y="62" width="12" height="4" fill="%23C41E3A" stroke="%23FFD700" stroke-width="1.5"/><path d="M15 30 Q12 30 12 33 L12 40 L18 40 L18 33 Q18 30 15 30 Z" fill="%23FFD700"/><path d="M25 30 Q22 30 22 33 L22 40 L28 40 L28 33 Q28 30 25 30 Z" fill="%23FFD700"/><circle cx="20" cy="35" r="2" fill="%23FFD700"/><path d="M18 42 L22 42" stroke="%23FFD700" stroke-width="1.5"/><g transform="translate(50, 60)"><path d="M20 25 L30 50 L10 50 Z" fill="%23C41E3A" stroke="%23FFD700" stroke-width="1.5"/><rect x="17" y="50" width="6" height="12" fill="%23C41E3A" stroke="%23FFD700" stroke-width="1.5"/><rect x="14" y="62" width="12" height="4" fill="%23C41E3A" stroke="%23FFD700" stroke-width="1.5"/><path d="M15 30 Q12 30 12 33 L12 40 L18 40 L18 33 Q18 30 15 30 Z" fill="%23FFD700"/><path d="M25 30 Q22 30 22 33 L22 40 L28 40 L28 33 Q28 30 25 30 Z" fill="%23FFD700"/><circle cx="20" cy="35" r="2" fill="%23FFD700"/><path d="M18 42 L22 42" stroke="%23FFD700" stroke-width="1.5"/></g></g></svg>');
+            background-position: 0 0;
+            background-size: 80px 120px;
             background-repeat: repeat;
         }
 
@@ -400,23 +394,23 @@
                 <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative overflow-hidden" style={{position: 'relative', zIndex: 1}}>
 
                 {/* Titel */}
-                <h1 className="absolute top-4 text-2xl md:text-3xl font-bold text-[#8B1538] tracking-wide px-4 text-center">
+                <h1 className="absolute top-4 text-2xl md:text-3xl font-bold text-[#FAF0E6] tracking-wide px-4 text-center drop-shadow-lg">
                     Het Sinterklaas Pakjes Spel
                 </h1>
 
                 {/* Progress Bar */}
-                <div className="absolute top-16 w-64 md:w-80 h-3 bg-[#E8D5C4] rounded-full overflow-hidden border-2 border-[#C9A961]">
+                <div className="absolute top-16 w-64 md:w-80 h-3 bg-[#FAF0E6] rounded-full overflow-hidden border-2 border-[#FFD700]">
                     <div
-                    className="h-full bg-[#9B2335] transition-all duration-300 ease-out"
+                    className="h-full bg-[#FFD700] transition-all duration-300 ease-out"
                     style={{ width: `${((questionIndex + 1) / VRAGEN.length) * 100}%` }}
                     />
                 </div>
-                <p className="absolute top-20 text-xs text-[#8B7355] font-bold mt-1">
+                <p className="absolute top-20 text-xs text-[#FAF0E6] font-bold mt-1 drop-shadow">
                     Vraag {questionIndex + 1} van {VRAGEN.length}
                 </p>
 
                 {/* --- DE KAART (Met 3D Flip) --- */}
-                <div className="relative w-full max-w-md px-4 h-auto flex items-center justify-center mt-16">
+                <div className="relative w-full max-w-md px-6 md:px-4 h-auto flex items-center justify-center mt-16">
                     <AnimatePresence initial={false} custom={direction} mode="popLayout">
 
                     <motion.div
@@ -449,7 +443,7 @@
 
                                 {/* VOORKANT VAN DE KAART */}
                                 <div className="flip-card-front">
-                                    <div className="bg-[#FAF0E6] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#C9A961] min-h-[450px] flex flex-col">
+                                    <div className="bg-[#FAF0E6] rounded-2xl shadow-2xl p-8 md:p-8 border-4 border-[#C9A961] min-h-[450px] flex flex-col">
 
                                         {/* Vraagtype label */}
                                         <div className="text-center mb-6 mt-4">
@@ -481,7 +475,7 @@
 
                                 {/* ACHTERKANT VAN DE KAART */}
                                 <div className="flip-card-back">
-                                    <div className="bg-[#FAF0E6] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#C9A961] min-h-[450px] flex flex-col">
+                                    <div className="bg-[#FAF0E6] rounded-2xl shadow-2xl p-8 md:p-8 border-4 border-[#C9A961] min-h-[450px] flex flex-col">
 
                                         {/* Score teller bovenaan */}
                                         <div className="text-center mb-5">
@@ -535,7 +529,7 @@
                     </AnimatePresence>
                 </div>
 
-                <p className="mt-8 text-[#8B7355] text-xs md:text-sm font-medium">
+                <p className="mt-8 text-[#FAF0E6] text-xs md:text-sm font-medium drop-shadow">
                     Tip: Gebruik pijltjestoetsen, spatiebalk of swipe!
                 </p>
                 </div>
@@ -547,8 +541,8 @@
     </script>
 
     <!-- Versie informatie -->
-    <div style="position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #8B7355; opacity: 0.6; font-family: monospace; z-index: 9999; background: rgba(245, 237, 227, 0.7); padding: 4px 8px; border-radius: 4px;">
-        v1.3 - 06 dec 2024 15:30
+    <div style="position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #FAF0E6; opacity: 0.8; font-family: monospace; z-index: 9999; background: rgba(139, 21, 56, 0.7); padding: 4px 8px; border-radius: 4px;">
+        v1.4 - 06 dec 2024 17:15
     </div>
 
 </body>
