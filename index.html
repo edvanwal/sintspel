@@ -56,7 +56,7 @@
 
     <script type="text/babel">
         // ==========================================
-        // DE VRAGENLIJST (158 VRAGEN)
+        // DE VRAGENLIJST (157 VRAGEN)
         // ==========================================
 const VRAGEN = [
   // === KENNIS VRAGEN (76 stuks) ===
@@ -189,39 +189,41 @@ const VRAGEN = [
   { id: 125, type: "ACTIE", text: "Vingers Raden: Steek achter je rug een aantal vingers op (bv. 4). Je linkerbuurman moet raden hoeveel.", answer: "Geslaagd als je buurman het niet raadt (anders verlies je je beurt)." },
   { id: 126, type: "ACTIE", text: "De Staf Balans: Balanceer een pen of potlood (als 'Staf') rechtop op je wijsvinger terwijl je een rondje van 360° draait.", answer: "Geslaagd als de 'Staf' niet valt tijdens de volledige draai.", timeLimit: 5 },
 
-  // === ANDERE VRAAGTYPEN (32 stuks) ===
+  // === ANDERE VRAAGTYPEN (31 stuks) ===
+  // --- 2025 Vragen (11 stuks) ---
   { id: 127, type: "2025", text: "Waar kwam de stoomboot dit jaar (2025) aan?", answer: "Op Texel (Oudeschild)" },
-  { id: 128, type: "Lastig", text: "In welk jaar was de allereerste intocht op de Nederlandse TV? (Gokje mag)", answer: "1952 (marge van 5 jaar = goed)" },
-  { id: 129, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
-  { id: 130, type: "Instinker", text: "Op welke datum is Sinterklaas officieel jarig (zijn sterfdag)?", answer: "6 december (Niet de 5e!)" },
-  { id: 131, type: "Lastig", text: "In welke Italiaanse stad liggen de botten van de Sint?", answer: "Bari" },
-  { id: 132, type: "2025", text: "Welke drukke Piet was er na 10 jaar weer bij (Jochem Myjer)?", answer: "Pietje Paniek" },
-  { id: 133, type: "Lastig", text: "Wat is de officiële Latijnse naam van Sinterklaas?", answer: "Sanctus Nicolaus" },
-  { id: 134, type: "Expert", text: "Van welk land is Sinterklaas de beschermheilige?", answer: "Rusland (of Griekenland)" },
-  { id: 135, type: "2025", text: "Welk dier wees de boot de weg toen de vuurtoren stuk was?", answer: "Een zeehond" },
-  { id: 136, type: "Expert", text: "Hoe noem je de mantel van de Sint als hij in de kerk is (niet tabberd)?", answer: "Een Koor-kap (of Pluviale)" },
-  { id: 137, type: "2025", text: "Wat zat er dit jaar per ongeluk tussen de pepernoten?", answer: "Puzzelstukjes" },
-  { id: 138, type: "Lastig", text: "Hoe heet de knecht van Sinterklaas in Frankrijk?", answer: "Père Fouettard" },
-  { id: 139, type: "Instinker", text: "Welke kleur is de lippenstift van Sinterklaas?", answer: "Hij draagt geen lippenstift" },
-  { id: 140, type: "Lastig", text: "Welke stad is de beschermstad van Sint Nicolaas (Hoofdstad NL)?", answer: "Amsterdam" },
-  { id: 141, type: "Lastig", text: "Uit hoeveel personen bestaat de 'Heiligman' officieel (Sint + Pieten)?", answer: "Strikvraag: De Heiligman is alleen Sinterklaas" },
-  { id: 142, type: "Expert", text: "Hoeveel jaar geleden stierf Sint Nicolaas ongeveer? (500, 1000, 1700?)", answer: "Ongeveer 1700 jaar geleden" },
-  { id: 143, type: "2025", text: "Waarom konden de Pieten de puzzelstukjes niet vinden?", answer: "Ze leken op pepernoten (of zaten in de pepernotenmix)" },
-  { id: 144, type: "Lastig", text: "Welke kleur zijn de ogen van Sinterklaas meestal?", answer: "Blauw" },
-  { id: 145, type: "2025", text: "Welk eiland bezocht Sinterklaas dit jaar voor de intocht?", answer: "Texel" },
-  { id: 146, type: "Expert", text: "Wat houdt Sinterklaas in zijn ANDERE hand (niet de staf)?", answer: "Vaak het Grote Boek of de teugels (of niets)" },
-  { id: 147, type: "Instinker", text: "Hoeveel Sinterklazen zijn er in totaal?", answer: "Er is er maar één (de rest zijn hulpsinterklazen)" },
-  { id: 148, type: "2025", text: "Wie speelde dit jaar de burgemeester van de intocht (op Texel)?", answer: "De echte burgemeester (Mark Pol) of een acteur. Beide goed" },
-  { id: 149, type: "Lastig", text: "Hoe heetten de drie arme meisjes die Sinterklaas hielp in de legende?", answer: "Ze hebben geen naam in het verhaal" },
-  { id: 150, type: "2025", text: "Wat deden de Pieten met de puzzelstukjes die ze vonden?", answer: "Ze probeerden ze aan elkaar te lijmen/leggen" },
-  { id: 151, type: "Instinker", text: "Sinterklaas rijdt op een schimmel. Wat is een schimmel?", answer: "Een wit paard" },
-  { id: 152, type: "2025", text: "Wat was er kapot bij Texel waardoor de boot de weg kwijt raakte?", answer: "De vuurtoren" },
-  { id: 153, type: "Lastig", text: "Is Sinterklaas een sprookje of een legende?", answer: "Een legende (gebaseerd op een echt persoon)" },
-  { id: 154, type: "Expert", text: "Hoe heet de moeder van Sinterklaas?", answer: "Geen idee (niemand weet dit, strikvraag!)" },
-  { id: 155, type: "Lastig", text: "Wat is marsepein in het Engels?", answer: "Marzipan" },
-  { id: 156, type: "2025", text: "Welke kleur had de grote puzzel die de Pieten moesten maken dit jaar?", answer: "Blauw" },
-  { id: 157, type: "2025", text: "Wat zat er in de 'blauwe doos' van de burgemeester?", answer: "De puzzel (het cadeau voor Texel)" },
-  { id: 158, type: "Expert", text: "Hoeveel andere heiligen heten ook 'Nicolaas'?", answer: "Meer dan 70 (of: heel veel)" }
+  { id: 128, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
+  { id: 129, type: "2025", text: "Welke drukke Piet was er na 10 jaar weer bij (gespeeld door Jochem Myjer)?", answer: "Pietje Paniek" },
+  { id: 130, type: "2025", text: "Welk dier wees de boot de weg toen de vuurtoren stuk was?", answer: "Een zeehond" },
+  { id: 131, type: "2025", text: "Waarom stonden er dit jaar hekken en soldaten om het Pietenhuis?", answer: "Om het te bewaken (het was 'bezet')" },
+  { id: 132, type: "2025", text: "De Pieten deelden dit jaar mysterieuze 'Noodpakketten' uit. Wat zat erin?", answer: "Helemaal niets (ze waren leeg)" },
+  { id: 133, type: "2025", text: "Voor wie hingen er spandoeken en tekeningen bij de intocht met de tekst \"Dankjewel ...\"?", answer: "Voor Dieuwertje (Blok)" },
+  { id: 134, type: "2025", text: "Wie is de nieuwe meneer die de voice-over (de vertelstem) van het Sinterklaasjournaal doet?", answer: "Herman van der Zandt" },
+  { id: 135, type: "2025", text: "Welke kleur had de doos van de puzzel (het cadeau voor de burgemeester)?", answer: "Blauw" },
+  { id: 136, type: "2025", text: "Wat was er kapot bij Texel waardoor de boot de weg kwijt raakte?", answer: "De lamp van de vuurtoren" },
+  { id: 137, type: "2025", text: "Wat zat er per ongeluk tussen de pepernoten (het strooigoed) dit jaar?", answer: "Puzzelstukjes" },
+
+  // --- Lastig, Expert en Instinker Vragen (20 stuks) ---
+  { id: 138, type: "Lastig", text: "In welk jaar was de allereerste intocht op de Nederlandse TV? (Gokje mag)", answer: "1952 (marge van 5 jaar = goed)" },
+  { id: 139, type: "Instinker", text: "Op welke datum is Sinterklaas officieel jarig (zijn sterfdag)?", answer: "6 december (Niet de 5e!)" },
+  { id: 140, type: "Lastig", text: "In welke Italiaanse stad liggen de botten van de Sint?", answer: "Bari" },
+  { id: 141, type: "Lastig", text: "Wat is de officiële Latijnse naam van Sinterklaas?", answer: "Sanctus Nicolaus" },
+  { id: 142, type: "Expert", text: "Van welk land is Sinterklaas de beschermheilige?", answer: "Rusland (of Griekenland)" },
+  { id: 143, type: "Expert", text: "Hoe noem je de mantel van de Sint als hij in de kerk is (niet tabberd)?", answer: "Een Koor-kap (of Pluviale)" },
+  { id: 144, type: "Lastig", text: "Hoe heet de knecht van Sinterklaas in Frankrijk?", answer: "Père Fouettard" },
+  { id: 145, type: "Instinker", text: "Welke kleur is de lippenstift van Sinterklaas?", answer: "Hij draagt geen lippenstift" },
+  { id: 146, type: "Lastig", text: "Welke stad is de beschermstad van Sint Nicolaas (Hoofdstad NL)?", answer: "Amsterdam" },
+  { id: 147, type: "Lastig", text: "Uit hoeveel personen bestaat de 'Heiligman' officieel (Sint + Pieten)?", answer: "Strikvraag: De Heiligman is alleen Sinterklaas" },
+  { id: 148, type: "Expert", text: "Hoeveel jaar geleden stierf Sint Nicolaas ongeveer? (500, 1000, 1700?)", answer: "Ongeveer 1700 jaar geleden" },
+  { id: 149, type: "Lastig", text: "Welke kleur zijn de ogen van Sinterklaas meestal?", answer: "Blauw" },
+  { id: 150, type: "Expert", text: "Wat houdt Sinterklaas in zijn ANDERE hand (niet de staf)?", answer: "Vaak het Grote Boek of de teugels (of niets)" },
+  { id: 151, type: "Instinker", text: "Hoeveel Sinterklazen zijn er in totaal?", answer: "Er is er maar één (de rest zijn hulpsinterklazen)" },
+  { id: 152, type: "Lastig", text: "Hoe heetten de drie arme meisjes die Sinterklaas hielp in de legende?", answer: "Ze hebben geen naam in het verhaal" },
+  { id: 153, type: "Instinker", text: "Sinterklaas rijdt op een schimmel. Wat is een schimmel?", answer: "Een wit paard" },
+  { id: 154, type: "Lastig", text: "Is Sinterklaas een sprookje of een legende?", answer: "Een legende (gebaseerd op een echt persoon)" },
+  { id: 155, type: "Expert", text: "Hoe heet de moeder van Sinterklaas?", answer: "Geen idee (niemand weet dit, strikvraag!)" },
+  { id: 156, type: "Lastig", text: "Wat is marsepein in het Engels?", answer: "Marzipan" },
+  { id: 157, type: "Expert", text: "Hoeveel andere heiligen heten ook 'Nicolaas'?", answer: "Meer dan 70 (of: heel veel)" }
 ];
 
         // ==========================================
@@ -1191,7 +1193,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v3.4 - Build: 7 dec 2025 00:15
+        v3.5 - Build: 7 dec 2025 00:15
     </div>
 
 </body>
