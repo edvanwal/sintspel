@@ -308,19 +308,24 @@
             }
 
             // Speel TimeUp.mp3 af
-            if (!timeUpSound || isMuted) return;
+            if (isMuted) return; // Alleen skippen als gemute
 
-            try {
-                timeUpSound.currentTime = 0;
-                const playPromise = timeUpSound.play();
+            if (timeUpSound) {
+                try {
+                    timeUpSound.pause(); // Eerst pauzeren als het al speelt
+                    timeUpSound.currentTime = 0;
+                    const playPromise = timeUpSound.play();
 
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log('TimeUp geluid kon niet worden afgespeeld:', error);
-                    });
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('TimeUp geluid kon niet worden afgespeeld:', error);
+                        });
+                    }
+                } catch (error) {
+                    console.log('Fout bij afspelen TimeUp geluid:', error);
                 }
-            } catch (error) {
-                console.log('Fout bij afspelen TimeUp geluid:', error);
+            } else {
+                console.log('TimeUp geluid niet geladen');
             }
         };
 
