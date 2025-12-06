@@ -13,7 +13,36 @@
 
     <style>
         /* Zorgt dat je niet per ongeluk de pagina ververst bij het swipen */
-        body { overflow: hidden; touch-action: none; background-color: #fca5a5; }
+        body { overflow: hidden; touch-action: none; background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%); }
+
+        /* 3D Flip animatie */
+        .flip-card {
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
     </style>
 </head>
 <body>
@@ -221,16 +250,16 @@
             })
         };
 
-        // Kleuren voor vraagtype labels
+        // Kleuren voor vraagtype labels - Warme Sinterklaas kleuren
         const getTypeColor = (type) => {
             switch(type.toUpperCase()) {
-                case 'KENNIS': return 'bg-blue-500 text-white';
-                case 'ACTIE': return 'bg-orange-500 text-white';
-                case '2025': return 'bg-purple-500 text-white';
-                case 'LASTIG': return 'bg-red-600 text-white';
-                case 'EXPERT': return 'bg-pink-600 text-white';
-                case 'INSTINKER': return 'bg-yellow-500 text-gray-900';
-                default: return 'bg-gray-500 text-white';
+                case 'KENNIS': return 'bg-[#8B7355] text-white'; // Zacht bruin
+                case 'ACTIE': return 'bg-[#D97D54] text-white'; // Warme terracotta
+                case '2025': return 'bg-[#9B2335] text-white'; // Bordeaux rood
+                case 'LASTIG': return 'bg-[#8B1538] text-white'; // Donker bordeaux
+                case 'EXPERT': return 'bg-[#6B4423] text-white'; // Donker bruin
+                case 'INSTINKER': return 'bg-[#D4AF37] text-gray-900'; // Goud
+                default: return 'bg-[#A0826D] text-white'; // Zacht bruin
             }
         };
 
@@ -238,15 +267,26 @@
             const [[page, direction], setPage] = useState([0, 0]);
             const [score, setScore] = useState(0); // Score teller: 0, 1, 2, of 3
             const [showTransition, setShowTransition] = useState(null); // 'wrong' of 'success'
+            const [isFlipped, setIsFlipped] = useState(false); // Flip state voor de kaart
 
             // Zorg dat we oneindig door de vragen kunnen loopen
             const questionIndex = Math.abs(page % VRAGEN.length);
             const currentQuestion = VRAGEN[questionIndex];
 
+            // Reset flip bij nieuwe vraag
+            useEffect(() => {
+                setIsFlipped(false);
+            }, [page]);
+
             // Functie om naar volgende/vorige te gaan
             const paginate = useCallback((newDirection) => {
                 setPage((prev) => [prev[0] + newDirection, newDirection]);
             }, []);
+
+            // Handler voor flip
+            const handleFlip = () => {
+                setIsFlipped(!isFlipped);
+            };
 
             // Handler voor GOED antwoord
             const handleCorrect = () => {
@@ -258,7 +298,8 @@
                 } else {
                     // Nog niet 3, ga naar volgende vraag
                     setScore(newScore);
-                    paginate(1);
+                    setIsFlipped(false); // Reset flip
+                    setTimeout(() => paginate(1), 300); // Kleine delay voor vloeiende overgang
                 }
             };
 
@@ -271,10 +312,11 @@
             const handleNextPlayer = () => {
                 setShowTransition(null);
                 setScore(0);
+                setIsFlipped(false);
                 paginate(1);
             };
 
-            // Toetsenbord bediening (Pijltjes)
+            // Toetsenbord bediening (Pijltjes en Spatie voor flip)
             useEffect(() => {
                 const handleKeyDown = (e) => {
                     if (showTransition) return; // Geen toetsenbord tijdens transition scherm
@@ -283,21 +325,24 @@
                         paginate(-1);
                     } else if (e.key === 'ArrowRight') {
                         paginate(1);
+                    } else if (e.key === ' ' && !isFlipped) {
+                        e.preventDefault();
+                        handleFlip();
                     }
                 };
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [paginate, showTransition]);
+            }, [paginate, showTransition, isFlipped]);
 
             // TRANSITION SCHERMEN
             if (showTransition === 'wrong') {
                 return (
-                    <div className="flex flex-col items-center justify-center h-screen w-screen bg-red-600 text-white p-8">
+                    <div className="flex flex-col items-center justify-center h-screen w-screen bg-[#8B1538] text-white p-8">
                         <div className="text-9xl mb-8 animate-bounce">🎁</div>
                         <h1 className="text-5xl font-bold mb-4 text-center">GEEF PAKJE DOOR</h1>
                         <h2 className="text-3xl font-bold mb-12 text-center">NAAR LINKS</h2>
                         <button
-                            className="px-12 py-6 bg-white text-red-600 rounded-full font-bold text-2xl shadow-2xl hover:bg-red-50 transition"
+                            className="px-12 py-6 bg-[#F5F5DC] text-[#8B1538] rounded-full font-bold text-2xl shadow-2xl hover:bg-[#FAF0E6] transition"
                             onClick={handleNextPlayer}
                         >
                             Volgende speler
@@ -308,12 +353,12 @@
 
             if (showTransition === 'success') {
                 return (
-                    <div className="flex flex-col items-center justify-center h-screen w-screen bg-green-600 text-white p-8">
+                    <div className="flex flex-col items-center justify-center h-screen w-screen bg-[#6B8E23] text-white p-8">
                         <div className="text-9xl mb-8 animate-bounce">🎉</div>
                         <h1 className="text-5xl font-bold mb-4 text-center">JE HEBT 3 GOED!</h1>
                         <h2 className="text-3xl font-bold mb-12 text-center">GEEF HET PAKJE DOOR!</h2>
                         <button
-                            className="px-12 py-6 bg-white text-green-600 rounded-full font-bold text-2xl shadow-2xl hover:bg-green-50 transition"
+                            className="px-12 py-6 bg-[#F5F5DC] text-[#6B8E23] rounded-full font-bold text-2xl shadow-2xl hover:bg-[#FAF0E6] transition"
                             onClick={handleNextPlayer}
                         >
                             Volgende speler
@@ -324,26 +369,26 @@
 
             // NORMAAL SPEL SCHERM
             return (
-                <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative bg-red-50">
+                <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative overflow-hidden">
 
                 {/* Titel */}
-                <h1 className="absolute top-6 text-2xl font-bold text-red-600 tracking-wide">
+                <h1 className="absolute top-4 text-2xl md:text-3xl font-bold text-[#8B1538] tracking-wide px-4 text-center">
                     Het Sinterklaas Pakjes Spel
                 </h1>
 
                 {/* Progress Bar */}
-                <div className="absolute top-16 w-64 h-3 bg-red-200 rounded-full overflow-hidden border border-red-300">
+                <div className="absolute top-16 w-64 md:w-80 h-3 bg-[#E8D5C4] rounded-full overflow-hidden border-2 border-[#C9A961]">
                     <div
-                    className="h-full bg-red-600 transition-all duration-300 ease-out"
+                    className="h-full bg-[#9B2335] transition-all duration-300 ease-out"
                     style={{ width: `${((questionIndex + 1) / VRAGEN.length) * 100}%` }}
                     />
                 </div>
-                <p className="absolute top-20 text-xs text-red-400 font-bold mt-1">
+                <p className="absolute top-20 text-xs text-[#8B7355] font-bold mt-1">
                     Vraag {questionIndex + 1} van {VRAGEN.length}
                 </p>
 
-                {/* --- DE KAART (Swipe zonder flip) --- */}
-                <div className="relative w-80 h-auto flex items-center justify-center mt-8">
+                {/* --- DE KAART (Met 3D Flip) --- */}
+                <div className="relative w-full max-w-md px-4 h-auto flex items-center justify-center mt-16">
                     <AnimatePresence initial={false} custom={direction} mode="popLayout">
 
                     <motion.div
@@ -370,76 +415,123 @@
                         }}
                         className="absolute w-full cursor-grab active:cursor-grabbing"
                     >
-                        <div className="bg-white rounded-xl shadow-xl p-6 border border-red-100">
+                        {/* Flip Card Container */}
+                        <div className="flip-card w-full min-h-[450px]">
+                            <div className={`flip-card-inner ${isFlipped ? 'flipped' : ''}`}>
 
-                            {/* Score teller bovenaan */}
-                            <div className="text-center mb-4">
-                                <div className="inline-block bg-yellow-400 text-gray-900 px-6 py-3 rounded-full font-bold text-2xl border-4 border-yellow-500 shadow-md">
-                                    {score}/3 goed
+                                {/* VOORKANT VAN DE KAART */}
+                                <div className="flip-card-front">
+                                    <div className="bg-[#FAF0E6] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#C9A961] min-h-[450px] flex flex-col">
+
+                                        {/* Score teller bovenaan */}
+                                        <div className="text-center mb-5">
+                                            <div className="inline-block bg-[#D4AF37] text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-2xl md:text-3xl border-4 border-[#C9A961] shadow-lg">
+                                                {score}/3 goed
+                                            </div>
+                                        </div>
+
+                                        {/* Vraagtype label */}
+                                        <div className="text-center mb-6">
+                                            <span className={`inline-block px-5 py-2 rounded-full text-sm md:text-base font-bold uppercase shadow-md ${getTypeColor(currentQuestion.type)}`}>
+                                                [{currentQuestion.type}]
+                                            </span>
+                                        </div>
+
+                                        {/* Vraag */}
+                                        <div className="flex-1 flex items-center justify-center mb-6">
+                                            <h2 className="text-xl md:text-2xl font-bold text-[#4A3424] text-center select-none leading-relaxed px-2">
+                                                {currentQuestion.text}
+                                            </h2>
+                                        </div>
+
+                                        {/* Bekijk Antwoord knop */}
+                                        <div className="text-center">
+                                            <button
+                                                onClick={handleFlip}
+                                                className="w-full px-8 py-4 md:py-5 bg-[#9B2335] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                                                onPointerDownCapture={(e) => e.stopPropagation()}
+                                            >
+                                                🔄 Bekijk antwoord
+                                            </button>
+                                        </div>
+
+                                    </div>
                                 </div>
+
+                                {/* ACHTERKANT VAN DE KAART */}
+                                <div className="flip-card-back">
+                                    <div className="bg-[#FAF0E6] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#C9A961] min-h-[450px] flex flex-col">
+
+                                        {/* Score teller bovenaan */}
+                                        <div className="text-center mb-5">
+                                            <div className="inline-block bg-[#D4AF37] text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-2xl md:text-3xl border-4 border-[#C9A961] shadow-lg">
+                                                {score}/3 goed
+                                            </div>
+                                        </div>
+
+                                        {/* Vraagtype label */}
+                                        <div className="text-center mb-6">
+                                            <span className={`inline-block px-5 py-2 rounded-full text-sm md:text-base font-bold uppercase shadow-md ${getTypeColor(currentQuestion.type)}`}>
+                                                [{currentQuestion.type}]
+                                            </span>
+                                        </div>
+
+                                        {/* Antwoord */}
+                                        <div className="flex-1 flex items-center justify-center mb-6">
+                                            <div className="text-center p-5 md:p-6 bg-[#F5F5DC] rounded-xl border-3 border-[#D4AF37] shadow-inner">
+                                                <p className="text-xs md:text-sm text-[#8B7355] uppercase tracking-wide mb-2 font-bold">Antwoord:</p>
+                                                <p className="text-lg md:text-xl text-[#4A3424] font-bold leading-relaxed">
+                                                    {currentQuestion.answer}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Goed/Fout knoppen */}
+                                        <div className="flex gap-3 md:gap-4 justify-center">
+                                            <button
+                                                onClick={handleCorrect}
+                                                className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#6B8E23] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
+                                                onPointerDownCapture={(e) => e.stopPropagation()}
+                                            >
+                                                ✅ Goed!
+                                            </button>
+                                            <button
+                                                onClick={handleWrong}
+                                                className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#9B2335] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                                                onPointerDownCapture={(e) => e.stopPropagation()}
+                                            >
+                                                ❌ Fout
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             </div>
-
-                            {/* Vraagtype label */}
-                            <div className="text-center mb-4">
-                                <span className={`inline-block px-4 py-1 rounded-full text-sm font-bold uppercase ${getTypeColor(currentQuestion.type)}`}>
-                                    [{currentQuestion.type}]
-                                </span>
-                            </div>
-
-                            {/* Vraag */}
-                            <h2 className="text-xl font-bold text-gray-800 mb-4 text-center select-none">
-                                {currentQuestion.text}
-                            </h2>
-
-                            {/* Antwoord (klein onder de vraag) */}
-                            <div className="text-center mb-6 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Antwoord:</p>
-                                <p className="text-sm text-gray-700 font-medium">
-                                    {currentQuestion.answer}
-                                </p>
-                            </div>
-
-                            {/* Goed/Fout knoppen */}
-                            <div className="flex gap-4 justify-center">
-                                <button
-                                    onClick={handleCorrect}
-                                    className="flex-1 px-6 py-4 bg-green-500 text-white rounded-xl font-bold text-lg shadow-lg hover:bg-green-600 transition"
-                                    onPointerDownCapture={(e) => e.stopPropagation()}
-                                >
-                                    ✅ Goed!
-                                </button>
-                                <button
-                                    onClick={handleWrong}
-                                    className="flex-1 px-6 py-4 bg-red-500 text-white rounded-xl font-bold text-lg shadow-lg hover:bg-red-600 transition"
-                                    onPointerDownCapture={(e) => e.stopPropagation()}
-                                >
-                                    ❌ Fout/Mislukt
-                                </button>
-                            </div>
-
                         </div>
+
                     </motion.div>
                     </AnimatePresence>
                 </div>
 
                 {/* Navigatie knoppen onderin */}
-                <div className="flex gap-8 mt-12 z-10">
+                <div className="flex gap-6 md:gap-8 mt-8 z-10">
                     <button
-                    className="px-6 py-3 bg-white text-red-500 border border-red-200 rounded-full font-bold shadow-sm hover:bg-red-50 transition flex items-center gap-2"
+                    className="px-6 md:px-8 py-3 md:py-4 bg-[#F5F5DC] text-[#8B1538] border-2 border-[#C9A961] rounded-full font-bold text-base md:text-lg shadow-lg hover:bg-[#FAF0E6] transition-all transform hover:scale-105 flex items-center gap-2"
                     onClick={() => paginate(-1)}
                     >
                     <span>←</span> Vorige
                     </button>
                     <button
-                    className="px-6 py-3 bg-red-500 text-white rounded-full font-bold shadow-lg hover:bg-red-600 transition flex items-center gap-2"
+                    className="px-6 md:px-8 py-3 md:py-4 bg-[#9B2335] text-white rounded-full font-bold text-base md:text-lg shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105 flex items-center gap-2"
                     onClick={() => paginate(1)}
                     >
                     Volgende <span>→</span>
                     </button>
                 </div>
 
-                <p className="mt-6 text-red-300 text-xs">
-                    Tip: Gebruik pijltjestoetsen of swipe!
+                <p className="mt-4 text-[#8B7355] text-xs md:text-sm font-medium">
+                    Tip: Gebruik pijltjestoetsen, spatiebalk of swipe!
                 </p>
                 </div>
             );
