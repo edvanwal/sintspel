@@ -13,7 +13,35 @@
 
     <style>
         /* Zorgt dat je niet per ongeluk de pagina ververst bij het swipen */
-        body { overflow: hidden; touch-action: none; background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%); }
+        body {
+            overflow: hidden;
+            touch-action: none;
+            background: linear-gradient(135deg, #F5EDE3 0%, #E8D5C4 100%);
+            position: relative;
+        }
+
+        /* Subtiel Sinterklaas patroon op achtergrond */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                /* Mijtertjes */
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path d="M30 10 L40 35 L20 35 Z M28 37 h4 v8 h-4 z" fill="%238B1538" opacity="0.5"/><circle cx="30" cy="20" r="2" fill="%23D4AF37"/></svg>'),
+                /* Staven */
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect x="38" y="15" width="4" height="50" fill="%23D4AF37" opacity="0.5"/><path d="M35 15 Q30 15 30 20 Q30 25 35 25 L35 15" fill="%23D4AF37" opacity="0.5"/></svg>'),
+                /* Pepernoten */
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><circle cx="25" cy="25" r="6" fill="%238B7355" opacity="0.6"/></svg>');
+            background-position: 0 0, 40px 40px, 20px 60px;
+            background-size: 60px 60px, 80px 80px, 50px 50px;
+            background-repeat: repeat;
+        }
 
         /* 3D Flip animatie */
         .flip-card {
@@ -369,7 +397,7 @@
 
             // NORMAAL SPEL SCHERM
             return (
-                <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative overflow-hidden">
+                <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative overflow-hidden" style={{position: 'relative', zIndex: 1}}>
 
                 {/* Titel */}
                 <h1 className="absolute top-4 text-2xl md:text-3xl font-bold text-[#8B1538] tracking-wide px-4 text-center">
@@ -423,17 +451,10 @@
                                 <div className="flip-card-front">
                                     <div className="bg-[#FAF0E6] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#C9A961] min-h-[450px] flex flex-col">
 
-                                        {/* Score teller bovenaan */}
-                                        <div className="text-center mb-5">
-                                            <div className="inline-block bg-[#D4AF37] text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-2xl md:text-3xl border-4 border-[#C9A961] shadow-lg">
-                                                {score}/3 goed
-                                            </div>
-                                        </div>
-
                                         {/* Vraagtype label */}
-                                        <div className="text-center mb-6">
+                                        <div className="text-center mb-6 mt-4">
                                             <span className={`inline-block px-5 py-2 rounded-full text-sm md:text-base font-bold uppercase shadow-md ${getTypeColor(currentQuestion.type)}`}>
-                                                [{currentQuestion.type}]
+                                                {currentQuestion.type}
                                             </span>
                                         </div>
 
@@ -472,7 +493,7 @@
                                         {/* Vraagtype label */}
                                         <div className="text-center mb-6">
                                             <span className={`inline-block px-5 py-2 rounded-full text-sm md:text-base font-bold uppercase shadow-md ${getTypeColor(currentQuestion.type)}`}>
-                                                [{currentQuestion.type}]
+                                                {currentQuestion.type}
                                             </span>
                                         </div>
 
@@ -487,17 +508,17 @@
                                         </div>
 
                                         {/* Goed/Fout knoppen */}
-                                        <div className="flex gap-3 md:gap-4 justify-center">
+                                        <div className="flex gap-5 md:gap-6 justify-center">
                                             <button
                                                 onClick={handleCorrect}
-                                                className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#6B8E23] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
+                                                className="px-4 md:px-5 py-2 md:py-3 bg-[#6B8E23] text-white rounded-xl font-bold text-base md:text-lg shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
                                                 onPointerDownCapture={(e) => e.stopPropagation()}
                                             >
                                                 ✅ Goed!
                                             </button>
                                             <button
                                                 onClick={handleWrong}
-                                                className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#9B2335] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                                                className="px-4 md:px-5 py-2 md:py-3 bg-[#9B2335] text-white rounded-xl font-bold text-base md:text-lg shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                                                 onPointerDownCapture={(e) => e.stopPropagation()}
                                             >
                                                 ❌ Fout
