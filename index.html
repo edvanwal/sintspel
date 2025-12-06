@@ -233,17 +233,20 @@
         let wrongSound = null;
         let timerSound = null;
         let timeUpSound = null;
+        let alarmClockSound = null;
 
         try {
             correctSound = new Audio('Goed.mp3');
             wrongSound = new Audio('Fout.mp3');
             timerSound = new Audio('Timer.mp3');
             timeUpSound = new Audio('TimeUp.mp3');
+            alarmClockSound = new Audio('Alarm_clock.mp3');
             // Preload de audio bestanden
             correctSound.load();
             wrongSound.load();
             timerSound.load();
             timeUpSound.load();
+            alarmClockSound.load();
             // Maak Timer.mp3 loopable
             timerSound.loop = true;
         } catch (error) {
@@ -321,6 +324,36 @@
             }
         };
 
+        // Functie om alarm geluid af te spelen
+        const playAlarmSound = (isMuted) => {
+            if (!alarmClockSound || isMuted) return;
+
+            try {
+                alarmClockSound.currentTime = 0;
+                const playPromise = alarmClockSound.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Alarm geluid kon niet worden afgespeeld:', error);
+                    });
+                }
+            } catch (error) {
+                console.log('Fout bij afspelen alarm geluid:', error);
+            }
+        };
+
+        // Functie om alarm geluid te stoppen
+        const stopAlarmSound = () => {
+            if (alarmClockSound) {
+                try {
+                    alarmClockSound.pause();
+                    alarmClockSound.currentTime = 0;
+                } catch (error) {
+                    console.log('Fout bij stoppen alarm geluid:', error);
+                }
+            }
+        };
+
         // Instellingen voor hoe ver je moet swipen
         const swipeConfidenceThreshold = 10000;
         const swipePower = (offset, velocity) => {
@@ -369,6 +402,14 @@
             const [timeLeft, setTimeLeft] = useState(null); // Timer countdown
             const [timerActive, setTimerActive] = useState(false); // Of timer actief is
 
+            // Game Alarm State
+            const [alarmMaxTime, setAlarmMaxTime] = useState(10); // Maximale tijd in minuten (default 10)
+            const [alarmTimeLeft, setAlarmTimeLeft] = useState(null); // Actuele countdown in seconden
+            const [alarmActive, setAlarmActive] = useState(false); // Of de wekker loopt
+            const [alarmPaused, setAlarmPaused] = useState(false); // Pauze status
+            const [alarmTriggered, setAlarmTriggered] = useState(false); // Of het alarm is afgegaan
+            const [gameLocked, setGameLocked] = useState(false); // Spel vergrendeld na alarm
+
             // Mute state - laad voorkeur uit localStorage
             const [isMuted, setIsMuted] = useState(() => {
                 try {
@@ -390,6 +431,7 @@
                         if (wrongSound) wrongSound.pause();
                         if (timerSound) timerSound.pause();
                         if (timeUpSound) timeUpSound.pause();
+                        if (alarmClockSound) alarmClockSound.pause();
                     }
                 } catch (error) {
                     console.log('LocalStorage niet beschikbaar');
@@ -435,6 +477,67 @@
                 }
             }, [timerActive, timeLeft, isMuted]);
 
+            // Game Alarm countdown logica - loopt door ongeacht navigatie
+            useEffect(() => {
+                if (alarmActive && !alarmPaused && alarmTimeLeft !== null && alarmTimeLeft > 0) {
+                    const alarmTimer = setTimeout(() => {
+                        setAlarmTimeLeft(alarmTimeLeft - 1);
+                    }, 1000);
+                    return () => clearTimeout(alarmTimer);
+                } else if (alarmActive && !alarmPaused && alarmTimeLeft === 0) {
+                    // ALARM AFGEGAAN!
+                    setAlarmActive(false);
+                    setAlarmTriggered(true);
+                    setGameLocked(true);
+                    playAlarmSound(isMuted);
+                }
+            }, [alarmActive, alarmPaused, alarmTimeLeft, isMuted]);
+
+            // Functie om game alarm te starten
+            const startGameAlarm = () => {
+                // Bereken random tijd tussen (max - 2 min) en max
+                // Zorg ervoor dat minimaal 3 minuten
+                const maxSeconds = Math.max(alarmMaxTime * 60, 180); // Minimaal 3 minuten (180 sec)
+                const minSeconds = Math.max(maxSeconds - 120, 180); // Minimaal 2 minuten minder, maar nooit onder 3 min
+
+                // Random tijd tussen min en max
+                const randomSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+
+                setAlarmTimeLeft(randomSeconds);
+                setAlarmActive(true);
+                setAlarmPaused(false);
+                setAlarmTriggered(false);
+            };
+
+            // Functie om game alarm te pauzeren
+            const pauseGameAlarm = () => {
+                setAlarmPaused(true);
+                stopAlarmSound(); // Stop geluid als het speelt
+            };
+
+            // Functie om game alarm te hervatten
+            const resumeGameAlarm = () => {
+                setAlarmPaused(false);
+            };
+
+            // Functie om game alarm te resetten
+            const resetGameAlarm = () => {
+                setAlarmActive(false);
+                setAlarmPaused(false);
+                setAlarmTimeLeft(null);
+                setAlarmTriggered(false);
+                setGameLocked(false);
+                stopAlarmSound();
+            };
+
+            // Functie om game alarm te stoppen (zonder alarm)
+            const stopGameAlarm = () => {
+                setAlarmActive(false);
+                setAlarmPaused(false);
+                setAlarmTimeLeft(null);
+                stopAlarmSound();
+            };
+
             // Functie om naar volgende/vorige te gaan
             const paginate = useCallback((newDirection) => {
                 setPage((prev) => [prev[0] + newDirection, newDirection]);
@@ -442,6 +545,8 @@
 
             // Handler voor flip
             const handleFlip = () => {
+                if (gameLocked) return; // Spel vergrendeld - geen actie
+
                 setIsFlipped(!isFlipped);
 
                 // Start timer als vraag een timeLimit heeft en we flippen naar antwoord
@@ -455,6 +560,8 @@
 
             // Handler voor GOED antwoord
             const handleCorrect = () => {
+                if (gameLocked) return; // Spel vergrendeld - geen actie
+
                 // Stop timer geluid als het nog speelt
                 if (timerSound) {
                     try {
@@ -483,6 +590,8 @@
 
             // Handler voor FOUT antwoord
             const handleWrong = () => {
+                if (gameLocked) return; // Spel vergrendeld - geen actie
+
                 // Stop timer geluid als het nog speelt
                 if (timerSound) {
                     try {
@@ -510,7 +619,7 @@
             // Toetsenbord bediening (Pijltjes en Spatie voor flip)
             useEffect(() => {
                 const handleKeyDown = (e) => {
-                    if (showTransition) return; // Geen toetsenbord tijdens transition scherm
+                    if (showTransition || gameLocked) return; // Geen toetsenbord tijdens transition of als spel locked is
 
                     if (e.key === 'ArrowLeft') {
                         paginate(-1);
@@ -523,7 +632,33 @@
                 };
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [paginate, showTransition, isFlipped]);
+            }, [paginate, showTransition, isFlipped, gameLocked]);
+
+            // GAME ALARM TRIGGERED - FULLSCREEN OVERLAY
+            if (alarmTriggered) {
+                return (
+                    <div className="flex flex-col items-center justify-center h-screen w-screen bg-[#A0253B] text-white p-8 relative">
+                        {/* Knipperende achtergrond animatie */}
+                        <div className="absolute inset-0 bg-[#8B1538] animate-pulse opacity-50"></div>
+
+                        <div className="relative z-10 flex flex-col items-center">
+                            <div className="text-9xl mb-8 animate-bounce">⏰</div>
+                            <h1 className="text-6xl md:text-7xl font-bold mb-6 text-center drop-shadow-2xl animate-pulse">
+                                TIJD IS OM!
+                            </h1>
+                            <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center drop-shadow-xl">
+                                WIE HEEFT HET PAKJE? 🎁
+                            </h2>
+                            <button
+                                className="px-12 py-6 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-2xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
+                                onClick={resetGameAlarm}
+                            >
+                                Reset Wekker
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
 
             // TRANSITION SCHERMEN
             if (showTransition === 'wrong') {
@@ -720,6 +855,103 @@
                     </AnimatePresence>
                 </div>
 
+                {/* WEKKER SECTIE - Linksonder */}
+                <div className="fixed bottom-4 left-4 z-40 bg-[#F5E6D3] rounded-xl shadow-2xl p-4 border-4 border-[#D4A574] max-w-xs">
+                    <h3 className="text-lg font-bold text-[#8B1538] mb-3 text-center">⏰ WEKKER</h3>
+
+                    {/* Als wekker NIET actief - Toon instelling en START knop */}
+                    {!alarmActive && !alarmTriggered && (
+                        <div className="space-y-3">
+                            <div>
+                                <label className="block text-xs font-bold text-[#8B6F47] mb-1">
+                                    Max. tijd (minuten):
+                                </label>
+                                <input
+                                    type="number"
+                                    min="3"
+                                    max="60"
+                                    value={alarmMaxTime}
+                                    onChange={(e) => setAlarmMaxTime(Math.max(3, parseInt(e.target.value) || 3))}
+                                    className="w-full px-3 py-2 border-2 border-[#D4A574] rounded-lg text-[#3E2723] font-bold text-center"
+                                />
+                                <p className="text-xs text-[#8B6F47] mt-1 italic">
+                                    (Wekker gaat af tussen {Math.max(alarmMaxTime - 2, 3)}-{alarmMaxTime} min)
+                                </p>
+                            </div>
+                            <button
+                                onClick={startGameAlarm}
+                                className="w-full px-4 py-3 bg-[#A0253B] text-white rounded-xl font-bold text-base shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                            >
+                                🚀 START WEKKER
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Als wekker ACTIEF - Toon timer en controle knoppen */}
+                    {alarmActive && !alarmTriggered && alarmTimeLeft !== null && (
+                        <div className="space-y-3">
+                            {/* Timer display - alleen zichtbaar laatste 60 seconden */}
+                            {alarmTimeLeft <= 60 && (
+                                <div className="text-center mb-3">
+                                    <div className={`inline-block px-4 py-3 rounded-lg font-bold shadow-xl border-2 transition-all ${
+                                        alarmTimeLeft <= 30
+                                            ? 'bg-[#A0253B] text-white border-[#A0253B] text-4xl animate-pulse scale-110'
+                                            : 'bg-[#A0253B] text-white border-[#A0253B] text-2xl'
+                                    }`}>
+                                        ⏱️ {Math.floor(alarmTimeLeft / 60)}:{String(alarmTimeLeft % 60).padStart(2, '0')}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Status tekst voor als timer nog niet zichtbaar is */}
+                            {alarmTimeLeft > 60 && (
+                                <div className="text-center mb-2">
+                                    <p className="text-sm font-bold text-[#6B8E23]">
+                                        ✅ Wekker loopt...
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Controle knoppen */}
+                            <div className="grid grid-cols-2 gap-2">
+                                {!alarmPaused ? (
+                                    <button
+                                        onClick={pauseGameAlarm}
+                                        className="px-3 py-2 bg-[#D4A574] text-gray-900 rounded-lg font-bold text-sm shadow-lg hover:bg-[#C4956A] transition-all"
+                                    >
+                                        ⏸️ Pauzeer
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={resumeGameAlarm}
+                                        className="px-3 py-2 bg-[#6B8E23] text-white rounded-lg font-bold text-sm shadow-lg hover:bg-[#556B1D] transition-all"
+                                    >
+                                        ▶️ Hervat
+                                    </button>
+                                )}
+                                <button
+                                    onClick={resetGameAlarm}
+                                    className="px-3 py-2 bg-[#8B6F47] text-white rounded-lg font-bold text-sm shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                >
+                                    🔄 Reset
+                                </button>
+                                <button
+                                    onClick={stopGameAlarm}
+                                    className="px-3 py-2 bg-[#A0253B] text-white rounded-lg font-bold text-sm shadow-lg hover:bg-[#8B1538] transition-all col-span-2"
+                                >
+                                    ⏹️ Stop
+                                </button>
+                            </div>
+
+                            {alarmPaused && (
+                                <p className="text-xs text-[#A0253B] text-center font-bold">
+                                    ⏸️ GEPAUZEERD
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </div>
+
                 <p className="mt-8 text-[#F5E6D3] text-xs md:text-sm font-medium drop-shadow">
                     Tip: Gebruik pijltjestoetsen, spatiebalk of swipe!
                 </p>
@@ -733,7 +965,7 @@
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 9999; background: rgba(139, 21, 56, 0.7); padding: 4px 8px; border-radius: 4px;">
-        v2.0 -
+        v3.0 -
     </div>
 
     <script>
@@ -749,7 +981,7 @@
 
             const versionElement = document.getElementById('version-info');
             if (versionElement) {
-                versionElement.textContent = `v2.0 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
+                versionElement.textContent = `v3.0 - ${dag} ${maand} ${jaar} ${uur}:${minuut}`;
             }
         }
 
