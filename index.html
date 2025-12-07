@@ -694,11 +694,11 @@ const VRAGEN = [
                     // Jong: 70% easy, 25% medium, 5% hard
                     weights = { easy: 0.70, medium: 0.25, hard: 0.05 };
                 } else if (playerAge <= 15) {
-                    // Middel: 20% easy, 60% medium, 20% hard
-                    weights = { easy: 0.20, medium: 0.60, hard: 0.20 };
+                    // Middel: 40% easy, 50% medium, 10% hard
+                    weights = { easy: 0.40, medium: 0.50, hard: 0.10 };
                 } else {
-                    // Ouder: 10% easy, 30% medium, 60% hard
-                    weights = { easy: 0.10, medium: 0.30, hard: 0.60 };
+                    // Ouder: 30% easy, 50% medium, 20% hard
+                    weights = { easy: 0.30, medium: 0.50, hard: 0.20 };
                 }
 
                 // Filter pool per difficulty
@@ -1649,7 +1649,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v10.0
+        v10.1
     </div>
 
 </body>
