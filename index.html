@@ -56,7 +56,7 @@
 
     <script type="text/babel">
         // ==========================================
-        // DE VRAGENLIJST (240 VRAGEN)
+        // DE VRAGENLIJST (255 VRAGEN)
         // ==========================================
 const VRAGEN = [
   // === KENNIS VRAGEN (76 stuks) ===
@@ -189,7 +189,7 @@ const VRAGEN = [
   { id: 125, type: "ACTIE", text: "Vingers Raden: Steek achter je rug een aantal vingers op (bv. 4). Je linkerbuurman moet raden hoeveel.", answer: "Geslaagd als je buurman het niet raadt (anders verlies je je beurt)." },
   { id: 126, type: "ACTIE", text: "De Staf Balans: Balanceer een pen of potlood (als 'Staf') rechtop op je wijsvinger terwijl je een rondje van 360° draait.", answer: "Geslaagd als de 'Staf' niet valt tijdens de volledige draai.", timeLimit: 5 },
 
-  // === ANDERE VRAAGTYPEN (114 stuks) ===
+  // === ANDERE VRAAGTYPEN (129 stuks) ===
   // --- 2025 Vragen (11 stuks) ---
   { id: 127, type: "2025", text: "Waar kwam de stoomboot dit jaar (2025) aan?", answer: "Op Texel (Oudeschild)" },
   { id: 128, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
@@ -320,7 +320,24 @@ const VRAGEN = [
   { id: 237, type: "WIE OF WAT BEN IK?", text: "Ik ben een geknutseld cadeau waar iets anders in verstopt zit. Wie of wat ben ik?", answer: "Een Surprise" },
   { id: 238, type: "WIE OF WAT BEN IK?", text: "Ik ben rood, lekker warm en ik hang om de schouders van Sinterklaas. Wie of wat ben ik?", answer: "De Mantel (of Tabberd)" },
   { id: 239, type: "WIE OF WAT BEN IK?", text: "Ik heb pannen, maar ik kan niet koken. Het paard loopt over mij heen. Wie of wat ben ik?", answer: "Het Dak" },
-  { id: 240, type: "WIE OF WAT BEN IK?", text: "Ik ben de leukste avond van het jaar, meestal op 5 december. Wie of wat ben ik?", answer: "Pakjesavond" }
+  { id: 240, type: "WIE OF WAT BEN IK?", text: "Ik ben de leukste avond van het jaar, meestal op 5 december. Wie of wat ben ik?", answer: "Pakjesavond" },
+
+  // --- SINTERKLAAS OF KERSTMAN? Vragen (15 stuks) ---
+  { id: 241, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie rijdt er op een wit schimmelpaard? Sinterklaas of de Kerstman?", answer: "Sinterklaas" },
+  { id: 242, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie heeft er vliegende rendieren voor zijn slee? Sinterklaas of de Kerstman?", answer: "De Kerstman" },
+  { id: 243, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie woont er op de Noordpool? Sinterklaas of de Kerstman?", answer: "De Kerstman" },
+  { id: 244, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie woont er in Spanje? Sinterklaas of de Kerstman?", answer: "Sinterklaas" },
+  { id: 245, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie draagt er een mijter (een hoge hoed met een kruis)? Sinterklaas of de Kerstman?", answer: "Sinterklaas" },
+  { id: 246, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie roept er altijd heel hard \"Ho Ho Ho\"? Sinterklaas of de Kerstman?", answer: "De Kerstman" },
+  { id: 247, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie heeft een lange, witte baard? Sinterklaas of de Kerstman?", answer: "Allebei" },
+  { id: 248, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie wordt er geholpen door kleine elfjes? Sinterklaas of de Kerstman?", answer: "De Kerstman" },
+  { id: 249, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie komt er aan met een Stoomboot? Sinterklaas of de Kerstman?", answer: "Sinterklaas" },
+  { id: 250, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie stopt de cadeautjes in je schoen? Sinterklaas of de Kerstman?", answer: "Sinterklaas" },
+  { id: 251, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie legt de cadeautjes onder een boom? Sinterklaas of de Kerstman?", answer: "De Kerstman" },
+  { id: 252, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie draagt er rode kleding? Sinterklaas of de Kerstman?", answer: "Allebei" },
+  { id: 253, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie heeft een gouden staf in zijn hand? Sinterklaas of de Kerstman?", answer: "Sinterklaas" },
+  { id: 254, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie draagt een slappe muts met een wit bolletje eraan? Sinterklaas of de Kerstman?", answer: "De Kerstman" },
+  { id: 255, type: "SINTERKLAAS OF KERSTMAN?", text: "Wie gaat er door de schoorsteen om binnen te komen? Sinterklaas of de Kerstman?", answer: "Allebei (Ze doen het allebei!)" }
 ];
 
         // ==========================================
@@ -1290,7 +1307,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v6.0 - Build: 7 dec 2025 00:15
+        v6.1 - Build: 7 dec 2025 00:15
     </div>
 
 </body>
