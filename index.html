@@ -56,7 +56,7 @@
 
     <script type="text/babel">
         // ==========================================
-        // DE VRAGENLIJST (165 VRAGEN)
+        // DE VRAGENLIJST (170 VRAGEN)
         // ==========================================
 const VRAGEN = [
   // === KENNIS VRAGEN (76 stuks) ===
@@ -189,7 +189,7 @@ const VRAGEN = [
   { id: 125, type: "ACTIE", text: "Vingers Raden: Steek achter je rug een aantal vingers op (bv. 4). Je linkerbuurman moet raden hoeveel.", answer: "Geslaagd als je buurman het niet raadt (anders verlies je je beurt)." },
   { id: 126, type: "ACTIE", text: "De Staf Balans: Balanceer een pen of potlood (als 'Staf') rechtop op je wijsvinger terwijl je een rondje van 360° draait.", answer: "Geslaagd als de 'Staf' niet valt tijdens de volledige draai.", timeLimit: 5 },
 
-  // === ANDERE VRAAGTYPEN (39 stuks) ===
+  // === ANDERE VRAAGTYPEN (44 stuks) ===
   // --- 2025 Vragen (11 stuks) ---
   { id: 127, type: "2025", text: "Waar kwam de stoomboot dit jaar (2025) aan?", answer: "Op Texel (Oudeschild)" },
   { id: 128, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
@@ -235,7 +235,14 @@ const VRAGEN = [
   { id: 162, type: "Instinker", text: "Stel: JIJ bent de kapitein van de Pakjesboot. Er zijn 50 Pieten aan boord en 1000 pakjes. Hoe oud is de kapitein?", answer: "Even oud als jij (Want jij bent de kapitein!)" },
   { id: 163, type: "Instinker", text: "Sinterklaas valt van een ladder van 10 meter hoog, maar hij heeft helemaal geen pijn. Hoe kan dat?", answer: "Hij stond op de onderste trede" },
   { id: 164, type: "Instinker", text: "Wat staat er precies in het midden van de 'Pakjesboot'?", answer: "De letter E (Bij het woord 'Pakjesboot')" },
-  { id: 165, type: "Instinker", text: "In welke maand eet Sinterklaas de minste pepernoten?", answer: "Februari (Dat is de kortste maand)" }
+  { id: 165, type: "Instinker", text: "In welke maand eet Sinterklaas de minste pepernoten?", answer: "Februari (Dat is de kortste maand)" },
+
+  // --- Woord hussel Vragen (5 stuks) ---
+  { id: 166, type: "Woord hussel", text: "Welk woord kan je maken van: RETMIJ?", answer: "MIJTER", timeLimit: 5 },
+  { id: 167, type: "Woord hussel", text: "Welk woord kan je maken van: JASPEN?", answer: "SPANJE", timeLimit: 5 },
+  { id: 168, type: "Woord hussel", text: "Welk woord kan je maken van: POORTPEEN?", answer: "PEPERNOOT", timeLimit: 5 },
+  { id: 169, type: "Woord hussel", text: "Welk woord kan je maken van: ZONLOSE?", answer: "OZOSNEL", timeLimit: 5 },
+  { id: 170, type: "Woord hussel", text: "Welk woord kan je maken van: PIERENMAS?", answer: "MARSEPEIN", timeLimit: 5 }
 ];
 
         // ==========================================
@@ -1205,7 +1212,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v3.8 - Build: 7 dec 2025 00:15
+        v3.9 - Build: 7 dec 2025 00:15
     </div>
 
 </body>
