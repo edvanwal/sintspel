@@ -748,33 +748,41 @@ const VRAGEN = [
                 const mediumQuestions = questionPool.filter(q => q.difficulty === 'medium');
                 const hardQuestions = questionPool.filter(q => q.difficulty === 'hard');
 
-                // Weighted random selectie
-                const rand = Math.random();
-                let selectedDifficulty;
+                // Bouw een gewogen mixed lijst met juiste ratio's
+                // Dit voorkomt herhalingen en houdt de difficulty balans
+                const weightedPool = [];
 
-                if (rand < weights.easy) {
-                    selectedDifficulty = 'easy';
-                } else if (rand < weights.easy + weights.medium) {
-                    selectedDifficulty = 'medium';
-                } else {
-                    selectedDifficulty = 'hard';
+                // Bereken target aantallen op basis van weights
+                const totalWeight = weights.easy + weights.medium + weights.hard;
+                const poolSize = questionPool.length;
+
+                const targetEasy = Math.round((weights.easy / totalWeight) * poolSize);
+                const targetMedium = Math.round((weights.medium / totalWeight) * poolSize);
+                const targetHard = Math.round((weights.hard / totalWeight) * poolSize);
+
+                // Voeg vragen toe tot target (of tot lijst leeg is)
+                for (let i = 0; i < targetEasy && i < easyQuestions.length; i++) {
+                    weightedPool.push(easyQuestions[i]);
+                }
+                for (let i = 0; i < targetMedium && i < mediumQuestions.length; i++) {
+                    weightedPool.push(mediumQuestions[i]);
+                }
+                for (let i = 0; i < targetHard && i < hardQuestions.length; i++) {
+                    weightedPool.push(hardQuestions[i]);
                 }
 
-                // Selecteer random vraag uit de gekozen difficulty
-                let candidates;
-                if (selectedDifficulty === 'easy' && easyQuestions.length > 0) {
-                    candidates = easyQuestions;
-                } else if (selectedDifficulty === 'medium' && mediumQuestions.length > 0) {
-                    candidates = mediumQuestions;
-                } else if (selectedDifficulty === 'hard' && hardQuestions.length > 0) {
-                    candidates = hardQuestions;
-                } else {
-                    // Fallback: gebruik hele pool als preferred difficulty niet beschikbaar
-                    candidates = questionPool;
+                // Als weighted pool te klein is, vul aan met resterende vragen
+                if (weightedPool.length < 10 && questionPool.length > weightedPool.length) {
+                    const remaining = questionPool.filter(q => !weightedPool.includes(q));
+                    weightedPool.push(...remaining);
                 }
 
-                const randomIndex = Math.floor(Math.random() * candidates.length);
-                return candidates[randomIndex];
+                // Gebruik weighted pool of fallback naar hele pool
+                const finalPool = weightedPool.length > 0 ? weightedPool : questionPool;
+
+                // Gebruik page index voor sequentiële selectie
+                const sequentialIndex = Math.abs(page % finalPool.length);
+                return finalPool[sequentialIndex];
             };
 
             // Zorg dat we oneindig door de vragen kunnen loopen
