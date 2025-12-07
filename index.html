@@ -1087,18 +1087,7 @@ const VRAGEN = [
 
                                 {/* ACHTERKANT VAN DE KAART */}
                                 <div className="flip-card-back">
-                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between relative">
-
-                                        {/* Timer (alleen als actief) - Rechtsboven */}
-                                        {timerActive && timeLeft !== null && (
-                                            <div className="absolute top-4 right-4">
-                                                <div className={`px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-3xl md:text-4xl shadow-2xl border-4 animate-pulse ${
-                                                    timeLeft <= 3 ? 'bg-[#A0253B] text-white border-[#A0253B]' : 'bg-[#6B8E23] text-white border-[#6B8E23]'
-                                                }`}>
-                                                    ⏰ {timeLeft}
-                                                </div>
-                                            </div>
-                                        )}
+                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between">
 
                                         {/* Score teller bovenaan */}
                                         <div className="text-center mb-3">
@@ -1107,12 +1096,16 @@ const VRAGEN = [
                                             </div>
                                         </div>
 
-                                        {/* Vraagtype label */}
-                                        <div className="text-center mb-3">
-                                            <span className={`inline-block px-8 py-3 rounded-full text-lg md:text-xl font-bold uppercase shadow-lg ${getTypeColor(currentQuestion.type)}`}>
-                                                {currentQuestion.type}
-                                            </span>
-                                        </div>
+                                        {/* Timer (alleen als actief) - Vervangt categorie label */}
+                                        {timerActive && timeLeft !== null && (
+                                            <div className="text-center mb-3">
+                                                <div className={`inline-block px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-3xl md:text-4xl shadow-2xl border-4 animate-pulse ${
+                                                    timeLeft <= 3 ? 'bg-[#A0253B] text-white border-[#A0253B]' : 'bg-[#6B8E23] text-white border-[#6B8E23]'
+                                                }`}>
+                                                    ⏰ {timeLeft}
+                                                </div>
+                                            </div>
+                                        )}
 
                                         {/* Antwoord */}
                                         <div className="flex-1 flex items-center justify-center mb-4">
@@ -1190,11 +1183,11 @@ const VRAGEN = [
                     </div>
                 )}
 
-                {/* Klein icoon om wekker te heropenen (rechtsboven) */}
+                {/* Klein icoon om wekker te heropenen (rechtsonder) */}
                 {showAlarmMinimized && (
                     <button
                         onClick={handleAlarmReopen}
-                        className="fixed top-4 right-4 z-40 bg-[#F5E6D3] text-[#8B1538] rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-110 border-4 border-[#D4A574]"
+                        className="fixed bottom-4 right-4 z-40 bg-[#F5E6D3] text-[#8B1538] rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-110 border-4 border-[#D4A574]"
                         aria-label="Open wekker"
                     >
                         <span className="text-3xl md:text-4xl">⏰</span>
@@ -1344,7 +1337,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v6.9 - 7 dec 2025 01:54
+        v7.0 - 7 dec 2025 02:00
     </div>
 
 </body>
