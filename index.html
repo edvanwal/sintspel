@@ -1365,34 +1365,34 @@ const VRAGEN = [
                 };
 
                 return (
-                    <div className="flex flex-col items-center justify-start min-h-[100dvh] w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white py-8 px-4 md:p-8 overflow-auto">
-                        <div className="text-9xl mb-8 animate-bounce">🏆</div>
+                    <div className="flex flex-col items-center justify-start min-h-[100dvh] w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white py-4 px-4 md:p-6 overflow-auto">
+                        <div className="text-6xl mb-4 animate-bounce">🏆</div>
 
-                        <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center drop-shadow-2xl">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center drop-shadow-2xl">
                             DE WINNAARS!
                         </h1>
 
                         {/* De Sinterklaas Winnaar */}
-                        <div className="bg-white text-[#8B1538] rounded-2xl p-8 mb-6 w-full max-w-lg shadow-2xl">
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-5 mb-4 w-full max-w-lg shadow-2xl">
                             <div className="text-center">
-                                <div className="text-6xl mb-3">🎅</div>
-                                <h2 className="text-2xl font-bold mb-2">DE SINTERKLAAS</h2>
-                                <p className="text-sm text-[#8B6F47] mb-3">(Heeft het pakje!)</p>
-                                <div className="text-4xl font-bold text-[#A0253B]">
+                                <div className="text-5xl mb-2">🎅</div>
+                                <h2 className="text-xl font-bold mb-2">DE SINTERKLAAS</h2>
+                                <p className="text-sm text-[#8B6F47] mb-2">(Heeft het pakje!)</p>
+                                <div className="text-3xl font-bold text-[#A0253B]">
                                     {sinterklaasWinner}
                                 </div>
                             </div>
                         </div>
 
                         {/* Slimme Piet Winnaar(s) */}
-                        <div className="bg-white text-[#8B1538] rounded-2xl p-8 mb-8 w-full max-w-lg shadow-2xl">
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-5 mb-4 w-full max-w-lg shadow-2xl">
                             <div className="text-center">
-                                <div className="text-6xl mb-3">🧠</div>
-                                <h2 className="text-2xl font-bold mb-2">
+                                <div className="text-5xl mb-2">🧠</div>
+                                <h2 className="text-xl font-bold mb-2">
                                     {slimmePieten.length > 1 ? 'SLIMME PIETEN' : 'SLIMME PIET'}
                                 </h2>
-                                <p className="text-sm text-[#8B6F47] mb-3">(Meeste vragen goed!)</p>
-                                <div className="text-4xl font-bold text-[#6B8E23]">
+                                <p className="text-sm text-[#8B6F47] mb-2">(Meeste vragen goed!)</p>
+                                <div className="text-3xl font-bold text-[#6B8E23]">
                                     {slimmePieten.join(' & ')}
                                 </div>
                                 <div className="text-lg text-[#8B6F47] mt-2">
@@ -1404,7 +1404,7 @@ const VRAGEN = [
                         {/* Speel Opnieuw Button */}
                         <button
                             onClick={handlePlayAgain}
-                            className="px-12 py-6 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-2xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
+                            className="px-8 py-4 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
                         >
                             🎮 Speel Opnieuw
                         </button>
@@ -1822,7 +1822,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v11.5
+        v11.6
     </div>
 
 </body>
