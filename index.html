@@ -346,6 +346,35 @@ const VRAGEN = [
         const { useState, useEffect, useCallback, useMemo } = React;
         const { motion, AnimatePresence } = window.Motion;
 
+        // ==========================================
+        // CONSTANTEN
+        // ==========================================
+
+        // Colors
+        const COLORS = {
+            primary: '#8B1538',
+            primaryDark: '#A0253B',
+            background: '#F5E6D3',
+            backgroundLight: '#FAF0E6',
+            border: '#D4A574',
+            borderDark: '#8B6F47',
+            text: '#3E2723',
+            textMuted: '#8B6F47',
+            success: '#6B8E23',
+            successDark: '#556B1D',
+            white: '#FFFFFF'
+        };
+
+        // Magic Numbers
+        const GAME_CONSTANTS = {
+            SWIPE_THRESHOLD: 10000,
+            ALARM_MIN_REDUCTION_SECONDS: 120, // 2 minuten
+            ALARM_MIN_THRESHOLD_SECONDS: 60,  // 1 minuut
+            ALARM_MAX_MINUTES: 60,
+            MIN_PLAYERS: 2,
+            MAX_QUESTION_DISPLAY_HEIGHT: 64 // voor overflow-y-auto
+        };
+
         // Audio setup - Laad geluidsbestanden
         let correctSound = null;
         let wrongSound = null;
@@ -692,6 +721,12 @@ const VRAGEN = [
                     return questionPool[questionIndex];
                 }
 
+                // Bounds check: zorg dat currentPlayerIndex geldig is
+                if (currentPlayerIndex < 0 || currentPlayerIndex >= players.length) {
+                    const questionIndex = Math.abs(page % questionPool.length);
+                    return questionPool[questionIndex];
+                }
+
                 const playerAge = players[currentPlayerIndex].age;
 
                 // Bepaal difficulty weights op basis van leeftijd
@@ -930,16 +965,19 @@ const VRAGEN = [
             // Handler voor flip
             const handleFlip = () => {
                 if (gameLocked) return; // Spel vergrendeld - geen actie
+                if (!currentQuestion) return; // Safety check
 
-                setIsFlipped(!isFlipped);
-
-                // Start timer als vraag een timeLimit heeft en we flippen naar antwoord
-                if (!isFlipped && currentQuestion.timeLimit) {
-                    setTimeLeft(currentQuestion.timeLimit);
-                    setTimerActive(true);
-                    // Start Timer.mp3 loop
-                    startTimerSound(isMuted);
-                }
+                setIsFlipped(prev => {
+                    const newFlipped = !prev;
+                    // Start timer als vraag een timeLimit heeft en we flippen naar antwoord
+                    if (!prev && currentQuestion.timeLimit) {
+                        setTimeLeft(currentQuestion.timeLimit);
+                        setTimerActive(true);
+                        // Start Timer.mp3 loop
+                        startTimerSound(isMuted);
+                    }
+                    return newFlipped;
+                });
             };
 
             // Handler voor GOED antwoord
@@ -1005,9 +1043,9 @@ const VRAGEN = [
                 setScore(0);
                 setIsFlipped(false);
 
-                // Roteer naar volgende speler (circularisch)
+                // Roteer naar volgende speler (circularisch) met functional update
                 if (players.length > 0) {
-                    setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+                    setCurrentPlayerIndex(prev => (prev + 1) % players.length);
                 }
 
                 paginate(1);
@@ -1166,8 +1204,9 @@ const VRAGEN = [
                                 {/* Formulier */}
                                 <div className="mb-4 space-y-3">
                                     <div>
-                                        <label className="block text-sm font-bold text-[#8B1538] mb-1">Naam:</label>
+                                        <label htmlFor="player-name-input" className="block text-sm font-bold text-[#8B1538] mb-1">Naam:</label>
                                         <input
+                                            id="player-name-input"
                                             type="text"
                                             value={playerName}
                                             onChange={(e) => setPlayerName(e.target.value)}
@@ -1177,8 +1216,9 @@ const VRAGEN = [
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-[#8B1538] mb-1">Leeftijd:</label>
+                                        <label htmlFor="player-age-input" className="block text-sm font-bold text-[#8B1538] mb-1">Leeftijd:</label>
                                         <input
+                                            id="player-age-input"
                                             type="number"
                                             value={playerAge}
                                             onChange={(e) => setPlayerAge(e.target.value)}
@@ -1192,6 +1232,7 @@ const VRAGEN = [
                                     <button
                                         onClick={handleAddPlayer}
                                         className="w-full px-6 py-3 bg-[#6B8E23] text-white rounded-lg font-bold text-lg shadow-lg hover:bg-[#556B1D] transition-all"
+                                        aria-label="Voeg speler toe aan de lijst"
                                     >
                                         ➕ Speler Toevoegen
                                     </button>
@@ -1302,13 +1343,21 @@ const VRAGEN = [
             // WINNAAR SELECTIE SCHERM (Fase 3)
             if (showWinnerSelection) {
                 const handleSelectWinner = (playerIndex) => {
+                    // Bounds check
+                    if (playerIndex < 0 || playerIndex >= players.length) return;
+
                     // Stel winnaar in
                     setSinterklaasWinner(players[playerIndex].name);
 
                     // Bereken Slimme Piet(en) - alle spelers met hoogste score
-                    const highestScore = Math.max(...players.map(p => p.score));
-                    const topPlayers = players.filter(p => p.score === highestScore);
-                    setSlimmePieten(topPlayers.map(p => p.name));
+                    // Empty array check: als geen players, skip
+                    if (players.length === 0) {
+                        setSlimmePieten([]);
+                    } else {
+                        const highestScore = Math.max(...players.map(p => p.score));
+                        const topPlayers = players.filter(p => p.score === highestScore);
+                        setSlimmePieten(topPlayers.map(p => p.name));
+                    }
 
                     // Ga naar finaal winnaar scherm
                     setShowWinnerSelection(false);
@@ -1573,6 +1622,7 @@ const VRAGEN = [
                                                 onClick={handleFlip}
                                                 className="w-full px-8 py-5 md:py-6 bg-[#A0253B] text-white rounded-xl font-bold text-xl md:text-2xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                                                 onPointerDownCapture={(e) => e.stopPropagation()}
+                                                aria-label="Bekijk het antwoord op de vraag"
                                             >
                                                 Bekijk antwoord
                                             </button>
@@ -1627,6 +1677,7 @@ const VRAGEN = [
                                                 onClick={handleWrong}
                                                 className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#A0253B] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                                                 onPointerDownCapture={(e) => e.stopPropagation()}
+                                                aria-label="Markeer antwoord als fout"
                                             >
                                                 ❌ Fout
                                             </button>
@@ -1634,6 +1685,7 @@ const VRAGEN = [
                                                 onClick={handleCorrect}
                                                 className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#6B8E23] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
                                                 onPointerDownCapture={(e) => e.stopPropagation()}
+                                                aria-label="Markeer antwoord als goed"
                                             >
                                                 ✅ Goed!
                                             </button>
@@ -1833,7 +1885,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v11.8
+        v12.0
     </div>
 
 </body>
