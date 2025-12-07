@@ -56,7 +56,7 @@
 
     <script type="text/babel">
         // ==========================================
-        // DE VRAGENLIJST (220 VRAGEN)
+        // DE VRAGENLIJST (240 VRAGEN)
         // ==========================================
 const VRAGEN = [
   // === KENNIS VRAGEN (76 stuks) ===
@@ -189,7 +189,7 @@ const VRAGEN = [
   { id: 125, type: "ACTIE", text: "Vingers Raden: Steek achter je rug een aantal vingers op (bv. 4). Je linkerbuurman moet raden hoeveel.", answer: "Geslaagd als je buurman het niet raadt (anders verlies je je beurt)." },
   { id: 126, type: "ACTIE", text: "De Staf Balans: Balanceer een pen of potlood (als 'Staf') rechtop op je wijsvinger terwijl je een rondje van 360° draait.", answer: "Geslaagd als de 'Staf' niet valt tijdens de volledige draai.", timeLimit: 5 },
 
-  // === ANDERE VRAAGTYPEN (94 stuks) ===
+  // === ANDERE VRAAGTYPEN (114 stuks) ===
   // --- 2025 Vragen (11 stuks) ---
   { id: 127, type: "2025", text: "Waar kwam de stoomboot dit jaar (2025) aan?", answer: "Op Texel (Oudeschild)" },
   { id: 128, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
@@ -298,7 +298,29 @@ const VRAGEN = [
   { id: 217, type: "WAAR OF NIET WAAR?", text: "Bliksem slaat nooit twee keer op dezelfde plek in. Is dat waar of niet waar?", answer: "NIET WAAR (Het slaat vaak meerdere keren in op hoge gebouwen)" },
   { id: 218, type: "WAAR OF NIET WAAR?", text: "Een blauwe vinvis heeft een hart zo groot als een auto. Is dat waar of niet waar?", answer: "WAAR" },
   { id: 219, type: "WAAR OF NIET WAAR?", text: "Marsepein wordt gemaakt van gemalen pinda's en suiker. Is dat waar of niet waar?", answer: "NIET WAAR (Van amandelen en suiker)" },
-  { id: 220, type: "WAAR OF NIET WAAR?", text: "Mensen en bananen hebben voor ongeveer 50% hetzelfde DNA. Is dat waar of niet waar?", answer: "WAAR" }
+  { id: 220, type: "WAAR OF NIET WAAR?", text: "Mensen en bananen hebben voor ongeveer 50% hetzelfde DNA. Is dat waar of niet waar?", answer: "WAAR" },
+
+  // --- WIE OF WAT BEN IK? Vragen (20 stuks) ---
+  { id: 221, type: "WIE OF WAT BEN IK?", text: "Ik ben van goud, ik ben lang en ik heb een mooie krul aan de bovenkant. Wie of wat ben ik?", answer: "De Staf" },
+  { id: 222, type: "WIE OF WAT BEN IK?", text: "Ik ben rood, ik sta op een hoofd en er staat een gouden kruis op mij. Wie of wat ben ik?", answer: "De Mijter" },
+  { id: 223, type: "WIE OF WAT BEN IK?", text: "Ik ben klein, bruin, knapperig en ik word door de kamer gegooid. Wie of wat ben ik?", answer: "Een Pepernoot (of Kruidnoot)" },
+  { id: 224, type: "WIE OF WAT BEN IK?", text: "Ik ben wit, ik heb vier benen en ik loop 's nachts over de daken. Wie of wat ben ik?", answer: "Het Paard (Ozosnel / Amerigo)" },
+  { id: 225, type: "WIE OF WAT BEN IK?", text: "Ik ben gemaakt van juten, ik ben loodzwaar en er zitten cadeautjes in. Wie of wat ben ik?", answer: "De Zak (van Sinterklaas)" },
+  { id: 226, type: "WIE OF WAT BEN IK?", text: "Ik ben groot, rood en dik. Alle namen van alle kinderen staan in mij geschreven. Wie of wat ben ik?", answer: "Het Grote Boek" },
+  { id: 227, type: "WIE OF WAT BEN IK?", text: "Je zet mij bij de haard of de verwarming, maar overdag loop je op mij. Wie of wat ben ik?", answer: "Je Schoen" },
+  { id: 228, type: "WIE OF WAT BEN IK?", text: "Ik ben gemaakt van chocolade. Ik ben er in de A, de B, de C... tot de Z! Wie of wat ben ik?", answer: "Een Chocoladeletter" },
+  { id: 229, type: "WIE OF WAT BEN IK?", text: "Ik ben een gat in het dak. Ik rook de hele dag, maar ik ben geen sigaret. Wie of wat ben ik?", answer: "De Schoorsteen" },
+  { id: 230, type: "WIE OF WAT BEN IK?", text: "Ik kom uit Spanje, ik vaar op het water en ik blaas stoom. Wie of wat ben ik?", answer: "De Stoomboot" },
+  { id: 231, type: "WIE OF WAT BEN IK?", text: "Ik ben oranje, gezond en het paard is dol op mij. Wie of wat ben ik?", answer: "Een Wortel" },
+  { id: 232, type: "WIE OF WAT BEN IK?", text: "Ik ben een warm land waar sinaasappels groeien en waar de Sint woont. Wie of wat ben ik?", answer: "Spanje" },
+  { id: 233, type: "WIE OF WAT BEN IK?", text: "Ik klim, ik klauter, ik maak grappen en ik strooi met snoep. Wie of wat ben ik?", answer: "Piet" },
+  { id: 234, type: "WIE OF WAT BEN IK?", text: "Ik ben wit, zoet en vierkant. Het paard snoept mij graag op. Wie of wat ben ik?", answer: "Een Suikerklontje" },
+  { id: 235, type: "WIE OF WAT BEN IK?", text: "Ik ben gemaakt van amandelen en suiker en ik ben heel zacht en zoet. Wie of wat ben ik?", answer: "Marsepein" },
+  { id: 236, type: "WIE OF WAT BEN IK?", text: "Ik rijm, ik sta op papier en ik word voorgelezen voordat je een pakje openmaakt. Wie of wat ben ik?", answer: "Een Gedicht" },
+  { id: 237, type: "WIE OF WAT BEN IK?", text: "Ik ben een geknutseld cadeau waar iets anders in verstopt zit. Wie of wat ben ik?", answer: "Een Surprise" },
+  { id: 238, type: "WIE OF WAT BEN IK?", text: "Ik ben rood, lekker warm en ik hang om de schouders van Sinterklaas. Wie of wat ben ik?", answer: "De Mantel (of Tabberd)" },
+  { id: 239, type: "WIE OF WAT BEN IK?", text: "Ik heb pannen, maar ik kan niet koken. Het paard loopt over mij heen. Wie of wat ben ik?", answer: "Het Dak" },
+  { id: 240, type: "WIE OF WAT BEN IK?", text: "Ik ben de leukste avond van het jaar, meestal op 5 december. Wie of wat ben ik?", answer: "Pakjesavond" }
 ];
 
         // ==========================================
@@ -1268,7 +1290,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v5.1 - Build: 7 dec 2025 00:15
+        v6.0 - Build: 7 dec 2025 00:15
     </div>
 
 </body>
