@@ -343,7 +343,7 @@ const VRAGEN = [
         // DE SPEL CODE
         // ==========================================
 
-        const { useState, useEffect, useCallback } = React;
+        const { useState, useEffect, useCallback, useMemo } = React;
         const { motion, AnimatePresence } = window.Motion;
 
         // Audio setup - Laad geluidsbestanden
@@ -742,7 +742,10 @@ const VRAGEN = [
             };
 
             // Zorg dat we oneindig door de vragen kunnen loopen
-            const currentQuestion = getQuestionForPlayer();
+            // useMemo zorgt dat de vraag NIET verandert bij elke re-render
+            const currentQuestion = useMemo(() => {
+                return getQuestionForPlayer();
+            }, [page, questionPool, players, currentPlayerIndex]);
 
             // Mark vraag als getoond wanneer deze wordt weergegeven
             useEffect(() => {
