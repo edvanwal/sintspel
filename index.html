@@ -56,7 +56,7 @@
 
     <script type="text/babel">
         // ==========================================
-        // DE VRAGENLIJST (190 VRAGEN)
+        // DE VRAGENLIJST (200 VRAGEN)
         // ==========================================
 const VRAGEN = [
   // === KENNIS VRAGEN (76 stuks) ===
@@ -189,7 +189,7 @@ const VRAGEN = [
   { id: 125, type: "ACTIE", text: "Vingers Raden: Steek achter je rug een aantal vingers op (bv. 4). Je linkerbuurman moet raden hoeveel.", answer: "Geslaagd als je buurman het niet raadt (anders verlies je je beurt)." },
   { id: 126, type: "ACTIE", text: "De Staf Balans: Balanceer een pen of potlood (als 'Staf') rechtop op je wijsvinger terwijl je een rondje van 360° draait.", answer: "Geslaagd als de 'Staf' niet valt tijdens de volledige draai.", timeLimit: 5 },
 
-  // === ANDERE VRAAGTYPEN (64 stuks) ===
+  // === ANDERE VRAAGTYPEN (74 stuks) ===
   // --- 2025 Vragen (11 stuks) ---
   { id: 127, type: "2025", text: "Waar kwam de stoomboot dit jaar (2025) aan?", answer: "Op Texel (Oudeschild)" },
   { id: 128, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
@@ -264,7 +264,19 @@ const VRAGEN = [
   { id: 187, type: "Dag Sinterklaasje", text: "Hoeveel snaren heeft een gitaar meestal?", answer: "6" },
   { id: 188, type: "Dag Sinterklaasje", text: "Welke beroemde tovenaar heeft een bliksemschicht-litteken op zijn voorhoofd?", answer: "Harry Potter" },
   { id: 189, type: "Dag Sinterklaasje", text: "Welke grote vogel steekt (volgens het gezegde) zijn kop in het zand?", answer: "De Struisvogel" },
-  { id: 190, type: "Dag Sinterklaasje", text: "Hoeveel dagen heeft een schrikkeljaar?", answer: "366 (Eentje meer dan normaal)" }
+  { id: 190, type: "Dag Sinterklaasje", text: "Hoeveel dagen heeft een schrikkeljaar?", answer: "366 (Eentje meer dan normaal)" },
+
+  // --- SNELLE JELLE Vragen (10 stuks) ---
+  { id: 191, type: "SNELLE JELLE", text: "Noem 3 Sinterklaasliedjes.", answer: "Zie ginds komt de stoomboot, Sinterklaas Kapoentje, De Zak van Sinterklaas...", timeLimit: 5 },
+  { id: 192, type: "SNELLE JELLE", text: "Noem 3 dingen die ROOD zijn.", answer: "Brandweerauto, tomaat, aardbei, de mantel van Sint...", timeLimit: 5 },
+  { id: 193, type: "SNELLE JELLE", text: "Noem 3 soorten strooigoed (snoep).", answer: "Pepernoten, kruidnoten, schuimpjes, taaitaai, marsepein...", timeLimit: 5 },
+  { id: 194, type: "SNELLE JELLE", text: "Noem 3 dingen die je op een pizza doet.", answer: "Kaas, salami, tomatensaus, ananas, ham...", timeLimit: 5 },
+  { id: 195, type: "SNELLE JELLE", text: "Noem 3 kledingstukken van Sinterklaas.", answer: "Mijter, mantel, handschoenen, ring, staf (is een accessoire, maar goed rekenen)...", timeLimit: 5 },
+  { id: 196, type: "SNELLE JELLE", text: "Noem 3 sporten met een bal.", answer: "Voetbal, tennis, basketbal, volleybal, hockey...", timeLimit: 5 },
+  { id: 197, type: "SNELLE JELLE", text: "Noem 3 apps op je telefoon.", answer: "WhatsApp, TikTok, Instagram, YouTube, Snapchat...", timeLimit: 5 },
+  { id: 198, type: "SNELLE JELLE", text: "Noem 3 dieren die eieren leggen.", answer: "Kip, eend, vogelbekdier, slang, krokodil, pinguïn...", timeLimit: 5 },
+  { id: 199, type: "SNELLE JELLE", text: "Noem 3 dingen die in een schooltas zitten.", answer: "Boeken, pennen, lunchtrommel, agenda, etui...", timeLimit: 5 },
+  { id: 200, type: "SNELLE JELLE", text: "Noem 3 smaken ijs.", answer: "Vanille, Aardbei, Chocolade, Banaan, Smurfen...", timeLimit: 5 }
 ];
 
         // ==========================================
@@ -1234,7 +1246,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v4.0 - Build: 7 dec 2025 00:15
+        v5.0 - Build: 7 dec 2025 00:15
     </div>
 
 </body>
