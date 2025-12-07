@@ -1140,6 +1140,18 @@ const VRAGEN = [
                         <div className="w-full max-w-2xl">
                             <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-4 md:p-6 border-4 border-[#D4A574]">
 
+                                {/* Info: Spelers kunnen aangepast worden */}
+                                {players.length > 0 && (
+                                    <div className="bg-[#6B8E23] text-white rounded-lg p-3 mb-4 text-center">
+                                        <p className="text-sm font-bold">
+                                            ✓ Je hebt {players.length} speler{players.length > 1 ? 's' : ''} uit de vorige ronde
+                                        </p>
+                                        <p className="text-xs mt-1">
+                                            Je kunt spelers toevoegen, verwijderen of gewoon doorgaan
+                                        </p>
+                                    </div>
+                                )}
+
                                 {/* Titel */}
                                 <div className="text-center mb-4">
                                     <div className="text-4xl mb-2">👥</div>
@@ -1351,50 +1363,50 @@ const VRAGEN = [
             // FINAAL WINNAAR SCHERM (Fase 3)
             if (showFinalWinners) {
                 const handlePlayAgain = () => {
-                    // Reset game voor nieuwe ronde
+                    // Reset game voor nieuwe ronde - ga naar spelers scherm
                     setShowFinalWinners(false);
                     setSinterklaasWinner(null);
-                    setSlimmePiet(null);
-                    setShowWelcome(true);
+                    setSlimmePieten([]);
+                    setShowPlayerRegistration(true);
                     setScore(0);
                     setCurrentPlayerIndex(0);
-                    // Reset player scores
+                    // Reset player scores maar behoud spelers
                     const resetPlayers = players.map(p => ({...p, score: 0}));
                     setPlayers(resetPlayers);
                 };
 
                 return (
-                    <div className="flex flex-col items-center justify-start min-h-[100dvh] w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white py-4 px-4 md:p-6 overflow-auto">
-                        <div className="text-6xl mb-4 animate-bounce">🏆</div>
+                    <div className="flex flex-col items-center justify-start min-h-[100dvh] w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white py-3 px-4 md:p-6 overflow-auto">
+                        <div className="text-5xl mb-3 animate-bounce">🏆</div>
 
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center drop-shadow-2xl">
+                        <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center drop-shadow-2xl">
                             DE WINNAARS!
                         </h1>
 
                         {/* De Sinterklaas Winnaar */}
-                        <div className="bg-white text-[#8B1538] rounded-2xl p-5 mb-4 w-full max-w-lg shadow-2xl">
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-4 mb-3 w-full max-w-lg shadow-2xl">
                             <div className="text-center">
-                                <div className="text-5xl mb-2">🎅</div>
-                                <h2 className="text-xl font-bold mb-2">DE SINTERKLAAS</h2>
-                                <p className="text-sm text-[#8B6F47] mb-2">(Heeft het pakje!)</p>
-                                <div className="text-3xl font-bold text-[#A0253B]">
+                                <div className="text-4xl mb-2">🎅</div>
+                                <h2 className="text-lg font-bold mb-1">DE SINTERKLAAS</h2>
+                                <p className="text-xs text-[#8B6F47] mb-2">(Heeft het pakje!)</p>
+                                <div className="text-2xl font-bold text-[#A0253B]">
                                     {sinterklaasWinner}
                                 </div>
                             </div>
                         </div>
 
                         {/* Slimme Piet Winnaar(s) */}
-                        <div className="bg-white text-[#8B1538] rounded-2xl p-5 mb-4 w-full max-w-lg shadow-2xl">
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-4 mb-3 w-full max-w-lg shadow-2xl">
                             <div className="text-center">
-                                <div className="text-5xl mb-2">🧠</div>
-                                <h2 className="text-xl font-bold mb-2">
+                                <div className="text-4xl mb-2">🧠</div>
+                                <h2 className="text-lg font-bold mb-1">
                                     {slimmePieten.length > 1 ? 'SLIMME PIETEN' : 'SLIMME PIET'}
                                 </h2>
-                                <p className="text-sm text-[#8B6F47] mb-2">(Meeste vragen goed!)</p>
-                                <div className="text-3xl font-bold text-[#6B8E23]">
+                                <p className="text-xs text-[#8B6F47] mb-2">(Meeste vragen goed!)</p>
+                                <div className="text-2xl font-bold text-[#6B8E23]">
                                     {slimmePieten.join(' & ')}
                                 </div>
-                                <div className="text-lg text-[#8B6F47] mt-2">
+                                <div className="text-base text-[#8B6F47] mt-1">
                                     {players.find(p => p.name === slimmePieten[0])?.score || 0} punten
                                 </div>
                             </div>
@@ -1403,7 +1415,7 @@ const VRAGEN = [
                         {/* Speel Opnieuw Button */}
                         <button
                             onClick={handlePlayAgain}
-                            className="px-8 py-4 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
+                            className="px-6 py-3 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-lg shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
                         >
                             🎮 Speel Opnieuw
                         </button>
@@ -1821,7 +1833,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v11.7
+        v11.8
     </div>
 
 </body>
