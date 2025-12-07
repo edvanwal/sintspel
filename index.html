@@ -1460,6 +1460,24 @@ const VRAGEN = [
                     </span>
                 </button>
 
+                {/* Kies Winnaar knop rechtsboven - alleen als players actief zijn */}
+                {players.length > 0 && (
+                    <button
+                        onClick={() => {
+                            setAlarmActive(false);
+                            setAlarmTriggered(false);
+                            setGameLocked(false);
+                            setShowWinnerSelection(true);
+                        }}
+                        className="fixed top-4 right-4 z-30 bg-[#6B8E23] text-white rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-2xl hover:bg-[#556B1D] transition-all transform hover:scale-110 border-3 border-[#D4A574]"
+                        aria-label="Stop spel en kies winnaar"
+                    >
+                        <span className="text-3xl md:text-4xl">
+                            🏆
+                        </span>
+                    </button>
+                )}
+
                 {/* Cadeau icoon en Titel */}
                 <div className="absolute top-4 flex flex-col items-center">
                     <div className="text-5xl md:text-6xl mb-2">🎁</div>
@@ -1777,20 +1795,6 @@ const VRAGEN = [
                                         >
                                             ⏹️ Stop
                                         </button>
-                                        {/* Stop Spel & Kies Winnaar - alleen als players actief zijn */}
-                                        {players.length > 0 && (
-                                            <button
-                                                onClick={() => {
-                                                    setAlarmActive(false);
-                                                    setAlarmTriggered(false);
-                                                    setGameLocked(false);
-                                                    setShowWinnerSelection(true);
-                                                }}
-                                                className="px-4 py-3 bg-[#6B8E23] text-white rounded-lg font-bold text-sm md:text-base shadow-lg hover:bg-[#556B1D] transition-all"
-                                            >
-                                                🏆 Kies Winnaar
-                                            </button>
-                                        )}
                                     </div>
 
                                     {alarmPaused && (
