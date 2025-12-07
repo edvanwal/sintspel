@@ -56,7 +56,7 @@
 
     <script type="text/babel">
         // ==========================================
-        // DE VRAGENLIJST (170 VRAGEN)
+        // DE VRAGENLIJST (190 VRAGEN)
         // ==========================================
 const VRAGEN = [
   // === KENNIS VRAGEN (76 stuks) ===
@@ -189,7 +189,7 @@ const VRAGEN = [
   { id: 125, type: "ACTIE", text: "Vingers Raden: Steek achter je rug een aantal vingers op (bv. 4). Je linkerbuurman moet raden hoeveel.", answer: "Geslaagd als je buurman het niet raadt (anders verlies je je beurt)." },
   { id: 126, type: "ACTIE", text: "De Staf Balans: Balanceer een pen of potlood (als 'Staf') rechtop op je wijsvinger terwijl je een rondje van 360° draait.", answer: "Geslaagd als de 'Staf' niet valt tijdens de volledige draai.", timeLimit: 5 },
 
-  // === ANDERE VRAAGTYPEN (44 stuks) ===
+  // === ANDERE VRAAGTYPEN (64 stuks) ===
   // --- 2025 Vragen (11 stuks) ---
   { id: 127, type: "2025", text: "Waar kwam de stoomboot dit jaar (2025) aan?", answer: "Op Texel (Oudeschild)" },
   { id: 128, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
@@ -242,7 +242,29 @@ const VRAGEN = [
   { id: 167, type: "Woord hussel", text: "Welk woord kan je maken van: JASPEN?", answer: "SPANJE", timeLimit: 5 },
   { id: 168, type: "Woord hussel", text: "Welk woord kan je maken van: POORTPEEN?", answer: "PEPERNOOT", timeLimit: 5 },
   { id: 169, type: "Woord hussel", text: "Welk woord kan je maken van: ZONLOSE?", answer: "OZOSNEL", timeLimit: 5 },
-  { id: 170, type: "Woord hussel", text: "Welk woord kan je maken van: PIERENMAS?", answer: "MARSEPEIN", timeLimit: 5 }
+  { id: 170, type: "Woord hussel", text: "Welk woord kan je maken van: PIERENMAS?", answer: "MARSEPEIN", timeLimit: 5 },
+
+  // --- Dag Sinterklaasje Vragen (20 stuks) ---
+  { id: 171, type: "Dag Sinterklaasje", text: "Hoeveel harten heeft een octopus?", answer: "3" },
+  { id: 172, type: "Dag Sinterklaasje", text: "Welk land heeft de vorm van een laars?", answer: "Italië" },
+  { id: 173, type: "Dag Sinterklaasje", text: "Is een tomaat groente of fruit?", answer: "Fruit" },
+  { id: 174, type: "Dag Sinterklaasje", text: "Hoeveel provincies heeft Nederland?", answer: "12" },
+  { id: 175, type: "Dag Sinterklaasje", text: "Wat is het snelste landdier ter wereld?", answer: "Het jachtluipaard (Cheeta)" },
+  { id: 176, type: "Dag Sinterklaasje", text: "Wat is het grootste dier ter wereld?", answer: "De Blauwe Vinvis" },
+  { id: 177, type: "Dag Sinterklaasje", text: "Wat is de grootste planeet van ons zonnestelsel?", answer: "Jupiter" },
+  { id: 178, type: "Dag Sinterklaasje", text: "Kun je niezen met je ogen open?", answer: "Nee (Dat is onmogelijk)" },
+  { id: 179, type: "Dag Sinterklaasje", text: "Hoeveel poten heeft een spin?", answer: "8" },
+  { id: 180, type: "Dag Sinterklaasje", text: "Wat is het hardste materiaal dat in de natuur voorkomt?", answer: "Diamant" },
+  { id: 181, type: "Dag Sinterklaasje", text: "Hoe heet de broer van Super Mario?", answer: "Luigi" },
+  { id: 182, type: "Dag Sinterklaasje", text: "Welk dier staat erom bekend dat het van kleur kan veranderen?", answer: "Een Kameleon" },
+  { id: 183, type: "Dag Sinterklaasje", text: "Bij hoeveel graden begint water te koken?", answer: "100 graden" },
+  { id: 184, type: "Dag Sinterklaasje", text: "Hoe heet de sneeuwpop uit de film Frozen?", answer: "Olaf" },
+  { id: 185, type: "Dag Sinterklaasje", text: "Welke taal spreken de mensen in Brazilië?", answer: "Portugees" },
+  { id: 186, type: "Dag Sinterklaasje", text: "Hoeveel poten heeft een insect (bijvoorbeeld een mier of vlieg)?", answer: "6 (Spinnen hebben er 8!)" },
+  { id: 187, type: "Dag Sinterklaasje", text: "Hoeveel snaren heeft een gitaar meestal?", answer: "6" },
+  { id: 188, type: "Dag Sinterklaasje", text: "Welke beroemde tovenaar heeft een bliksemschicht-litteken op zijn voorhoofd?", answer: "Harry Potter" },
+  { id: 189, type: "Dag Sinterklaasje", text: "Welke grote vogel steekt (volgens het gezegde) zijn kop in het zand?", answer: "De Struisvogel" },
+  { id: 190, type: "Dag Sinterklaasje", text: "Hoeveel dagen heeft een schrikkeljaar?", answer: "366 (Eentje meer dan normaal)" }
 ];
 
         // ==========================================
@@ -1212,7 +1234,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v3.9 - Build: 7 dec 2025 00:15
+        v4.0 - Build: 7 dec 2025 00:15
     </div>
 
 </body>
