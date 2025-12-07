@@ -694,6 +694,26 @@ const VRAGEN = [
                 setAlarmActive(true);
                 setAlarmPaused(false);
                 setAlarmTriggered(false);
+
+                // BELANGRIJK: Unlock Alarm_clock.mp3 voor iOS Safari
+                // iOS Safari blokkeert audio die niet direct door gebruikersactie wordt getriggerd
+                // Door Alarm_clock.mp3 hier kort af te spelen (en meteen te pauzeren),
+                // "unlocken" we het voor later automatisch afspelen
+                if (alarmClockSound && !isMuted) {
+                    console.log('🔓 Unlock Alarm_clock.mp3 voor iOS Safari...');
+                    alarmClockSound.volume = 0; // Tijdelijk volume op 0
+                    alarmClockSound.play()
+                        .then(() => {
+                            alarmClockSound.pause();
+                            alarmClockSound.currentTime = 0;
+                            alarmClockSound.volume = 1; // Volume terug naar normaal
+                            console.log('✅ Alarm_clock.mp3 unlocked voor iOS');
+                        })
+                        .catch(error => {
+                            console.log('⚠️ Alarm unlock gefaald:', error);
+                            alarmClockSound.volume = 1; // Volume toch terugzetten
+                        });
+                }
             };
 
             // Functie om game alarm te pauzeren
@@ -1316,7 +1336,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v6.3 - 7 dec 2025 01:32
+        v6.4 - 7 dec 2025 01:36
     </div>
 
 </body>
