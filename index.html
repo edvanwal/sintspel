@@ -1185,27 +1185,27 @@ const VRAGEN = [
                                     </button>
                                 </div>
 
-                                {/* Spelers Lijst */}
+                                {/* Spelers Lijst - Alleen laatst toegevoegd */}
                                 {players.length > 0 && (
                                     <div className="mb-4">
                                         <h3 className="text-lg font-bold text-[#8B1538] mb-2">
                                             Spelers ({players.length}):
                                         </h3>
-                                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                                            {[...players].reverse().map((player, reverseIndex) => {
-                                                const index = players.length - 1 - reverseIndex;
-                                                return (
-                                                <div key={index} className="flex items-center justify-between bg-white rounded-lg p-3 border-2 border-[#D4A574]">
+                                        {(() => {
+                                            const lastPlayer = players[players.length - 1];
+                                            const index = players.length - 1;
+                                            return (
+                                                <div className="flex items-center justify-between bg-white rounded-lg p-3 border-2 border-[#D4A574]">
                                                     <div className="flex items-center gap-3">
                                                         <span className="text-2xl font-bold text-[#A0253B]">
                                                             {index + 1}.
                                                         </span>
                                                         <div>
                                                             <div className="font-bold text-[#3E2723] text-lg">
-                                                                {player.name}
+                                                                {lastPlayer.name}
                                                             </div>
                                                             <div className="text-sm text-[#8B6F47]">
-                                                                {player.age} jaar
+                                                                {lastPlayer.age} jaar
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1216,9 +1216,8 @@ const VRAGEN = [
                                                         🗑️
                                                     </button>
                                                 </div>
-                                                );
-                                            })}
-                                        </div>
+                                            );
+                                        })()}
                                     </div>
                                 )}
 
@@ -1822,7 +1821,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v11.6
+        v11.7
     </div>
 
 </body>
