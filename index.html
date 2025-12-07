@@ -56,7 +56,7 @@
 
     <script type="text/babel">
         // ==========================================
-        // DE VRAGENLIJST (200 VRAGEN)
+        // DE VRAGENLIJST (220 VRAGEN)
         // ==========================================
 const VRAGEN = [
   // === KENNIS VRAGEN (76 stuks) ===
@@ -189,7 +189,7 @@ const VRAGEN = [
   { id: 125, type: "ACTIE", text: "Vingers Raden: Steek achter je rug een aantal vingers op (bv. 4). Je linkerbuurman moet raden hoeveel.", answer: "Geslaagd als je buurman het niet raadt (anders verlies je je beurt)." },
   { id: 126, type: "ACTIE", text: "De Staf Balans: Balanceer een pen of potlood (als 'Staf') rechtop op je wijsvinger terwijl je een rondje van 360° draait.", answer: "Geslaagd als de 'Staf' niet valt tijdens de volledige draai.", timeLimit: 5 },
 
-  // === ANDERE VRAAGTYPEN (74 stuks) ===
+  // === ANDERE VRAAGTYPEN (94 stuks) ===
   // --- 2025 Vragen (11 stuks) ---
   { id: 127, type: "2025", text: "Waar kwam de stoomboot dit jaar (2025) aan?", answer: "Op Texel (Oudeschild)" },
   { id: 128, type: "2025", text: "Wie presenteerde de landelijke intocht dit jaar op tv?", answer: "Merel Westrik" },
@@ -276,7 +276,29 @@ const VRAGEN = [
   { id: 197, type: "SNELLE JELLE", text: "Noem 3 apps op je telefoon.", answer: "WhatsApp, TikTok, Instagram, YouTube, Snapchat...", timeLimit: 5 },
   { id: 198, type: "SNELLE JELLE", text: "Noem 3 dieren die eieren leggen.", answer: "Kip, eend, vogelbekdier, slang, krokodil, pinguïn...", timeLimit: 5 },
   { id: 199, type: "SNELLE JELLE", text: "Noem 3 dingen die in een schooltas zitten.", answer: "Boeken, pennen, lunchtrommel, agenda, etui...", timeLimit: 5 },
-  { id: 200, type: "SNELLE JELLE", text: "Noem 3 smaken ijs.", answer: "Vanille, Aardbei, Chocolade, Banaan, Smurfen...", timeLimit: 5 }
+  { id: 200, type: "SNELLE JELLE", text: "Noem 3 smaken ijs.", answer: "Vanille, Aardbei, Chocolade, Banaan, Smurfen...", timeLimit: 5 },
+
+  // --- WAAR OF NIET WAAR? Vragen (20 stuks) ---
+  { id: 201, type: "WAAR OF NIET WAAR?", text: "Sinterklaas is getrouwd. Is dat waar of niet waar?", answer: "NIET WAAR (Hij is vrijgezel / een bisschop trouwt niet)" },
+  { id: 202, type: "WAAR OF NIET WAAR?", text: "Het oog van een struisvogel is groter dan zijn hersenen. Is dat waar of niet waar?", answer: "WAAR" },
+  { id: 203, type: "WAAR OF NIET WAAR?", text: "Pepernoten worden gemaakt van oud brood en speculaaskruiden. Is dat waar of niet waar?", answer: "NIET WAAR (Van roggebloem en anijs)" },
+  { id: 204, type: "WAAR OF NIET WAAR?", text: "Een slak kan wel 3 jaar achter elkaar slapen. Is dat waar of niet waar?", answer: "WAAR" },
+  { id: 205, type: "WAAR OF NIET WAAR?", text: "De Eiffeltoren staat in Londen. Is dat waar of niet waar?", answer: "NIET WAAR (In Parijs)" },
+  { id: 206, type: "WAAR OF NIET WAAR?", text: "Pinda's zijn eigenlijk geen noten, maar bonen (peulvruchten). Is dat waar of niet waar?", answer: "WAAR" },
+  { id: 207, type: "WAAR OF NIET WAAR?", text: "De staf van Sinterklaas is gemaakt van massief goud. Is dat waar of niet waar?", answer: "NIET WAAR (Dat zou veel te zwaar zijn om te tillen!)" },
+  { id: 208, type: "WAAR OF NIET WAAR?", text: "Een goudvis heeft een geheugen van maar 3 seconden. Is dat waar of niet waar?", answer: "NIET WAAR (Dat is een fabeltje, ze onthouden dingen maandenlang)" },
+  { id: 209, type: "WAAR OF NIET WAAR?", text: "Varkens kunnen fysiek niet omhoog naar de lucht kijken. Is dat waar of niet waar?", answer: "WAAR (Hun nek is daar niet voor gebouwd)" },
+  { id: 210, type: "WAAR OF NIET WAAR?", text: "Sinterklaas is ouder dan de Kerstman. Is dat waar of niet waar?", answer: "WAAR (Sint Nicolaas leefde in de 4e eeuw, de Kerstman is veel later bedacht)" },
+  { id: 211, type: "WAAR OF NIET WAAR?", text: "Je oren en je neus blijven je hele leven lang doorgroeien. Is dat waar of niet waar?", answer: "WAAR" },
+  { id: 212, type: "WAAR OF NIET WAAR?", text: "Haaien bestonden al voordat er bomen op aarde waren. Is dat waar of niet waar?", answer: "WAAR (Haaien zijn oeroud!)" },
+  { id: 213, type: "WAAR OF NIET WAAR?", text: "Je kunt je eigen elleboog likken. Is dat waar of niet waar?", answer: "NIET WAAR (Voor bijna iedereen onmogelijk... probeer maar!)" },
+  { id: 214, type: "WAAR OF NIET WAAR?", text: "In Spanje vieren de kinderen ook Pakjesavond op 5 december. Is dat waar of niet waar?", answer: "NIET WAAR (Zij krijgen cadeautjes met Driekoningen op 6 januari)" },
+  { id: 215, type: "WAAR OF NIET WAAR?", text: "Witte chocolade is officieel geen chocolade (omdat er geen cacaopoeder in zit). Is dat waar of niet waar?", answer: "WAAR (Er zit wel cacaoboter in, maar geen cacaomassa)" },
+  { id: 216, type: "WAAR OF NIET WAAR?", text: "De zon is eigenlijk een ster. Is dat waar of niet waar?", answer: "WAAR" },
+  { id: 217, type: "WAAR OF NIET WAAR?", text: "Bliksem slaat nooit twee keer op dezelfde plek in. Is dat waar of niet waar?", answer: "NIET WAAR (Het slaat vaak meerdere keren in op hoge gebouwen)" },
+  { id: 218, type: "WAAR OF NIET WAAR?", text: "Een blauwe vinvis heeft een hart zo groot als een auto. Is dat waar of niet waar?", answer: "WAAR" },
+  { id: 219, type: "WAAR OF NIET WAAR?", text: "Marsepein wordt gemaakt van gemalen pinda's en suiker. Is dat waar of niet waar?", answer: "NIET WAAR (Van amandelen en suiker)" },
+  { id: 220, type: "WAAR OF NIET WAAR?", text: "Mensen en bananen hebben voor ongeveer 50% hetzelfde DNA. Is dat waar of niet waar?", answer: "WAAR" }
 ];
 
         // ==========================================
@@ -1246,7 +1268,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v5.0 - Build: 7 dec 2025 00:15
+        v5.1 - Build: 7 dec 2025 00:15
     </div>
 
 </body>
