@@ -575,8 +575,48 @@ const VRAGEN = [
                 return shuffled;
             };
 
-            // Gerandomiseerde vragen - elke keer dat component mount wordt array geshuffeld
-            const [shuffledQuestions] = useState(() => shuffleArray(VRAGEN));
+            // ==========================================
+            // SMART QUESTION TRACKING SYSTEEM
+            // Vragen herhalen pas na alle 255 vragen
+            // Persisteert via localStorage, ook na refresh
+            // ==========================================
+
+            // Laad getoonde vraag IDs uit localStorage
+            const [shownQuestionIds, setShownQuestionIds] = useState(() => {
+                try {
+                    const saved = localStorage.getItem('sintspel-shown-questions');
+                    const ids = saved ? JSON.parse(saved) : [];
+                    console.log(`📚 ${ids.length} vragen al getoond`);
+                    return ids;
+                } catch (error) {
+                    console.log('⚠️ Kan localStorage niet laden');
+                    return [];
+                }
+            });
+
+            // Genereer vragenpool: alleen ongetoonde vragen (of reset als alles getoond is)
+            const generateQuestionPool = (shownIds) => {
+                const totalQuestions = VRAGEN.length;
+
+                // Als alle 255 vragen getoond zijn, reset en begin opnieuw
+                if (shownIds.length >= totalQuestions) {
+                    console.log('🔄 Alle 255 vragen zijn geweest! Start nieuwe ronde.');
+                    try {
+                        localStorage.setItem('sintspel-shown-questions', JSON.stringify([]));
+                    } catch (error) {
+                        console.log('⚠️ Kan localStorage niet updaten');
+                    }
+                    return shuffleArray(VRAGEN);
+                }
+
+                // Filter ongetoonde vragen en shuffle ze
+                const unshownQuestions = VRAGEN.filter(q => !shownIds.includes(q.id));
+                console.log(`✨ ${unshownQuestions.length} ongetoonde vragen beschikbaar van ${totalQuestions}`);
+                return shuffleArray(unshownQuestions);
+            };
+
+            // Question pool state - bevat alleen ongetoonde vragen
+            const [questionPool, setQuestionPool] = useState(() => generateQuestionPool(shownQuestionIds));
 
             const [[page, direction], setPage] = useState([0, 0]);
             const [score, setScore] = useState(0); // Score teller: 0, 1, 2, of 3
@@ -631,8 +671,52 @@ const VRAGEN = [
             };
 
             // Zorg dat we oneindig door de vragen kunnen loopen
-            const questionIndex = Math.abs(page % shuffledQuestions.length);
-            const currentQuestion = shuffledQuestions[questionIndex];
+            const questionIndex = Math.abs(page % questionPool.length);
+            const currentQuestion = questionPool[questionIndex];
+
+            // Mark vraag als getoond wanneer deze wordt weergegeven
+            useEffect(() => {
+                if (currentQuestion && !shownQuestionIds.includes(currentQuestion.id)) {
+                    const newShownIds = [...shownQuestionIds, currentQuestion.id];
+
+                    // Check of we alle vragen hebben gehad
+                    if (newShownIds.length >= VRAGEN.length) {
+                        console.log('🎉 Alle 255 vragen zijn nu getoond! Volgende keer start een nieuwe ronde.');
+                        // Reset gebeurt bij volgende mount/refresh via generateQuestionPool
+                    }
+
+                    setShownQuestionIds(newShownIds);
+                    try {
+                        localStorage.setItem('sintspel-shown-questions', JSON.stringify(newShownIds));
+                        console.log(`✅ Vraag ${currentQuestion.id} gemarkeerd als getoond (${newShownIds.length}/${VRAGEN.length})`);
+                    } catch (error) {
+                        console.log('⚠️ Kan localStorage niet updaten');
+                    }
+                }
+            }, [currentQuestion?.id]);
+
+            // Regenereer pool als alle vragen in huidige pool zijn getoond (mid-sessie refresh)
+            useEffect(() => {
+                // Check of alle vragen in de huidige pool getoond zijn
+                const allPoolQuestionsShown = questionPool.every(q => shownQuestionIds.includes(q.id));
+
+                if (allPoolQuestionsShown && shownQuestionIds.length < VRAGEN.length) {
+                    // Alle vragen in pool zijn getoond, maar er zijn nog ongetoonde vragen over
+                    console.log('🔄 Pool uitgeput, regenereren met resterende vragen...');
+                    const newPool = generateQuestionPool(shownQuestionIds);
+                    setQuestionPool(newPool);
+                } else if (shownQuestionIds.length >= VRAGEN.length && questionPool.length === VRAGEN.length) {
+                    // Alle 255 vragen zijn getoond, reset alles voor nieuwe ronde
+                    console.log('🔄 Alle vragen getoond! Reset voor nieuwe ronde.');
+                    setShownQuestionIds([]);
+                    try {
+                        localStorage.setItem('sintspel-shown-questions', JSON.stringify([]));
+                    } catch (error) {
+                        console.log('⚠️ Kan localStorage niet updaten');
+                    }
+                    setQuestionPool(shuffleArray(VRAGEN));
+                }
+            }, [shownQuestionIds, questionPool]);
 
             // Reset flip en timer bij nieuwe vraag
             useEffect(() => {
@@ -1338,7 +1422,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v7.5
+        v7.6
     </div>
 
 </body>
