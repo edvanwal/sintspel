@@ -1009,8 +1009,8 @@ const VRAGEN = [
 
                 {/* Cadeau icoon en Titel */}
                 <div className="absolute top-4 flex flex-col items-center">
-                    <div className="text-5xl md:text-6xl mb-2">🎁</div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-[#F5E6D3] tracking-wide px-4 text-center drop-shadow-lg">
+                    <div className="text-6xl md:text-7xl mb-2">🎁</div>
+                    <h1 className="text-5xl md:text-6xl font-bold text-[#F5E6D3] tracking-wide px-4 text-center drop-shadow-lg">
                         Sinterklaas Quiz
                     </h1>
                 </div>
@@ -1118,7 +1118,15 @@ const VRAGEN = [
                                         <div className="flex-1 flex items-center justify-center mb-4">
                                             <div className="text-center p-5 md:p-6 bg-[#F5E6D3] rounded-xl border-3 border-[#D4A574] shadow-inner">
                                                 <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">Antwoord:</p>
-                                                <p className="text-2xl md:text-3xl text-[#3E2723] font-bold leading-snug">
+                                                <p className={`text-[#3E2723] font-bold leading-snug ${
+                                                    currentQuestion.answer.length > 150
+                                                        ? 'text-base md:text-lg'
+                                                        : currentQuestion.answer.length > 100
+                                                        ? 'text-lg md:text-xl'
+                                                        : currentQuestion.answer.length > 60
+                                                        ? 'text-xl md:text-2xl'
+                                                        : 'text-2xl md:text-3xl'
+                                                }`}>
                                                     {currentQuestion.answer}
                                                 </p>
                                             </div>
@@ -1336,7 +1344,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v6.4 - 7 dec 2025 01:36
+        v6.5 - 7 dec 2025 01:40
     </div>
 
 </body>
