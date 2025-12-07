@@ -728,61 +728,11 @@ const VRAGEN = [
                     return questionPool[questionIndex];
                 }
 
-                const playerAge = players[currentPlayerIndex].age;
-
-                // Bepaal difficulty weights op basis van leeftijd
-                let weights;
-                if (playerAge < 10) {
-                    // Jong: 70% easy, 25% medium, 5% hard
-                    weights = { easy: 0.70, medium: 0.25, hard: 0.05 };
-                } else if (playerAge <= 15) {
-                    // Middel: 40% easy, 50% medium, 10% hard
-                    weights = { easy: 0.40, medium: 0.50, hard: 0.10 };
-                } else {
-                    // Ouder: 30% easy, 50% medium, 20% hard
-                    weights = { easy: 0.30, medium: 0.50, hard: 0.20 };
-                }
-
-                // Filter pool per difficulty
-                const easyQuestions = questionPool.filter(q => q.difficulty === 'easy');
-                const mediumQuestions = questionPool.filter(q => q.difficulty === 'medium');
-                const hardQuestions = questionPool.filter(q => q.difficulty === 'hard');
-
-                // Bouw een gewogen mixed lijst met juiste ratio's
-                // Dit voorkomt herhalingen en houdt de difficulty balans
-                const weightedPool = [];
-
-                // Bereken target aantallen op basis van weights
-                const totalWeight = weights.easy + weights.medium + weights.hard;
-                const poolSize = questionPool.length;
-
-                const targetEasy = Math.round((weights.easy / totalWeight) * poolSize);
-                const targetMedium = Math.round((weights.medium / totalWeight) * poolSize);
-                const targetHard = Math.round((weights.hard / totalWeight) * poolSize);
-
-                // Voeg vragen toe tot target (of tot lijst leeg is)
-                for (let i = 0; i < targetEasy && i < easyQuestions.length; i++) {
-                    weightedPool.push(easyQuestions[i]);
-                }
-                for (let i = 0; i < targetMedium && i < mediumQuestions.length; i++) {
-                    weightedPool.push(mediumQuestions[i]);
-                }
-                for (let i = 0; i < targetHard && i < hardQuestions.length; i++) {
-                    weightedPool.push(hardQuestions[i]);
-                }
-
-                // Als weighted pool te klein is, vul aan met resterende vragen
-                if (weightedPool.length < 10 && questionPool.length > weightedPool.length) {
-                    const remaining = questionPool.filter(q => !weightedPool.includes(q));
-                    weightedPool.push(...remaining);
-                }
-
-                // Gebruik weighted pool of fallback naar hele pool
-                const finalPool = weightedPool.length > 0 ? weightedPool : questionPool;
-
-                // Gebruik page index voor sequentiële selectie
-                const sequentialIndex = Math.abs(page % finalPool.length);
-                return finalPool[sequentialIndex];
+                // Simpel: ga gewoon sequentieel door de pool
+                // De pool is al geshuffled en bevat alleen ongetoonde vragen
+                // Geen extra filtering needed - dit voorkomt herhalingen
+                const questionIndex = Math.abs(page % questionPool.length);
+                return questionPool[questionIndex];
             };
 
             // Zorg dat we oneindig door de vragen kunnen loopen
