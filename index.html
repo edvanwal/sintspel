@@ -660,6 +660,7 @@ const VRAGEN = [
             const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // Huidige speler (0-based index)
             const [playerName, setPlayerName] = useState(''); // Tijdelijke input voor naam
             const [playerAge, setPlayerAge] = useState(''); // Tijdelijke input voor leeftijd
+            const [showAddPlayerForm, setShowAddPlayerForm] = useState(false); // Toon/verberg formulier voor nieuwe speler
 
             // Winner Selection State (Fase 3)
             const [showWinnerSelection, setShowWinnerSelection] = useState(false); // Winnaar selectie scherm
@@ -1159,7 +1160,12 @@ const VRAGEN = [
                         }]);
                         setPlayerName('');
                         setPlayerAge('');
+                        setShowAddPlayerForm(false); // Verberg formulier na toevoegen
                     }
+                };
+
+                const toggleAddPlayerForm = () => {
+                    setShowAddPlayerForm(!showAddPlayerForm);
                 };
 
                 const handleRemovePlayer = (index) => {
@@ -1194,71 +1200,92 @@ const VRAGEN = [
                                 <div className="text-center mb-4">
                                     <div className="text-4xl mb-2">👥</div>
                                     <h1 className="text-2xl md:text-3xl font-bold text-[#8B1538] mb-2">
-                                        Voeg Spelers Toe
+                                        Spelers Beheren
                                     </h1>
                                     <p className="text-sm md:text-base text-[#3E2723]">
-                                        Vul de namen en leeftijden in van links naar rechts
+                                        {players.length === 0 ? 'Voeg minimaal 2 spelers toe om te beginnen' : 'Beheer je spelers en start het spel'}
                                     </p>
                                 </div>
 
-                                {/* Formulier */}
-                                <div className="mb-4 space-y-3">
-                                    <div>
-                                        <label htmlFor="player-name-input" className="block text-sm font-bold text-[#8B1538] mb-1">Naam:</label>
-                                        <input
-                                            id="player-name-input"
-                                            type="text"
-                                            value={playerName}
-                                            onChange={(e) => setPlayerName(e.target.value)}
-                                            onKeyPress={(e) => e.key === 'Enter' && handleAddPlayer()}
-                                            placeholder="Bijv. Anna"
-                                            className="w-full px-4 py-3 rounded-lg border-2 border-[#D4A574] text-[#3E2723] text-lg focus:outline-none focus:border-[#8B1538]"
-                                        />
+                                {/* Knop om formulier te tonen/verbergen */}
+                                {!showAddPlayerForm && (
+                                    <div className="mb-4">
+                                        <button
+                                            onClick={toggleAddPlayerForm}
+                                            className="w-full px-6 py-3 bg-[#6B8E23] text-white rounded-lg font-bold text-lg shadow-lg hover:bg-[#556B1D] transition-all"
+                                        >
+                                            ➕ Speler Toevoegen
+                                        </button>
                                     </div>
-                                    <div>
-                                        <label htmlFor="player-age-input" className="block text-sm font-bold text-[#8B1538] mb-1">Leeftijd:</label>
-                                        <input
-                                            id="player-age-input"
-                                            type="number"
-                                            value={playerAge}
-                                            onChange={(e) => setPlayerAge(e.target.value)}
-                                            onKeyPress={(e) => e.key === 'Enter' && handleAddPlayer()}
-                                            placeholder="Bijv. 12"
-                                            min="1"
-                                            max="99"
-                                            className="w-full px-4 py-3 rounded-lg border-2 border-[#D4A574] text-[#3E2723] text-lg focus:outline-none focus:border-[#8B1538]"
-                                        />
-                                    </div>
-                                    <button
-                                        onClick={handleAddPlayer}
-                                        className="w-full px-6 py-3 bg-[#6B8E23] text-white rounded-lg font-bold text-lg shadow-lg hover:bg-[#556B1D] transition-all"
-                                        aria-label="Voeg speler toe aan de lijst"
-                                    >
-                                        ➕ Speler Toevoegen
-                                    </button>
-                                </div>
+                                )}
 
-                                {/* Spelers Lijst - Alleen laatst toegevoegd */}
+                                {/* Formulier - Conditioneel getoond */}
+                                {showAddPlayerForm && (
+                                    <div className="mb-4 space-y-3 bg-white rounded-lg p-4 border-2 border-[#6B8E23]">
+                                        <div>
+                                            <label htmlFor="player-name-input" className="block text-sm font-bold text-[#8B1538] mb-1">Naam:</label>
+                                            <input
+                                                id="player-name-input"
+                                                type="text"
+                                                value={playerName}
+                                                onChange={(e) => setPlayerName(e.target.value)}
+                                                onKeyPress={(e) => e.key === 'Enter' && handleAddPlayer()}
+                                                placeholder="Bijv. Anna"
+                                                className="w-full px-4 py-3 rounded-lg border-2 border-[#D4A574] text-[#3E2723] text-lg focus:outline-none focus:border-[#8B1538]"
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="player-age-input" className="block text-sm font-bold text-[#8B1538] mb-1">Leeftijd:</label>
+                                            <input
+                                                id="player-age-input"
+                                                type="number"
+                                                value={playerAge}
+                                                onChange={(e) => setPlayerAge(e.target.value)}
+                                                onKeyPress={(e) => e.key === 'Enter' && handleAddPlayer()}
+                                                placeholder="Bijv. 12"
+                                                min="1"
+                                                max="99"
+                                                className="w-full px-4 py-3 rounded-lg border-2 border-[#D4A574] text-[#3E2723] text-lg focus:outline-none focus:border-[#8B1538]"
+                                            />
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={handleAddPlayer}
+                                                className="flex-1 px-6 py-3 bg-[#6B8E23] text-white rounded-lg font-bold text-lg shadow-lg hover:bg-[#556B1D] transition-all"
+                                                aria-label="Voeg speler toe aan de lijst"
+                                            >
+                                                ✓ Toevoegen
+                                            </button>
+                                            <button
+                                                onClick={toggleAddPlayerForm}
+                                                className="px-6 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-lg shadow-lg hover:bg-[#6B5637] transition-all"
+                                            >
+                                                ✕ Annuleren
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Spelers Lijst - Alle spelers scrollbaar */}
                                 {players.length > 0 && (
                                     <div className="mb-4">
                                         <h3 className="text-lg font-bold text-[#8B1538] mb-2">
                                             Spelers ({players.length}):
                                         </h3>
-                                        {(() => {
-                                            const lastPlayer = players[players.length - 1];
-                                            const index = players.length - 1;
-                                            return (
-                                                <div className="flex items-center justify-between bg-white rounded-lg p-3 border-2 border-[#D4A574]">
+                                        <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2">
+                                            {players.map((player, index) => (
+                                                <div key={index} className="flex items-center justify-between bg-white rounded-lg p-3 border-2 border-[#D4A574]">
                                                     <div className="flex items-center gap-3">
                                                         <span className="text-2xl font-bold text-[#A0253B]">
                                                             {index + 1}.
                                                         </span>
                                                         <div>
                                                             <div className="font-bold text-[#3E2723] text-lg">
-                                                                {lastPlayer.name}
+                                                                {player.name}
                                                             </div>
                                                             <div className="text-sm text-[#8B6F47]">
-                                                                {lastPlayer.age} jaar
+                                                                {player.age} jaar
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1269,8 +1296,8 @@ const VRAGEN = [
                                                         🗑️
                                                     </button>
                                                 </div>
-                                            );
-                                        })()}
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
 
