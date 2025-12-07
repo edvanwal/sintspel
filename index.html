@@ -636,7 +636,7 @@ const VRAGEN = [
             const [showWinnerSelection, setShowWinnerSelection] = useState(false); // Winnaar selectie scherm
             const [showFinalWinners, setShowFinalWinners] = useState(false); // Finaal winnaar scherm
             const [sinterklaasWinner, setSinterklaasWinner] = useState(null); // Winnaar met pakje
-            const [slimmePiet, setSlimmePiet] = useState(null); // Hoogste score winnaar
+            const [slimmePieten, setSlimmePieten] = useState([]); // Hoogste score winnaars (kan meerdere zijn)
 
             // Game Alarm State
             const [alarmMaxTime, setAlarmMaxTime] = useState(10); // Maximale tijd in minuten (default 10)
@@ -1294,14 +1294,10 @@ const VRAGEN = [
                     // Stel winnaar in
                     setSinterklaasWinner(players[playerIndex].name);
 
-                    // Bereken Slimme Piet (hoogste score)
-                    let highestScorePlayer = players[0];
-                    players.forEach(player => {
-                        if (player.score > highestScorePlayer.score) {
-                            highestScorePlayer = player;
-                        }
-                    });
-                    setSlimmePiet(highestScorePlayer.name);
+                    // Bereken Slimme Piet(en) - alle spelers met hoogste score
+                    const highestScore = Math.max(...players.map(p => p.score));
+                    const topPlayers = players.filter(p => p.score === highestScore);
+                    setSlimmePieten(topPlayers.map(p => p.name));
 
                     // Ga naar finaal winnaar scherm
                     setShowWinnerSelection(false);
@@ -1369,7 +1365,7 @@ const VRAGEN = [
                 };
 
                 return (
-                    <div className="flex flex-col items-center justify-center h-screen w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white p-8">
+                    <div className="flex flex-col items-center justify-start min-h-[100dvh] w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white py-8 px-4 md:p-8 overflow-auto">
                         <div className="text-9xl mb-8 animate-bounce">🏆</div>
 
                         <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center drop-shadow-2xl">
@@ -1388,17 +1384,19 @@ const VRAGEN = [
                             </div>
                         </div>
 
-                        {/* Slimme Piet Winnaar */}
+                        {/* Slimme Piet Winnaar(s) */}
                         <div className="bg-white text-[#8B1538] rounded-2xl p-8 mb-8 w-full max-w-lg shadow-2xl">
                             <div className="text-center">
                                 <div className="text-6xl mb-3">🧠</div>
-                                <h2 className="text-2xl font-bold mb-2">SLIMME PIET</h2>
+                                <h2 className="text-2xl font-bold mb-2">
+                                    {slimmePieten.length > 1 ? 'SLIMME PIETEN' : 'SLIMME PIET'}
+                                </h2>
                                 <p className="text-sm text-[#8B6F47] mb-3">(Meeste vragen goed!)</p>
                                 <div className="text-4xl font-bold text-[#6B8E23]">
-                                    {slimmePiet}
+                                    {slimmePieten.join(' & ')}
                                 </div>
                                 <div className="text-lg text-[#8B6F47] mt-2">
-                                    {players.find(p => p.name === slimmePiet)?.score || 0} punten
+                                    {players.find(p => p.name === slimmePieten[0])?.score || 0} punten
                                 </div>
                             </div>
                         </div>
@@ -1824,7 +1822,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v11.1
+        v11.2
     </div>
 
 </body>
