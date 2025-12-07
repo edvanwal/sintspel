@@ -632,6 +632,12 @@ const VRAGEN = [
             const [playerName, setPlayerName] = useState(''); // Tijdelijke input voor naam
             const [playerAge, setPlayerAge] = useState(''); // Tijdelijke input voor leeftijd
 
+            // Winner Selection State (Fase 3)
+            const [showWinnerSelection, setShowWinnerSelection] = useState(false); // Winnaar selectie scherm
+            const [showFinalWinners, setShowFinalWinners] = useState(false); // Finaal winnaar scherm
+            const [sinterklaasWinner, setSinterklaasWinner] = useState(null); // Winnaar met pakje
+            const [slimmePiet, setSlimmePiet] = useState(null); // Hoogste score winnaar
+
             // Game Alarm State
             const [alarmMaxTime, setAlarmMaxTime] = useState(10); // Maximale tijd in minuten (default 10)
             const [alarmTimeLeft, setAlarmTimeLeft] = useState(null); // Actuele countdown in seconden
@@ -1233,6 +1239,14 @@ const VRAGEN = [
 
             // GAME ALARM TRIGGERED - FULLSCREEN OVERLAY
             if (alarmTriggered) {
+                const handleStopGame = () => {
+                    // Stop alarm en ga naar winnaar selectie
+                    setAlarmTriggered(false);
+                    setAlarmActive(false);
+                    setGameLocked(false);
+                    setShowWinnerSelection(true);
+                };
+
                 return (
                     <div className="flex flex-col items-center justify-center h-screen w-screen bg-[#A0253B] text-white p-8 relative">
                         {/* Knipperende achtergrond animatie */}
@@ -1246,13 +1260,150 @@ const VRAGEN = [
                             <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center drop-shadow-xl">
                                 WIE HEEFT HET PAKJE? 🎁
                             </h2>
-                            <button
-                                className="px-12 py-6 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-2xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
-                                onClick={resetGameAlarm}
-                            >
-                                Reset Wekker
-                            </button>
+
+                            {/* Toon Stop Spel knop als players actief zijn */}
+                            {players.length > 0 ? (
+                                <button
+                                    className="px-12 py-6 bg-[#6B8E23] text-white rounded-full font-bold text-2xl shadow-2xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
+                                    onClick={handleStopGame}
+                                >
+                                    🏆 Stop Spel & Kies Winnaar
+                                </button>
+                            ) : (
+                                <button
+                                    className="px-12 py-6 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-2xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
+                                    onClick={resetGameAlarm}
+                                >
+                                    Reset Wekker
+                                </button>
+                            )}
                         </div>
+                    </div>
+                );
+            }
+
+            // WINNAAR SELECTIE SCHERM (Fase 3)
+            if (showWinnerSelection) {
+                const handleSelectWinner = (playerIndex) => {
+                    // Stel winnaar in
+                    setSinterklaasWinner(players[playerIndex].name);
+
+                    // Bereken Slimme Piet (hoogste score)
+                    let highestScorePlayer = players[0];
+                    players.forEach(player => {
+                        if (player.score > highestScorePlayer.score) {
+                            highestScorePlayer = player;
+                        }
+                    });
+                    setSlimmePiet(highestScorePlayer.name);
+
+                    // Ga naar finaal winnaar scherm
+                    setShowWinnerSelection(false);
+                    setShowFinalWinners(true);
+                };
+
+                return (
+                    <div className="flex flex-col items-center justify-start pt-8 md:pt-12 min-h-screen w-screen bg-[#A0253B] text-white py-3 px-4 md:p-6 relative overflow-auto">
+                        <div className="w-full max-w-2xl">
+                            <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574]">
+
+                                {/* Titel */}
+                                <div className="text-center mb-6">
+                                    <div className="text-6xl mb-3">🎁</div>
+                                    <h1 className="text-3xl md:text-4xl font-bold text-[#8B1538] mb-2">
+                                        Wie Heeft Het Pakje?
+                                    </h1>
+                                    <p className="text-sm md:text-base text-[#3E2723]">
+                                        Klik op de speler die het pakje heeft
+                                    </p>
+                                </div>
+
+                                {/* Spelers Lijst */}
+                                <div className="space-y-3">
+                                    {players.map((player, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => handleSelectWinner(index)}
+                                            className="w-full flex items-center justify-between bg-white hover:bg-[#FAF0E6] rounded-xl p-4 border-3 border-[#D4A574] shadow-lg transition-all transform hover:scale-105"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-3xl">👤</span>
+                                                <div className="text-left">
+                                                    <div className="font-bold text-[#3E2723] text-xl">
+                                                        {player.name}
+                                                    </div>
+                                                    <div className="text-sm text-[#8B6F47]">
+                                                        Score: {player.score} punten
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="text-3xl">🎁</div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // FINAAL WINNAAR SCHERM (Fase 3)
+            if (showFinalWinners) {
+                const handlePlayAgain = () => {
+                    // Reset game voor nieuwe ronde
+                    setShowFinalWinners(false);
+                    setSinterklaasWinner(null);
+                    setSlimmePiet(null);
+                    setShowWelcome(true);
+                    setScore(0);
+                    setCurrentPlayerIndex(0);
+                    // Reset player scores
+                    const resetPlayers = players.map(p => ({...p, score: 0}));
+                    setPlayers(resetPlayers);
+                };
+
+                return (
+                    <div className="flex flex-col items-center justify-center h-screen w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white p-8">
+                        <div className="text-9xl mb-8 animate-bounce">🏆</div>
+
+                        <h1 className="text-5xl md:text-6xl font-bold mb-12 text-center drop-shadow-2xl">
+                            DE WINNAARS!
+                        </h1>
+
+                        {/* De Sinterklaas Winnaar */}
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-8 mb-6 w-full max-w-lg shadow-2xl">
+                            <div className="text-center">
+                                <div className="text-6xl mb-3">🎅</div>
+                                <h2 className="text-2xl font-bold mb-2">DE SINTERKLAAS</h2>
+                                <p className="text-sm text-[#8B6F47] mb-3">(Heeft het pakje!)</p>
+                                <div className="text-4xl font-bold text-[#A0253B]">
+                                    {sinterklaasWinner}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Slimme Piet Winnaar */}
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-8 mb-8 w-full max-w-lg shadow-2xl">
+                            <div className="text-center">
+                                <div className="text-6xl mb-3">🧠</div>
+                                <h2 className="text-2xl font-bold mb-2">SLIMME PIET</h2>
+                                <p className="text-sm text-[#8B6F47] mb-3">(Meeste vragen goed!)</p>
+                                <div className="text-4xl font-bold text-[#6B8E23]">
+                                    {slimmePiet}
+                                </div>
+                                <div className="text-lg text-[#8B6F47] mt-2">
+                                    {players.find(p => p.name === slimmePiet)?.score || 0} punten
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Speel Opnieuw Button */}
+                        <button
+                            onClick={handlePlayAgain}
+                            className="px-12 py-6 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-2xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
+                        >
+                            🎮 Speel Opnieuw
+                        </button>
                     </div>
                 );
             }
@@ -1649,7 +1800,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v10.1
+        v11.0
     </div>
 
 </body>
