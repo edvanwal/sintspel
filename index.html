@@ -1777,6 +1777,20 @@ const VRAGEN = [
                                         >
                                             ⏹️ Stop
                                         </button>
+                                        {/* Stop Spel & Kies Winnaar - alleen als players actief zijn */}
+                                        {players.length > 0 && (
+                                            <button
+                                                onClick={() => {
+                                                    setAlarmActive(false);
+                                                    setAlarmTriggered(false);
+                                                    setGameLocked(false);
+                                                    setShowWinnerSelection(true);
+                                                }}
+                                                className="px-4 py-3 bg-[#6B8E23] text-white rounded-lg font-bold text-sm md:text-base shadow-lg hover:bg-[#556B1D] transition-all"
+                                            >
+                                                🏆 Kies Winnaar
+                                            </button>
+                                        )}
                                     </div>
 
                                     {alarmPaused && (
