@@ -204,6 +204,18 @@ function FlashCardQuiz() {
                         console.log('Fout bij stoppen timer geluid:', error);
                     }
                 }
+
+                // Cleanup: stop audio bij component unmount
+                return () => {
+                    if (timerSound) {
+                        try {
+                            timerSound.pause();
+                            timerSound.currentTime = 0;
+                        } catch (error) {
+                            console.log('Cleanup: Fout bij stoppen timer geluid:', error);
+                        }
+                    }
+                };
             }, [page]);
 
             // Timer countdown logica
@@ -219,6 +231,26 @@ function FlashCardQuiz() {
                     // Stop Timer.mp3 en speel TimeUp.mp3 af
                     stopTimerAndPlayTimeUp(isMuted);
                 }
+
+                // Cleanup: stop alle timer audio bij unmount
+                return () => {
+                    if (timerSound) {
+                        try {
+                            timerSound.pause();
+                            timerSound.currentTime = 0;
+                        } catch (error) {
+                            console.log('Cleanup: Fout bij stoppen timer geluid:', error);
+                        }
+                    }
+                    if (timeUpSound) {
+                        try {
+                            timeUpSound.pause();
+                            timeUpSound.currentTime = 0;
+                        } catch (error) {
+                            console.log('Cleanup: Fout bij stoppen timeup geluid:', error);
+                        }
+                    }
+                };
             }, [timerActive, timeLeft, isMuted]);
 
             // Game Alarm countdown logica - loopt door ongeacht navigatie
@@ -235,6 +267,18 @@ function FlashCardQuiz() {
                     setGameLocked(true);
                     playAlarmSound(isMuted);
                 }
+
+                // Cleanup: stop alarm audio bij unmount
+                return () => {
+                    if (alarmClockSound) {
+                        try {
+                            alarmClockSound.pause();
+                            alarmClockSound.currentTime = 0;
+                        } catch (error) {
+                            console.log('Cleanup: Fout bij stoppen alarm geluid:', error);
+                        }
+                    }
+                };
             }, [alarmActive, alarmPaused, alarmTimeLeft, isMuted]);
 
             // Functie om game alarm te starten
