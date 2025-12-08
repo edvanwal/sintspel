@@ -736,6 +736,7 @@ function FlashCardQuiz() {
                     if (players.length >= 2) {
                         setShowPlayerRegistration(false);
                         setCurrentPlayerIndex(0);
+                        setIsFlipped(false); // Reset card to show question side
                     }
                 };
 
