@@ -6,6 +6,159 @@
 const { useState, useEffect, useCallback, useMemo } = React;
 const { motion, AnimatePresence } = window.Motion;
 
+// ==========================================
+// SUB-COMPONENTEN - HERBRUIKBAAR
+// ==========================================
+
+// Component: Speler Info Display
+function PlayerInfo({ player, index, isActive }) {
+    return (
+        <div className="text-center mb-2">
+            <div className="text-sm md:text-base text-[#8B6F47] font-bold mb-1">Beurt van:</div>
+            <div className="inline-block bg-[#A0253B] text-white px-6 py-2 rounded-full font-bold text-xl md:text-2xl shadow-lg">
+                👤 {player.name}
+            </div>
+            <div className="text-xs md:text-sm text-[#8B6F47] mt-1">
+                Score: {player.score} punten
+            </div>
+        </div>
+    );
+}
+
+// Component: Vraag Type Label
+function QuestionTypeLabel({ type }) {
+    return (
+        <div className="text-center mb-4">
+            <span className={`inline-block px-8 py-3 rounded-full text-lg md:text-xl font-bold uppercase shadow-lg ${getTypeColor(type)}`}>
+                {type}
+            </span>
+        </div>
+    );
+}
+
+// Component: Vraag Tekst met dynamische font size
+function QuestionText({ text }) {
+    const fontSize = text.length > 150
+        ? 'text-lg md:text-xl'
+        : text.length > 100
+        ? 'text-xl md:text-2xl'
+        : 'text-2xl md:text-3xl';
+
+    return (
+        <div className="flex-1 flex items-center justify-center mb-4">
+            <h2 className={`font-extrabold text-[#3E2723] text-center select-none leading-tight px-1 ${fontSize}`}>
+                {text}
+            </h2>
+        </div>
+    );
+}
+
+// Component: Antwoord Tekst met dynamische font size
+function AnswerText({ answer }) {
+    const fontSize = answer.length > 150
+        ? 'text-base md:text-lg'
+        : answer.length > 100
+        ? 'text-lg md:text-xl'
+        : answer.length > 60
+        ? 'text-xl md:text-2xl'
+        : 'text-2xl md:text-3xl';
+
+    return (
+        <div className="flex-1 flex items-center justify-center mb-4">
+            <div className="text-center p-5 md:p-6 bg-[#F5E6D3] rounded-xl border-3 border-[#D4A574] shadow-inner">
+                <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">Antwoord:</p>
+                <p className={`text-[#3E2723] font-bold leading-snug ${fontSize}`}>
+                    {answer}
+                </p>
+            </div>
+        </div>
+    );
+}
+
+// Component: Timer Display
+function TimerDisplay({ timeLeft }) {
+    if (timeLeft === null) return null;
+
+    return (
+        <div className="text-center mb-3">
+            <div className={`inline-block px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-3xl md:text-4xl shadow-2xl border-4 animate-pulse ${
+                timeLeft <= 3 ? 'bg-[#A0253B] text-white border-[#A0253B]' : 'bg-[#6B8E23] text-white border-[#6B8E23]'
+            }`}>
+                ⏰ {timeLeft}
+            </div>
+        </div>
+    );
+}
+
+// Component: Score Display
+function ScoreDisplay({ score, total = 3 }) {
+    return (
+        <div className="text-center mb-3">
+            <div className="inline-block bg-[#D4A574] text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-2xl md:text-3xl border-4 border-[#D4A574] shadow-lg">
+                {score}/{total} goed
+            </div>
+        </div>
+    );
+}
+
+// Component: Vraag Kaart (Voorkant)
+function QuestionCard({ question, player, onFlip }) {
+    return (
+        <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between">
+            {player && <PlayerInfo player={player} />}
+            <QuestionTypeLabel type={question.type} />
+            <QuestionText text={question.text} />
+            <div className="text-center">
+                <button
+                    onClick={onFlip}
+                    className="w-full px-8 py-5 md:py-6 bg-[#A0253B] text-white rounded-xl font-bold text-xl md:text-2xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                    onPointerDownCapture={(e) => e.stopPropagation()}
+                    aria-label="Bekijk het antwoord op de vraag"
+                >
+                    Bekijk antwoord
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// Component: Antwoord Kaart (Achterkant)
+function AnswerCard({ question, score, timeLeft, timerActive, onCorrect, onWrong, onNext }) {
+    return (
+        <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between">
+            <ScoreDisplay score={score} total={3} />
+            {timerActive && <TimerDisplay timeLeft={timeLeft} />}
+            <AnswerText answer={question.answer} />
+            <div className="flex gap-4 md:gap-5 justify-center">
+                <button
+                    onClick={onWrong}
+                    className="flex-1 px-8 py-4 md:py-5 bg-[#A0253B] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
+                    onPointerDownCapture={(e) => e.stopPropagation()}
+                    aria-label="Antwoord was fout"
+                >
+                    ❌ Fout
+                </button>
+                <button
+                    onClick={onCorrect}
+                    className="flex-1 px-8 py-4 md:py-5 bg-[#6B8E23] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
+                    onPointerDownCapture={(e) => e.stopPropagation()}
+                    aria-label="Antwoord was goed"
+                >
+                    ✅ Goed
+                </button>
+            </div>
+            {onNext && (
+                <button
+                    onClick={onNext}
+                    className="mt-3 w-full px-6 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-base shadow-lg hover:bg-[#7A5F3C] transition-all"
+                >
+                    Volgende speler ➜
+                </button>
+            )}
+        </div>
+    );
+}
+
 function FlashCardQuiz() {
 
             // ==========================================
@@ -1003,117 +1156,24 @@ function FlashCardQuiz() {
 
                                 {/* VOORKANT VAN DE KAART */}
                                 <div className="flip-card-front">
-                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between">
-
-                                        {/* Huidige Speler Naam (indien player systeem actief) */}
-                                        {players.length > 0 && (
-                                            <div className="text-center mb-2">
-                                                <div className="text-sm md:text-base text-[#8B6F47] font-bold mb-1">Beurt van:</div>
-                                                <div className="inline-block bg-[#A0253B] text-white px-6 py-2 rounded-full font-bold text-xl md:text-2xl shadow-lg">
-                                                    👤 {players[currentPlayerIndex].name}
-                                                </div>
-                                                <div className="text-xs md:text-sm text-[#8B6F47] mt-1">
-                                                    Score: {players[currentPlayerIndex].score} punten
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Vraagtype label */}
-                                        <div className="text-center mb-4">
-                                            <span className={`inline-block px-8 py-3 rounded-full text-lg md:text-xl font-bold uppercase shadow-lg ${getTypeColor(currentQuestion.type)}`}>
-                                                {currentQuestion.type}
-                                            </span>
-                                        </div>
-
-                                        {/* Vraag */}
-                                        <div className="flex-1 flex items-center justify-center mb-4">
-                                            <h2 className={`font-extrabold text-[#3E2723] text-center select-none leading-tight px-1 ${
-                                                currentQuestion.text.length > 150
-                                                    ? 'text-lg md:text-xl'
-                                                    : currentQuestion.text.length > 100
-                                                    ? 'text-xl md:text-2xl'
-                                                    : 'text-2xl md:text-3xl'
-                                            }`}>
-                                                {currentQuestion.text}
-                                            </h2>
-                                        </div>
-
-                                        {/* Bekijk Antwoord knop */}
-                                        <div className="text-center">
-                                            <button
-                                                onClick={handleFlip}
-                                                className="w-full px-8 py-5 md:py-6 bg-[#A0253B] text-white rounded-xl font-bold text-xl md:text-2xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
-                                                onPointerDownCapture={(e) => e.stopPropagation()}
-                                                aria-label="Bekijk het antwoord op de vraag"
-                                            >
-                                                Bekijk antwoord
-                                            </button>
-                                        </div>
-
-                                    </div>
+                                    <QuestionCard
+                                        question={currentQuestion}
+                                        player={players.length > 0 ? players[currentPlayerIndex] : null}
+                                        onFlip={handleFlip}
+                                    />
                                 </div>
 
                                 {/* ACHTERKANT VAN DE KAART */}
                                 <div className="flip-card-back">
-                                    <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between">
-
-                                        {/* Score teller bovenaan */}
-                                        <div className="text-center mb-3">
-                                            <div className="inline-block bg-[#D4A574] text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-2xl md:text-3xl border-4 border-[#D4A574] shadow-lg">
-                                                {score}/3 goed
-                                            </div>
-                                        </div>
-
-                                        {/* Timer (alleen als actief) - Vervangt categorie label */}
-                                        {timerActive && timeLeft !== null && (
-                                            <div className="text-center mb-3">
-                                                <div className={`inline-block px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-3xl md:text-4xl shadow-2xl border-4 animate-pulse ${
-                                                    timeLeft <= 3 ? 'bg-[#A0253B] text-white border-[#A0253B]' : 'bg-[#6B8E23] text-white border-[#6B8E23]'
-                                                }`}>
-                                                    ⏰ {timeLeft}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Antwoord */}
-                                        <div className="flex-1 flex items-center justify-center mb-4">
-                                            <div className="text-center p-5 md:p-6 bg-[#F5E6D3] rounded-xl border-3 border-[#D4A574] shadow-inner">
-                                                <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">Antwoord:</p>
-                                                <p className={`text-[#3E2723] font-bold leading-snug ${
-                                                    currentQuestion.answer.length > 150
-                                                        ? 'text-base md:text-lg'
-                                                        : currentQuestion.answer.length > 100
-                                                        ? 'text-lg md:text-xl'
-                                                        : currentQuestion.answer.length > 60
-                                                        ? 'text-xl md:text-2xl'
-                                                        : 'text-2xl md:text-3xl'
-                                                }`}>
-                                                    {currentQuestion.answer}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* Goed/Fout knoppen */}
-                                        <div className="flex gap-4 md:gap-5 justify-center">
-                                            <button
-                                                onClick={handleWrong}
-                                                className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#A0253B] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
-                                                onPointerDownCapture={(e) => e.stopPropagation()}
-                                                aria-label="Markeer antwoord als fout"
-                                            >
-                                                ❌ Fout
-                                            </button>
-                                            <button
-                                                onClick={handleCorrect}
-                                                className="flex-1 px-6 md:px-8 py-4 md:py-5 bg-[#6B8E23] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
-                                                onPointerDownCapture={(e) => e.stopPropagation()}
-                                                aria-label="Markeer antwoord als goed"
-                                            >
-                                                ✅ Goed!
-                                            </button>
-                                        </div>
-
-                                    </div>
+                                    <AnswerCard
+                                        question={currentQuestion}
+                                        score={score}
+                                        timeLeft={timeLeft}
+                                        timerActive={timerActive}
+                                        onCorrect={handleCorrect}
+                                        onWrong={handleWrong}
+                                        onNext={null}
+                                    />
                                 </div>
 
                             </div>
