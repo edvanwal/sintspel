@@ -1267,7 +1267,14 @@ function FlashCardQuiz() {
                                         <div className="flex items-center justify-center gap-3">
                                             <button
                                                 onClick={() => setAlarmMaxTime(Math.max(1, alarmMaxTime - 1))}
-                                                className="px-4 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-xl shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                                disabled={alarmMaxTime <= 1}
+                                                className={`px-4 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-xl shadow-lg transition-all ${
+                                                    alarmMaxTime <= 1
+                                                        ? 'opacity-40 cursor-not-allowed'
+                                                        : 'hover:bg-[#7A5F3C] hover:scale-105'
+                                                }`}
+                                                aria-label={alarmMaxTime <= 1 ? 'Minimum bereikt: 1 minuut' : 'Verlaag tijd met 1 minuut'}
+                                                title={alarmMaxTime <= 1 ? 'Minimum: 1 minuut' : 'Verlaag met 1 minuut'}
                                             >
                                                 −
                                             </button>
@@ -1276,7 +1283,14 @@ function FlashCardQuiz() {
                                             </div>
                                             <button
                                                 onClick={() => setAlarmMaxTime(Math.min(60, alarmMaxTime + 1))}
-                                                className="px-4 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-xl shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                                disabled={alarmMaxTime >= 60}
+                                                className={`px-4 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-xl shadow-lg transition-all ${
+                                                    alarmMaxTime >= 60
+                                                        ? 'opacity-40 cursor-not-allowed'
+                                                        : 'hover:bg-[#7A5F3C] hover:scale-105'
+                                                }`}
+                                                aria-label={alarmMaxTime >= 60 ? 'Maximum bereikt: 60 minuten' : 'Verhoog tijd met 1 minuut'}
+                                                title={alarmMaxTime >= 60 ? 'Maximum: 60 minuten (1 uur)' : 'Verhoog met 1 minuut'}
                                             >
                                                 +
                                             </button>
@@ -1285,6 +1299,15 @@ function FlashCardQuiz() {
                                         <p className="text-sm text-[#8B6F47] mt-3 text-center">
                                             De wekker gaat af tussen {Math.max(alarmMaxTime - 2, 1)} en {alarmMaxTime} minuten.
                                         </p>
+
+                                        {/* Limiet feedback */}
+                                        {(alarmMaxTime <= 1 || alarmMaxTime >= 60) && (
+                                            <p className="text-xs text-[#A0253B] mt-2 text-center font-semibold">
+                                                {alarmMaxTime <= 1
+                                                    ? '⚠️ Minimum bereikt: Minimaal 1 minuut nodig'
+                                                    : '⚠️ Maximum bereikt: Max. 60 minuten (1 uur) voor beste ervaring'}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <button
