@@ -11,34 +11,59 @@ let alarmClockSound = null;
 
 // Initialiseer audio bestanden
 const initAudio = () => {
-    try {
-        correctSound = new Audio('Goed.mp3');
-        wrongSound = new Audio('Fout.mp3');
-        timerSound = new Audio('Timer.mp3');
-        timeUpSound = new Audio('TimeUp.mp3');
-        alarmClockSound = new Audio('Alarm_clock.mp3');
+    const audioBestandenPaden = {
+        correct: 'Goed.mp3',
+        wrong: 'Fout.mp3',
+        timer: 'Timer.mp3',
+        timeUp: 'TimeUp.mp3',
+        alarm: 'Alarm_clock.mp3'
+    };
 
-        console.log('🔊 Audio bestanden aangemaakt:');
-        console.log('- Goed.mp3:', !!correctSound);
-        console.log('- Fout.mp3:', !!wrongSound);
-        console.log('- Timer.mp3:', !!timerSound);
-        console.log('- TimeUp.mp3:', !!timeUpSound);
-        console.log('- Alarm_clock.mp3:', !!alarmClockSound);
+    console.log('🔊 Audio bestanden initialiseren...');
 
-        // Preload de audio bestanden
-        correctSound.load();
-        wrongSound.load();
-        timerSound.load();
-        timeUpSound.load();
-        alarmClockSound.load();
+    // Laad elk audio bestand afzonderlijk met error handling
+    Object.entries(audioBestandenPaden).forEach(([naam, pad]) => {
+        try {
+            const audio = new Audio(pad);
 
-        // Maak Timer.mp3 loopable
-        timerSound.loop = true;
+            // Error handler voor als het bestand niet kan laden
+            audio.onerror = () => {
+                console.error(`❌ Kan ${naam} geluid niet laden: ${pad}`);
+            };
 
-        console.log('✅ Alle audio bestanden geladen');
-    } catch (error) {
-        console.error('❌ Audio kon niet worden geladen:', error);
-    }
+            // Success handler
+            audio.onloadeddata = () => {
+                console.log(`✅ ${naam} geluid geladen: ${pad}`);
+            };
+
+            // Preload het bestand
+            audio.load();
+
+            // Wijs toe aan de juiste variabele
+            switch(naam) {
+                case 'correct':
+                    correctSound = audio;
+                    break;
+                case 'wrong':
+                    wrongSound = audio;
+                    break;
+                case 'timer':
+                    timerSound = audio;
+                    timerSound.loop = true; // Maak loopable
+                    break;
+                case 'timeUp':
+                    timeUpSound = audio;
+                    break;
+                case 'alarm':
+                    alarmClockSound = audio;
+                    break;
+            }
+        } catch (error) {
+            console.error(`❌ Fout bij initialiseren van ${naam} (${pad}):`, error);
+        }
+    });
+
+    console.log('✅ Audio initialisatie voltooid');
 };
 
 // Functie om geluid af te spelen (met error handling)
