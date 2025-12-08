@@ -14,12 +14,12 @@ const { motion, AnimatePresence } = window.Motion;
 function PlayerInfo({ player, index, isActive }) {
     return (
         <div className="text-center mb-2">
-            <div className="text-sm md:text-base text-[#8B6F47] font-bold mb-1">Beurt van:</div>
+            <div className="text-sm md:text-base text-[#8B6F47] font-bold mb-1">{UI_TEKSTEN.BEURT_VAN}</div>
             <div className="inline-block bg-[#A0253B] text-white px-6 py-2 rounded-full font-bold text-xl md:text-2xl shadow-lg">
                 👤 {player.name}
             </div>
             <div className="text-xs md:text-sm text-[#8B6F47] mt-1">
-                Score: {player.score} punten
+                {UI_TEKSTEN.SCORE_LABEL} {player.score} {UI_TEKSTEN.PUNTEN}
             </div>
         </div>
     );
@@ -66,7 +66,7 @@ function AnswerText({ answer }) {
     return (
         <div className="flex-1 flex items-center justify-center mb-4">
             <div className="text-center p-5 md:p-6 bg-[#F5E6D3] rounded-xl border-3 border-[#D4A574] shadow-inner">
-                <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">Antwoord:</p>
+                <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">{UI_TEKSTEN.ANTWOORD_LABEL}</p>
                 <p className={`text-[#3E2723] font-bold leading-snug ${fontSize}`}>
                     {answer}
                 </p>
@@ -95,7 +95,7 @@ function ScoreDisplay({ score, total = 3 }) {
     return (
         <div className="text-center mb-3">
             <div className="inline-block bg-[#D4A574] text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-2xl md:text-3xl border-4 border-[#D4A574] shadow-lg">
-                {score}/{total} goed
+                {UI_TEKSTEN.SCORE_FORMAT(score, total)}
             </div>
         </div>
     );
@@ -113,9 +113,9 @@ function QuestionCard({ question, player, onFlip }) {
                     onClick={onFlip}
                     className="w-full px-8 py-5 md:py-6 bg-[#A0253B] text-white rounded-xl font-bold text-xl md:text-2xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                     onPointerDownCapture={(e) => e.stopPropagation()}
-                    aria-label="Bekijk het antwoord op de vraag"
+                    aria-label={UI_TEKSTEN.ARIA_BEKIJK_ANTWOORD}
                 >
-                    Bekijk antwoord
+                    {UI_TEKSTEN.BEKIJK_ANTWOORD}
                 </button>
             </div>
         </div>
@@ -134,17 +134,17 @@ function AnswerCard({ question, score, timeLeft, timerActive, onCorrect, onWrong
                     onClick={onWrong}
                     className="flex-1 px-8 py-4 md:py-5 bg-[#A0253B] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                     onPointerDownCapture={(e) => e.stopPropagation()}
-                    aria-label="Antwoord was fout"
+                    aria-label={UI_TEKSTEN.ARIA_ANTWOORD_FOUT}
                 >
-                    ❌ Fout
+                    {UI_TEKSTEN.FOUT_KNOP}
                 </button>
                 <button
                     onClick={onCorrect}
                     className="flex-1 px-8 py-4 md:py-5 bg-[#6B8E23] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
                     onPointerDownCapture={(e) => e.stopPropagation()}
-                    aria-label="Antwoord was goed"
+                    aria-label={UI_TEKSTEN.ARIA_ANTWOORD_GOED}
                 >
-                    ✅ Goed
+                    {UI_TEKSTEN.GOED_KNOP}
                 </button>
             </div>
             {onNext && (
@@ -152,7 +152,7 @@ function AnswerCard({ question, score, timeLeft, timerActive, onCorrect, onWrong
                     onClick={onNext}
                     className="mt-3 w-full px-6 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-base shadow-lg hover:bg-[#7A5F3C] transition-all"
                 >
-                    Volgende speler ➜
+                    {UI_TEKSTEN.VOLGENDE_SPELER}
                 </button>
             )}
         </div>
