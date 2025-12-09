@@ -156,12 +156,10 @@ const alarmReducer = (state, action) => {
     }
 };
 
-// Export (voor browser compatibility)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        gameReducer,
-        gameInitialState,
-        alarmReducer,
-        alarmInitialState
-    };
-}
+// ES6 Export
+export {
+    gameReducer,
+    gameInitialState,
+    alarmReducer,
+    alarmInitialState
+};

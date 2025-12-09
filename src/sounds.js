@@ -209,3 +209,17 @@ const stopAlarmSound = () => {
 
 // Initialiseer audio bij laden van het script
 initAudio();
+
+// ES6 Exports
+export {
+    correctSound,
+    wrongSound,
+    timerSound,
+    timeUpSound,
+    alarmClockSound,
+    playSound,
+    startTimerSound,
+    stopTimerAndPlayTimeUp,
+    playAlarmSound,
+    stopAlarmSound
+};

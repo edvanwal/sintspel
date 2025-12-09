@@ -283,3 +283,6 @@ const VRAGEN = [
   { id: 255, type: "SINTERKERSTMAN", difficulty: "easy", text: "Wie gaat er door de schoorsteen om binnen te komen? Sinterklaas of de Kerstman?", answer: "Allebei (Ze doen het allebei!)" }
 ];
 
+
+// ES6 Export
+export { VRAGEN };
