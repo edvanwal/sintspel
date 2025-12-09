@@ -6,6 +6,7 @@ import { VRAGEN } from './questions.js';
 import { UI_TEKSTEN } from './strings.js';
 import {
     shuffleArray,
+    createWeightedPool,
     swipeConfidenceThreshold,
     swipePower,
     variants
@@ -67,6 +68,31 @@ export function FlashCardQuiz() {
 
             // Question pool state - bevat alleen ongetoonde vragen
             const [questionPool, setQuestionPool] = useState(() => generateQuestionPool(shownQuestionIds));
+
+            // Weighted pool per speler - 1x gegenereerd per speler
+            // Dit voorkomt herhalingen EN past difficulty aan op basis van leeftijd
+            const weightedPool = useMemo(() => {
+                // Geen players? Gebruik originele pool
+                if (players.length === 0) {
+                    return questionPool;
+                }
+
+                // Bounds check
+                if (currentPlayerIndex < 0 || currentPlayerIndex >= players.length) {
+                    return questionPool;
+                }
+
+                // Haal leeftijd van huidige speler op
+                const currentPlayer = players[currentPlayerIndex];
+                const playerAge = currentPlayer?.age;
+
+                // Genereer weighted pool voor deze speler
+                const weighted = createWeightedPool(questionPool, playerAge);
+
+                console.log(`🎯 Weighted pool voor ${currentPlayer.name} (${playerAge} jaar): ${weighted.length} vragen`);
+
+                return weighted;
+            }, [questionPool, players, currentPlayerIndex]);
 
             const [[page, direction], setPage] = useState([0, 0]);
             const [score, setScore] = useState(0); // Score teller: 0, 1, 2, of 3
@@ -136,32 +162,22 @@ export function FlashCardQuiz() {
 
             // Smart vraag selectie op basis van leeftijd en moeilijkheid
             const getQuestionForPlayer = useCallback(() => {
-                if (questionPool.length === 0) return null;
+                // Gebruik weighted pool (die automatisch fallback naar questionPool doet als geen players)
+                if (weightedPool.length === 0) return null;
 
-                // Geen players? Gewoon random vraag
-                if (players.length === 0) {
-                    const questionIndex = Math.abs(page % questionPool.length);
-                    return questionPool[questionIndex];
-                }
-
-                // Bounds check: zorg dat currentPlayerIndex geldig is
-                if (currentPlayerIndex < 0 || currentPlayerIndex >= players.length) {
-                    const questionIndex = Math.abs(page % questionPool.length);
-                    return questionPool[questionIndex];
-                }
-
-                // Simpel: ga gewoon sequentieel door de pool
-                // De pool is al geshuffled en bevat alleen ongetoonde vragen
-                // Geen extra filtering needed - dit voorkomt herhalingen
-                const questionIndex = Math.abs(page % questionPool.length);
-                return questionPool[questionIndex];
-            }, [questionPool, page, players, currentPlayerIndex]);
+                // Ga sequentieel door de weighted pool
+                // De pool is:
+                // - Voor single player: gewoon geshuffled
+                // - Voor multiplayer: weighted op basis van leeftijd huidige speler
+                const questionIndex = Math.abs(page % weightedPool.length);
+                return weightedPool[questionIndex];
+            }, [weightedPool, page]);
 
             // Zorg dat we oneindig door de vragen kunnen loopen
             // useMemo zorgt dat de vraag NIET verandert bij elke re-render
             const currentQuestion = useMemo(() => {
                 return getQuestionForPlayer();
-            }, [page, questionPool, players, currentPlayerIndex, getQuestionForPlayer]);
+            }, [getQuestionForPlayer]);
 
             // Mark vraag als getoond wanneer deze wordt weergegeven
             useEffect(() => {
