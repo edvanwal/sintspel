@@ -94,6 +94,37 @@ export function FlashCardQuiz() {
                 return weighted;
             }, [questionPool, players, currentPlayerIndex]);
 
+            // ==========================================
+            // DEVELOPMENT MODE - SMOKE TEST
+            // Detecteert vroeg als age-based weighting niet werkt
+            // ==========================================
+            useEffect(() => {
+                if (import.meta.env.DEV) {
+                    // Run smoke test on mount to verify age-based weighting works
+                    const youngPool = createWeightedPool(VRAGEN, 8);
+                    const adultPool = createWeightedPool(VRAGEN, 25);
+
+                    const youngEasy = youngPool.filter(q => q.difficulty === 'easy').length;
+                    const adultEasy = adultPool.filter(q => q.difficulty === 'easy').length;
+
+                    const youngEasyPercent = youngEasy / youngPool.length;
+                    const adultEasyPercent = adultEasy / adultPool.length;
+
+                    if (youngEasyPercent <= adultEasyPercent) {
+                        console.error('❌ AGE-BASED WEIGHTING NOT WORKING!');
+                        console.error(`   Young child (8): ${(youngEasyPercent * 100).toFixed(1)}% easy questions`);
+                        console.error(`   Adult (25): ${(adultEasyPercent * 100).toFixed(1)}% easy questions`);
+                        console.error('   Expected: Young child should have MORE easy questions than adult');
+                    } else if (youngEasyPercent < 0.60 || youngEasyPercent > 0.80) {
+                        console.warn('⚠️ Age-based weighting may be incorrect');
+                        console.warn(`   Young child (8): ${(youngEasyPercent * 100).toFixed(1)}% easy (expected ~70%)`);
+                    } else {
+                        console.log('✅ Age-based weighting smoke test passed');
+                        console.log(`   Young: ${(youngEasyPercent * 100).toFixed(1)}% easy, Adult: ${(adultEasyPercent * 100).toFixed(1)}% easy`);
+                    }
+                }
+            }, []); // Only run once on mount
+
             const [[page, direction], setPage] = useState([0, 0]);
             const [score, setScore] = useState(0); // Score teller: 0, 1, 2, of 3
             const [showTransition, setShowTransition] = useState(null); // 'wrong' of 'success'
