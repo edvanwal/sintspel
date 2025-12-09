@@ -48,10 +48,44 @@
 </head>
 <body>
 
-    <div id="root"></div>
+    <div id="root">
+        <!-- Loading indicator - wordt verwijderd zodra React mount -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-center; min-height: 100vh; color: #F5E6D3; font-family: sans-serif; text-align: center; padding: 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">🎅</div>
+            <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Laden...</div>
+            <div style="font-size: 14px; opacity: 0.8;" id="loading-status">JavaScript wordt geladen...</div>
+        </div>
+    </div>
 
     <!-- Vite entry point -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Update loading status when JS loads -->
+    <script type="module">
+        const status = document.getElementById('loading-status');
+        if (status) status.textContent = '✓ JavaScript geladen, React wordt gestart...';
+    </script>
+
+    <!-- Global error handler for debugging -->
+    <script>
+        window.addEventListener('error', function(event) {
+            console.error('❌ Global error:', event.error || event.message);
+            const status = document.getElementById('loading-status');
+            if (status) {
+                status.textContent = '❌ Fout: ' + (event.error?.message || event.message);
+                status.style.color = '#ff6b6b';
+            }
+        });
+
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('❌ Unhandled promise rejection:', event.reason);
+            const status = document.getElementById('loading-status');
+            if (status) {
+                status.textContent = '❌ Laad fout: ' + event.reason;
+                status.style.color = '#ff6b6b';
+            }
+        });
+    </script>
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
