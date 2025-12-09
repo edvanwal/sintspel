@@ -1000,13 +1000,6 @@ export function FlashCardQuiz() {
             return (
                 <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative overflow-hidden" style={{position: 'relative', zIndex: 1}}>
 
-                {/* DEBUG: Zichtbare indicator dat React werkt */}
-                <div style={{position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 9999, background: 'yellow', padding: '20px', fontSize: '24px', fontWeight: 'bold', color: 'black', border: '5px solid red'}}>
-                    🔍 DEBUG: React app is loaded!
-                    <br/>Questions: {VRAGEN?.length}
-                    <br/>Players: {players.length}
-                </div>
-
                 {/* Mute/Unmute knop linksonder */}
                 <button
                     onClick={toggleMute}
