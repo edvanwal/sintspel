@@ -1,177 +1,29 @@
-// ==========================================
-// HOOFDCOMPONENT - FLASHCARD QUIZ
-// ==========================================
-// Afhankelijkheden: React, Framer Motion, questions.js, utils.js, sounds.js
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { QuestionCard } from './components/QuestionCard.jsx';
+import { AnswerCard } from './components/AnswerCard.jsx';
+import { VRAGEN } from './questions.js';
+import { UI_TEKSTEN } from './strings.js';
+import {
+    shuffleArray,
+    swipeConfidenceThreshold,
+    swipePower,
+    variants
+} from './utils.js';
+import {
+    correctSound,
+    wrongSound,
+    timerSound,
+    timeUpSound,
+    alarmClockSound,
+    playSound,
+    startTimerSound,
+    stopTimerAndPlayTimeUp,
+    playAlarmSound,
+    stopAlarmSound
+} from './sounds.js';
 
-const { useState, useEffect, useCallback, useMemo } = React;
-const { motion, AnimatePresence } = window.Motion;
-
-// ==========================================
-// SUB-COMPONENTEN - HERBRUIKBAAR
-// ==========================================
-
-// Component: Speler Info Display
-function PlayerInfo({ player, index: _index, isActive: _isActive }) {
-    return (
-        <div className="text-center mb-2">
-            <div className="text-sm md:text-base text-[#8B6F47] font-bold mb-1">{UI_TEKSTEN.BEURT_VAN}</div>
-            <div className="inline-block bg-[#A0253B] text-white px-6 py-2 rounded-full font-bold text-xl md:text-2xl shadow-lg">
-                👤 {player.name}
-            </div>
-            <div className="text-xs md:text-sm text-[#8B6F47] mt-1">
-                {UI_TEKSTEN.SCORE_LABEL} {player.score} {UI_TEKSTEN.PUNTEN}
-            </div>
-        </div>
-    );
-}
-
-// Component: Vraag Type Label
-function QuestionTypeLabel({ type }) {
-    return (
-        <div className="text-center mb-4">
-            <span className={`inline-block px-8 py-3 rounded-full text-lg md:text-xl font-bold uppercase shadow-lg ${getTypeColor(type)}`}>
-                {type}
-            </span>
-        </div>
-    );
-}
-
-// Component: Vraag Tekst met dynamische font size
-function QuestionText({ text }) {
-    const fontSize = text.length > 150
-        ? 'text-lg md:text-xl'
-        : text.length > 100
-        ? 'text-xl md:text-2xl'
-        : 'text-2xl md:text-3xl';
-
-    return (
-        <div className="flex-1 flex items-center justify-center mb-4">
-            <h2 className={`font-extrabold text-[#3E2723] text-center select-none leading-tight px-1 ${fontSize}`}>
-                {text}
-            </h2>
-        </div>
-    );
-}
-
-// Component: Antwoord Tekst met dynamische font size
-function AnswerText({ answer }) {
-    const fontSize = answer.length > 150
-        ? 'text-base md:text-lg'
-        : answer.length > 100
-        ? 'text-lg md:text-xl'
-        : answer.length > 60
-        ? 'text-xl md:text-2xl'
-        : 'text-2xl md:text-3xl';
-
-    return (
-        <div className="flex-1 flex items-center justify-center mb-4">
-            <div className="text-center p-5 md:p-6 bg-[#F5E6D3] rounded-xl border-3 border-[#D4A574] shadow-inner">
-                <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">{UI_TEKSTEN.ANTWOORD_LABEL}</p>
-                <p className={`text-[#3E2723] font-bold leading-snug ${fontSize}`}>
-                    {answer}
-                </p>
-            </div>
-        </div>
-    );
-}
-
-// Component: Timer Display
-function TimerDisplay({ timeLeft }) {
-    if (timeLeft === null) return null;
-
-    return (
-        <div className="text-center mb-3">
-            <div className={`inline-block px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-3xl md:text-4xl shadow-2xl border-4 animate-pulse ${
-                timeLeft <= 3 ? 'bg-[#A0253B] text-white border-[#A0253B]' : 'bg-[#6B8E23] text-white border-[#6B8E23]'
-            }`}>
-                ⏰ {timeLeft}
-            </div>
-        </div>
-    );
-}
-
-// Component: Score Display
-function ScoreDisplay({ score, total = 3 }) {
-    return (
-        <div className="text-center mb-3">
-            <div className="inline-block bg-[#D4A574] text-gray-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-2xl md:text-3xl border-4 border-[#D4A574] shadow-lg">
-                {UI_TEKSTEN.SCORE_FORMAT(score, total)}
-            </div>
-        </div>
-    );
-}
-
-// Component: Vraag Kaart (Voorkant)
-function QuestionCard({ question, player, onFlip }) {
-    return (
-        <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between">
-            {player && <PlayerInfo player={player} />}
-            <QuestionTypeLabel type={question.type} />
-            <QuestionText text={question.text} />
-            <div className="text-center">
-                <button
-                    onClick={onFlip}
-                    className="w-full px-8 py-5 md:py-6 bg-[#A0253B] text-white rounded-xl font-bold text-xl md:text-2xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
-                    onPointerDownCapture={(e) => e.stopPropagation()}
-                    aria-label={UI_TEKSTEN.ARIA_BEKIJK_ANTWOORD}
-                >
-                    {UI_TEKSTEN.BEKIJK_ANTWOORD}
-                </button>
-            </div>
-        </div>
-    );
-}
-
-// Component: Antwoord Kaart (Achterkant)
-function AnswerCard({ question, score, timeLeft, timerActive, onCorrect, onWrong, onNext, onFlip }) {
-    return (
-        <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574] min-h-[420px] flex flex-col justify-between">
-            <ScoreDisplay score={score} total={3} />
-            {timerActive && <TimerDisplay timeLeft={timeLeft} />}
-            <AnswerText answer={question.answer} />
-            <div className="flex flex-col gap-3">
-                <div className="flex gap-4 md:gap-5 justify-center">
-                    <button
-                        onClick={onWrong}
-                        className="flex-1 px-8 py-4 md:py-5 bg-[#A0253B] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
-                        onPointerDownCapture={(e) => e.stopPropagation()}
-                        aria-label={UI_TEKSTEN.ARIA_ANTWOORD_FOUT}
-                    >
-                        {UI_TEKSTEN.FOUT_KNOP}
-                    </button>
-                    <button
-                        onClick={onCorrect}
-                        className="flex-1 px-8 py-4 md:py-5 bg-[#6B8E23] text-white rounded-xl font-bold text-lg md:text-xl shadow-xl hover:bg-[#556B1D] transition-all transform hover:scale-105"
-                        onPointerDownCapture={(e) => e.stopPropagation()}
-                        aria-label={UI_TEKSTEN.ARIA_ANTWOORD_GOED}
-                    >
-                        {UI_TEKSTEN.GOED_KNOP}
-                    </button>
-                </div>
-                {onFlip && (
-                    <button
-                        onClick={onFlip}
-                        className="w-full px-6 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-base shadow-lg hover:bg-[#7A5F3C] transition-all"
-                        onPointerDownCapture={(e) => e.stopPropagation()}
-                        aria-label="Terug naar vraag"
-                    >
-                        ← Terug naar vraag
-                    </button>
-                )}
-                {onNext && (
-                    <button
-                        onClick={onNext}
-                        className="w-full px-6 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-base shadow-lg hover:bg-[#7A5F3C] transition-all"
-                    >
-                        {UI_TEKSTEN.VOLGENDE_SPELER}
-                    </button>
-                )}
-            </div>
-        </div>
-    );
-}
-
-function FlashCardQuiz() {
+export function FlashCardQuiz() {
 
             // ==========================================
             // SMART QUESTION TRACKING SYSTEEM

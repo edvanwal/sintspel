@@ -108,7 +108,5 @@ const UI_TEKSTEN = {
     ARIA_ANTWOORD_GOED: 'Antwoord was goed',
 };
 
-// Export
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { UI_TEKSTEN };
-}
+// ES6 Export
+export { UI_TEKSTEN };

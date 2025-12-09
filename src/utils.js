@@ -76,3 +76,14 @@ const shuffleArray = (array) => {
     }
     return shuffled;
 };
+
+// ES6 Exports
+export {
+    COLORS,
+    GAME_CONSTANTS,
+    swipeConfidenceThreshold,
+    swipePower,
+    variants,
+    getTypeColor,
+    shuffleArray
+};
