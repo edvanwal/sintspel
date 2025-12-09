@@ -1,5 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { calculateAlarmTime } from './utils.js';
+import { describe, it, expect } from 'vitest';
 
 describe('Alarm System', () => {
   describe('Alarm State Management', () => {

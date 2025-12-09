@@ -11,7 +11,7 @@ const { motion, AnimatePresence } = window.Motion;
 // ==========================================
 
 // Component: Speler Info Display
-function PlayerInfo({ player, index, isActive }) {
+function PlayerInfo({ player, index: _index, isActive: _isActive }) {
     return (
         <div className="text-center mb-2">
             <div className="text-sm md:text-base text-[#8B6F47] font-bold mb-1">{UI_TEKSTEN.BEURT_VAN}</div>
@@ -283,7 +283,7 @@ function FlashCardQuiz() {
             };
 
             // Smart vraag selectie op basis van leeftijd en moeilijkheid
-            const getQuestionForPlayer = () => {
+            const getQuestionForPlayer = useCallback(() => {
                 if (questionPool.length === 0) return null;
 
                 // Geen players? Gewoon random vraag
@@ -303,13 +303,13 @@ function FlashCardQuiz() {
                 // Geen extra filtering needed - dit voorkomt herhalingen
                 const questionIndex = Math.abs(page % questionPool.length);
                 return questionPool[questionIndex];
-            };
+            }, [questionPool, page, players, currentPlayerIndex]);
 
             // Zorg dat we oneindig door de vragen kunnen loopen
             // useMemo zorgt dat de vraag NIET verandert bij elke re-render
             const currentQuestion = useMemo(() => {
                 return getQuestionForPlayer();
-            }, [page, questionPool, players, currentPlayerIndex]);
+            }, [page, questionPool, players, currentPlayerIndex, getQuestionForPlayer]);
 
             // Mark vraag als getoond wanneer deze wordt weergegeven
             useEffect(() => {
@@ -330,7 +330,7 @@ function FlashCardQuiz() {
                         console.log('⚠️ Kan localStorage niet updaten');
                     }
                 }
-            }, [currentQuestion?.id]);
+            }, [currentQuestion, shownQuestionIds]);
 
             // Regenereer pool als alle vragen in huidige pool zijn getoond (mid-sessie refresh)
             useEffect(() => {
@@ -640,7 +640,7 @@ function FlashCardQuiz() {
                 };
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [paginate, showTransition, isFlipped, gameLocked]);
+            }, [paginate, showTransition, isFlipped, gameLocked, handleFlip]);
 
             // WELKOMSTSCHERM - INSTRUCTIES
             if (showWelcome) {
