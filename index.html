@@ -58,5 +58,17 @@
         v14.0 - ES6 Modules + Vite
     </div>
 
+    <!-- JavaScript test - dit moet de versie veranderen als JS werkt -->
+    <script>
+        console.log('🔍 Plain JavaScript is running!');
+        const versionDiv = document.getElementById('version-info');
+        if (versionDiv) {
+            versionDiv.innerHTML = '✅ JavaScript werkt!<br>Wachten op React...';
+            versionDiv.style.background = 'lime';
+            versionDiv.style.padding = '10px';
+            versionDiv.style.fontSize = '16px';
+        }
+    </script>
+
 </body>
 </html>
