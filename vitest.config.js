@@ -9,13 +9,22 @@ export default defineConfig({
     setupFiles: './tests/setup.js',
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      include: ['tests/**/*.js'],
+      reporter: ['text', 'json', 'html', 'lcov'],
+      include: ['src/**/*.{js,jsx}'],
       exclude: [
         'node_modules/',
-        'tests/setup.js',
-        'tests/**/*.test.js'
-      ]
+        'tests/**',
+        'src/main.jsx', // Entry point, just renders
+        '**/*.test.{js,jsx}',
+        '**/*.config.{js,jsx}'
+      ],
+      // Coverage thresholds - tests fail if below these percentages
+      thresholds: {
+        lines: 70,
+        functions: 65,
+        branches: 60,
+        statements: 70
+      }
     }
   }
 });

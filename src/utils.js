@@ -128,37 +128,71 @@ const createWeightedPool = (questionPool, playerAge) => {
     const mediumQuestions = questionPool.filter(q => q.difficulty === 'medium');
     const hardQuestions = questionPool.filter(q => q.difficulty === 'hard');
 
-    // Bouw gewogen pool met juiste ratio's
-    const weightedPool = [];
-    const poolSize = questionPool.length;
-
-    // Bereken target aantallen op basis van weights
-    const totalWeight = weights.easy + weights.medium + weights.hard;
-    const targetEasy = Math.round((weights.easy / totalWeight) * poolSize);
-    const targetMedium = Math.round((weights.medium / totalWeight) * poolSize);
-    const targetHard = Math.round((weights.hard / totalWeight) * poolSize);
-
     // Shuffle elke difficulty groep eerst (voor extra randomness)
     const shuffledEasy = shuffleArray(easyQuestions);
     const shuffledMedium = shuffleArray(mediumQuestions);
     const shuffledHard = shuffleArray(hardQuestions);
 
-    // Voeg vragen toe tot target (of tot lijst leeg is)
-    for (let i = 0; i < targetEasy && i < shuffledEasy.length; i++) {
-        weightedPool.push(shuffledEasy[i]);
-    }
-    for (let i = 0; i < targetMedium && i < shuffledMedium.length; i++) {
-        weightedPool.push(shuffledMedium[i]);
-    }
-    for (let i = 0; i < targetHard && i < shuffledHard.length; i++) {
-        weightedPool.push(shuffledHard[i]);
+    // Strategie: Pas weights aan op basis van wat beschikbaar is
+    // Voorbeeld: Als je 70% easy wilt maar maar 45% easy beschikbaar is,
+    // gebruik dan ALLE easy en schaal de rest naar beneden
+    const weightedPool = [];
+
+    // Bereken wat we willen (ideal targets)
+    const totalWeight = weights.easy + weights.medium + weights.hard;
+    const idealEasyRatio = weights.easy / totalWeight;
+    const idealMediumRatio = weights.medium / totalWeight;
+    const idealHardRatio = weights.hard / totalWeight;
+
+    // Bereken wat we hebben (available)
+    const availableEasyRatio = shuffledEasy.length / questionPool.length;
+    const availableMediumRatio = shuffledMedium.length / questionPool.length;
+    const availableHardRatio = shuffledHard.length / questionPool.length;
+
+    // Als een category tekort schiet, gebruik alles en schaal anderen
+    let finalEasyCount, finalMediumCount, finalHardCount;
+
+    // Check welke category het meest "limiting" is (grootste tekort)
+    const easyRatio = shuffledEasy.length > 0 ? idealEasyRatio / availableEasyRatio : 1;
+    const mediumRatio = shuffledMedium.length > 0 ? idealMediumRatio / availableMediumRatio : 1;
+    const hardRatio = shuffledHard.length > 0 ? idealHardRatio / availableHardRatio : 1;
+
+    const maxRatio = Math.max(easyRatio, mediumRatio, hardRatio);
+
+    if (maxRatio > 1) {
+        // We hebben een tekort - schaal naar beneden
+        // De limiting factor bepaalt de pool size
+        const poolScaleFactor = 1 / maxRatio;
+
+        finalEasyCount = Math.round(idealEasyRatio * questionPool.length * poolScaleFactor);
+        finalMediumCount = Math.round(idealMediumRatio * questionPool.length * poolScaleFactor);
+        finalHardCount = Math.round(idealHardRatio * questionPool.length * poolScaleFactor);
+
+        // Clamp to available
+        finalEasyCount = Math.min(finalEasyCount, shuffledEasy.length);
+        finalMediumCount = Math.min(finalMediumCount, shuffledMedium.length);
+        finalHardCount = Math.min(finalHardCount, shuffledHard.length);
+    } else {
+        // Genoeg beschikbaar - gebruik ideal targets
+        finalEasyCount = Math.round(idealEasyRatio * questionPool.length);
+        finalMediumCount = Math.round(idealMediumRatio * questionPool.length);
+        finalHardCount = Math.round(idealHardRatio * questionPool.length);
+
+        // Clamp to available
+        finalEasyCount = Math.min(finalEasyCount, shuffledEasy.length);
+        finalMediumCount = Math.min(finalMediumCount, shuffledMedium.length);
+        finalHardCount = Math.min(finalHardCount, shuffledHard.length);
     }
 
-    // Als weighted pool te klein is (bijv. niet genoeg hard vragen),
-    // vul aan met resterende vragen uit originele pool
-    if (weightedPool.length < poolSize) {
-        const remaining = questionPool.filter(q => !weightedPool.includes(q));
-        weightedPool.push(...remaining);
+    // Voeg vragen toe in de berekende aantallen
+    for (let i = 0; i < finalEasyCount; i++) {
+        weightedPool.push(shuffledEasy[i]);
+    }
+    for (let i = 0; i < finalMediumCount; i++) {
+        weightedPool.push(shuffledMedium[i]);
+    }
+    for (let i = 0; i < finalHardCount; i++) {
+        weightedPool.push(shuffledHard[i]);
     }
 
     // Final shuffle van de weighted pool
