@@ -841,39 +841,39 @@ export function FlashCardQuiz() {
                 return (
                     <div className="flex flex-col items-center justify-center min-h-[100dvh] w-screen bg-[#A0253B] text-white py-8 px-4 md:p-6 relative overflow-auto">
                         <div className="w-full max-w-2xl">
-                            <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-4 md:p-6 border-4 border-[#D4A574]">
+                            <div className="bg-[#F5E6D3] rounded-2xl shadow-2xl p-6 md:p-8 border-4 border-[#D4A574]">
 
                                 {/* Titel */}
-                                <div className="text-center mb-4">
-                                    <div className="text-4xl mb-2">🎁</div>
-                                    <h1 className="text-2xl md:text-3xl font-bold text-[#8B1538] mb-1">
+                                <div className="text-center mb-6">
+                                    <div className="text-6xl md:text-7xl mb-3">🎁</div>
+                                    <h1 className="text-3xl md:text-4xl font-bold text-[#8B1538] mb-2">
                                         Wie Heeft Het Pakje?
                                     </h1>
-                                    <p className="text-sm text-[#3E2723]">
+                                    <p className="text-base md:text-lg text-[#3E2723]">
                                         Klik op de speler die het pakje heeft
                                     </p>
                                 </div>
 
                                 {/* Spelers Lijst */}
-                                <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-2">
+                                <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
                                     {players.map((player, index) => (
                                         <button
                                             key={index}
                                             onClick={() => handleSelectWinner(index)}
-                                            className="w-full flex items-center justify-between bg-white hover:bg-[#FAF0E6] rounded-xl p-3 border-2 border-[#D4A574] shadow-lg transition-all transform hover:scale-105"
+                                            className="w-full flex items-center justify-between bg-white hover:bg-[#FAF0E6] rounded-xl p-4 md:p-5 border-2 border-[#D4A574] shadow-lg transition-all transform hover:scale-105"
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-2xl">👤</span>
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-3xl md:text-4xl">👤</span>
                                                 <div className="text-left">
-                                                    <div className="font-bold text-[#3E2723] text-lg">
+                                                    <div className="font-bold text-[#3E2723] text-xl md:text-2xl">
                                                         {player.name}
                                                     </div>
-                                                    <div className="text-xs text-[#8B6F47]">
+                                                    <div className="text-sm md:text-base text-[#8B6F47]">
                                                         Score: {player.score} punten
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="text-2xl">🎁</div>
+                                            <div className="text-3xl md:text-4xl">🎁</div>
                                         </button>
                                     ))}
                                 </div>
@@ -899,37 +899,37 @@ export function FlashCardQuiz() {
                 };
 
                 return (
-                    <div className="flex flex-col items-center justify-center min-h-[100dvh] w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white py-8 px-4 md:p-6 overflow-auto">
-                        <div className="text-4xl mb-2 animate-bounce">🏆</div>
+                    <div className="flex flex-col items-center justify-center min-h-[100dvh] w-screen bg-gradient-to-b from-[#6B8E23] to-[#556B1D] text-white py-8 px-6 md:p-8 overflow-auto">
+                        <div className="text-7xl md:text-8xl mb-4 animate-bounce">🏆</div>
 
-                        <h1 className="text-2xl md:text-3xl font-bold mb-3 text-center drop-shadow-2xl">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center drop-shadow-2xl">
                             DE WINNAARS!
                         </h1>
 
                         {/* De Sinterklaas Winnaar */}
-                        <div className="bg-white text-[#8B1538] rounded-2xl p-3 mb-2 w-full max-w-lg shadow-2xl">
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-6 md:p-8 mb-4 w-full max-w-lg shadow-2xl">
                             <div className="text-center">
-                                <div className="text-3xl mb-1">🎅</div>
-                                <h2 className="text-base font-bold mb-1">DE SINTERKLAAS</h2>
-                                <p className="text-xs text-[#8B6F47] mb-1">(Heeft het pakje!)</p>
-                                <div className="text-xl font-bold text-[#A0253B]">
+                                <div className="text-5xl md:text-6xl mb-2">🎅</div>
+                                <h2 className="text-xl md:text-2xl font-bold mb-2">DE SINTERKLAAS</h2>
+                                <p className="text-sm md:text-base text-[#8B6F47] mb-2">(Heeft het pakje!)</p>
+                                <div className="text-2xl md:text-3xl font-bold text-[#A0253B]">
                                     {sinterklaasWinner}
                                 </div>
                             </div>
                         </div>
 
                         {/* Slimme Piet Winnaar(s) */}
-                        <div className="bg-white text-[#8B1538] rounded-2xl p-3 mb-3 w-full max-w-lg shadow-2xl">
+                        <div className="bg-white text-[#8B1538] rounded-2xl p-6 md:p-8 mb-6 w-full max-w-lg shadow-2xl">
                             <div className="text-center">
-                                <div className="text-3xl mb-1">🧠</div>
-                                <h2 className="text-base font-bold mb-1">
+                                <div className="text-5xl md:text-6xl mb-2">🧠</div>
+                                <h2 className="text-xl md:text-2xl font-bold mb-2">
                                     {slimmePieten.length > 1 ? 'SLIMME PIETEN' : 'SLIMME PIET'}
                                 </h2>
-                                <p className="text-xs text-[#8B6F47] mb-1">(Meeste vragen goed!)</p>
-                                <div className="text-xl font-bold text-[#6B8E23]">
+                                <p className="text-sm md:text-base text-[#8B6F47] mb-2">(Meeste vragen goed!)</p>
+                                <div className="text-2xl md:text-3xl font-bold text-[#6B8E23]">
                                     {slimmePieten.join(' & ')}
                                 </div>
-                                <div className="text-sm text-[#8B6F47] mt-1">
+                                <div className="text-base md:text-lg text-[#8B6F47] mt-2">
                                     {players.find(p => p.name === slimmePieten[0])?.score || 0} punten
                                 </div>
                             </div>
@@ -938,7 +938,7 @@ export function FlashCardQuiz() {
                         {/* Speel Opnieuw Button */}
                         <button
                             onClick={handlePlayAgain}
-                            className="px-6 py-3 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-base shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
+                            className="px-8 py-4 bg-[#F5E6D3] text-[#8B1538] rounded-full font-bold text-xl md:text-2xl shadow-2xl hover:bg-[#FAF0E6] transition-all transform hover:scale-105"
                         >
                             🎮 Speel Opnieuw
                         </button>
