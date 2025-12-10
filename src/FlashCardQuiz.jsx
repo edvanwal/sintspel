@@ -72,6 +72,10 @@ export function FlashCardQuiz() {
             // Question pool state - bevat alleen ongetoonde vragen
             const [questionPool, setQuestionPool] = useState(() => generateQuestionPool(shownQuestionIds));
 
+            // Player System State - MOET voor weightedPool gedefinieerd worden!
+            const [players, setPlayers] = useState([]); // Array van {name, age, score}
+            const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // Huidige speler (0-based index)
+
             // Weighted pool per speler - 1x gegenereerd per speler
             // Dit voorkomt herhalingen EN past difficulty aan op basis van leeftijd
             const weightedPool = useMemo(() => {
@@ -136,10 +140,8 @@ export function FlashCardQuiz() {
             const [timerActive, setTimerActive] = useState(false); // Of timer actief is
             const [showWelcome, setShowWelcome] = useState(true); // Welkomstscherm bij opstarten
 
-            // Player System State
+            // Player System State (players en currentPlayerIndex zijn al eerder gedefinieerd)
             const [showPlayerRegistration, setShowPlayerRegistration] = useState(false); // Speler registratie scherm
-            const [players, setPlayers] = useState([]); // Array van {name, age, score}
-            const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0); // Huidige speler (0-based index)
             const [playerName, setPlayerName] = useState(''); // Tijdelijke input voor naam
             const [playerAge, setPlayerAge] = useState(''); // Tijdelijke input voor leeftijd
             const [showAddPlayerForm, setShowAddPlayerForm] = useState(false); // Toon/verberg formulier voor nieuwe speler
