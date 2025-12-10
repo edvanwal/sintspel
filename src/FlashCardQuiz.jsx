@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence, Reorder } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { QuestionCard } from './components/QuestionCard.jsx';
 import { AnswerCard } from './components/AnswerCard.jsx';
 import { VRAGEN } from './questions.js';
@@ -728,29 +728,17 @@ export function FlashCardQuiz() {
                                     </div>
                                 )}
 
-                                {/* Spelers Lijst - Alle spelers scrollbaar met drag-and-drop */}
+                                {/* Spelers Lijst - Alle spelers scrollbaar */}
                                 {players.length > 0 && (
                                     <div className="mb-3">
-                                        <h3 className="text-base font-bold text-[#8B1538] mb-1">
+                                        <h3 className="text-base font-bold text-[#8B1538] mb-2">
                                             Spelers ({players.length}):
                                         </h3>
-                                        <p className="text-xs text-[#8B6F47] mb-2">Sleep om volgorde te wijzigen</p>
-                                        <Reorder.Group
-                                            axis="y"
-                                            values={players}
-                                            onReorder={setPlayers}
-                                            className="space-y-2 max-h-[35vh] overflow-y-auto pr-2"
-                                        >
+                                        <div className="space-y-2 max-h-[35vh] overflow-y-auto pr-2">
                                             {players.map((player, index) => (
-                                                <Reorder.Item
-                                                    key={player.name + player.age}
-                                                    value={player}
-                                                    className="flex items-center justify-between bg-white rounded-lg p-2 border-2 border-[#D4A574] cursor-grab active:cursor-grabbing"
-                                                >
-                                                    {/* Drag handle */}
+                                                <div key={index} className="flex items-center justify-between bg-white rounded-lg p-2 border-2 border-[#D4A574]">
                                                     <div className="flex items-center gap-2 flex-1">
-                                                        <span className="text-lg text-[#8B6F47] select-none">⋮⋮</span>
-                                                        <span className="text-xl font-bold text-[#A0253B] min-w-[24px]">
+                                                        <span className="text-xl font-bold text-[#A0253B] min-w-[28px]">
                                                             {index + 1}.
                                                         </span>
                                                         <div className="flex-1">
@@ -762,32 +750,32 @@ export function FlashCardQuiz() {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    {/* Up/Down buttons */}
+                                                    {/* Up/Down/Delete buttons */}
                                                     <div className="flex items-center gap-1">
                                                         <button
-                                                            onClick={(e) => { e.stopPropagation(); movePlayerUp(index); }}
+                                                            onClick={() => movePlayerUp(index)}
                                                             disabled={index === 0}
-                                                            className={`px-2 py-1 rounded-lg font-bold transition-all text-sm ${index === 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#6B8E23] text-white hover:bg-[#556B1D]'}`}
+                                                            className={`w-8 h-8 rounded-lg font-bold transition-all text-lg ${index === 0 ? 'bg-gray-200 text-gray-400' : 'bg-[#6B8E23] text-white active:bg-[#556B1D]'}`}
                                                         >
                                                             ▲
                                                         </button>
                                                         <button
-                                                            onClick={(e) => { e.stopPropagation(); movePlayerDown(index); }}
+                                                            onClick={() => movePlayerDown(index)}
                                                             disabled={index === players.length - 1}
-                                                            className={`px-2 py-1 rounded-lg font-bold transition-all text-sm ${index === players.length - 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#6B8E23] text-white hover:bg-[#556B1D]'}`}
+                                                            className={`w-8 h-8 rounded-lg font-bold transition-all text-lg ${index === players.length - 1 ? 'bg-gray-200 text-gray-400' : 'bg-[#6B8E23] text-white active:bg-[#556B1D]'}`}
                                                         >
                                                             ▼
                                                         </button>
                                                         <button
-                                                            onClick={(e) => { e.stopPropagation(); handleRemovePlayer(index); }}
-                                                            className="px-2 py-1 bg-[#A0253B] text-white rounded-lg font-bold hover:bg-[#8B1538] transition-all text-lg"
+                                                            onClick={() => handleRemovePlayer(index)}
+                                                            className="w-8 h-8 bg-[#A0253B] text-white rounded-lg font-bold active:bg-[#8B1538] transition-all text-lg"
                                                         >
                                                             🗑️
                                                         </button>
                                                     </div>
-                                                </Reorder.Item>
+                                                </div>
                                             ))}
-                                        </Reorder.Group>
+                                        </div>
                                     </div>
                                 )}
 
