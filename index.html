@@ -462,6 +462,12 @@ const VRAGEN = [
 
             console.log(`🎯 Weighted pool voor ${playerAge} jaar: ${finalEasyCount} easy, ${finalMediumCount} medium, ${finalHardCount} hard`);
 
+            // Fallback: als weighted pool leeg is, gebruik originele pool
+            if (weightedPool.length === 0) {
+                console.log('⚠️ Weighted pool is leeg, fallback naar originele pool');
+                return pool;
+            }
+
             // Final shuffle en return
             return shuffleArray(weightedPool);
         };
@@ -1599,6 +1605,16 @@ const VRAGEN = [
                 );
             }
 
+            // Guard: als er geen currentQuestion is, toon loading
+            if (!currentQuestion) {
+                return (
+                    <div className="flex flex-col items-center justify-center min-h-screen w-screen bg-[#8B1538] text-white">
+                        <div className="text-6xl mb-4 animate-bounce">🎅</div>
+                        <div className="text-xl font-bold">Vragen laden...</div>
+                    </div>
+                );
+            }
+
             // NORMAAL SPEL SCHERM
             return (
                 <div className="flex flex-col items-center justify-center h-screen w-screen font-sans relative overflow-hidden" style={{position: 'relative', zIndex: 1}}>
@@ -2014,7 +2030,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v15.3 - Age Weighted
+        v15.4 - Stable
     </div>
 
 </body>
