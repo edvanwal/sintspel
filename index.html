@@ -6,8 +6,9 @@
     <title>Sinterklaas Quiz</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- React 18 Production (kleiner & sneller dan development) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
@@ -52,7 +53,21 @@
 </head>
 <body>
 
-    <div id="root"></div>
+    <!-- Loading indicator - wordt automatisch vervangen door React -->
+    <div id="root">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #F5E6D3; font-family: sans-serif; text-align: center; padding: 20px;">
+            <div style="font-size: 64px; margin-bottom: 20px; animation: bounce 1s infinite;">🎅</div>
+            <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Sinterklaas Quiz laden...</div>
+            <div style="font-size: 14px; opacity: 0.7;">Even geduld, de Pieten zijn bezig!</div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
 
     <script type="text/babel">
         // ==========================================
@@ -375,41 +390,41 @@ const VRAGEN = [
             MAX_QUESTION_DISPLAY_HEIGHT: 64 // voor overflow-y-auto
         };
 
-        // Audio setup - Laad geluidsbestanden
+        // Audio setup - Laad geluidsbestanden met individuele error handling
         let correctSound = null;
         let wrongSound = null;
         let timerSound = null;
         let timeUpSound = null;
         let alarmClockSound = null;
 
-        try {
-            correctSound = new Audio('Goed.mp3');
-            wrongSound = new Audio('Fout.mp3');
-            timerSound = new Audio('Timer.mp3');
-            timeUpSound = new Audio('TimeUp.mp3');
-            alarmClockSound = new Audio('Alarm_clock.mp3');
+        // Helper functie voor veilig laden van audio
+        const loadAudio = (filename) => {
+            try {
+                const audio = new Audio(filename);
+                audio.onerror = () => console.warn(`⚠️ ${filename} kon niet worden geladen`);
+                audio.onloadeddata = () => console.log(`✅ ${filename} geladen`);
+                audio.load();
+                return audio;
+            } catch (error) {
+                console.warn(`⚠️ ${filename} kon niet worden aangemaakt:`, error);
+                return null;
+            }
+        };
 
-            console.log('🔊 Audio bestanden aangemaakt:');
-            console.log('- Goed.mp3:', !!correctSound);
-            console.log('- Fout.mp3:', !!wrongSound);
-            console.log('- Timer.mp3:', !!timerSound);
-            console.log('- TimeUp.mp3:', !!timeUpSound);
-            console.log('- Alarm_clock.mp3:', !!alarmClockSound);
+        // Laad elk bestand individueel - app werkt door als sommige mislukken
+        console.log('🔊 Audio bestanden laden...');
+        correctSound = loadAudio('Goed.mp3');
+        wrongSound = loadAudio('Fout.mp3');
+        timerSound = loadAudio('Timer.mp3');
+        timeUpSound = loadAudio('TimeUp.mp3');
+        alarmClockSound = loadAudio('Alarm_clock.mp3');
 
-            // Preload de audio bestanden
-            correctSound.load();
-            wrongSound.load();
-            timerSound.load();
-            timeUpSound.load();
-            alarmClockSound.load();
-
-            // Maak Timer.mp3 loopable
+        // Maak Timer.mp3 loopable (als het geladen is)
+        if (timerSound) {
             timerSound.loop = true;
-
-            console.log('✅ Alle audio bestanden geladen');
-        } catch (error) {
-            console.error('❌ Audio kon niet worden geladen:', error);
         }
+
+        console.log('🔊 Audio initialisatie voltooid (app werkt ook zonder geluid)');
 
         // Functie om geluid af te spelen (met error handling)
         const playSound = (sound, isMuted) => {
@@ -807,7 +822,16 @@ const VRAGEN = [
                     const timer = setTimeout(() => {
                         setTimeLeft(timeLeft - 1);
                     }, 1000);
-                    return () => clearTimeout(timer);
+                    return () => {
+                        clearTimeout(timer);
+                        // Cleanup: stop audio bij unmount
+                        if (timerSound) {
+                            try { timerSound.pause(); } catch (e) {}
+                        }
+                        if (timeUpSound) {
+                            try { timeUpSound.pause(); } catch (e) {}
+                        }
+                    };
                 } else if (timerActive && timeLeft === 0) {
                     console.log('⏰ Timer bereikt 0! Speel TimeUp geluid...');
                     setTimerActive(false);
@@ -822,7 +846,13 @@ const VRAGEN = [
                     const alarmTimer = setTimeout(() => {
                         setAlarmTimeLeft(alarmTimeLeft - 1);
                     }, 1000);
-                    return () => clearTimeout(alarmTimer);
+                    return () => {
+                        clearTimeout(alarmTimer);
+                        // Cleanup: stop alarm audio bij unmount
+                        if (alarmClockSound) {
+                            try { alarmClockSound.pause(); } catch (e) {}
+                        }
+                    };
                 } else if (alarmActive && !alarmPaused && alarmTimeLeft === 0) {
                     // ALARM AFGEGAAN!
                     setAlarmActive(false);
@@ -1895,7 +1925,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v15.1 - CDN + Fixes
+        v15.2 - Optimized
     </div>
 
 </body>
