@@ -300,26 +300,8 @@ export function FlashCardQuiz() {
                     // Stop Timer.mp3 en speel TimeUp.mp3 af
                     stopTimerAndPlayTimeUp(isMuted);
                 }
-
-                // Cleanup: stop alle timer audio bij unmount
-                return () => {
-                    if (timerSound) {
-                        try {
-                            timerSound.pause();
-                            timerSound.currentTime = 0;
-                        } catch (error) {
-                            console.log('Cleanup: Fout bij stoppen timer geluid:', error);
-                        }
-                    }
-                    if (timeUpSound) {
-                        try {
-                            timeUpSound.pause();
-                            timeUpSound.currentTime = 0;
-                        } catch (error) {
-                            console.log('Cleanup: Fout bij stoppen timeup geluid:', error);
-                        }
-                    }
-                };
+                // Note: Audio cleanup wordt afgehandeld in de page useEffect (regel 262-288)
+                // om te voorkomen dat het geluid elke seconde wordt gestopt
             }, [timerActive, timeLeft, isMuted]);
 
             // Game Alarm countdown logica - loopt door ongeacht navigatie
