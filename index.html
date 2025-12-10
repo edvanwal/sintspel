@@ -941,16 +941,9 @@ const VRAGEN = [
                     const timer = setTimeout(() => {
                         setTimeLeft(timeLeft - 1);
                     }, 1000);
-                    return () => {
-                        clearTimeout(timer);
-                        // Cleanup: stop audio bij unmount
-                        if (timerSound) {
-                            try { timerSound.pause(); } catch (e) {}
-                        }
-                        if (timeUpSound) {
-                            try { timeUpSound.pause(); } catch (e) {}
-                        }
-                    };
+                    return () => clearTimeout(timer);
+                    // Note: Audio cleanup wordt afgehandeld in de page useEffect (regel 923-936)
+                    // om te voorkomen dat het geluid elke seconde wordt gestopt
                 } else if (timerActive && timeLeft === 0) {
                     console.log('⏰ Timer bereikt 0! Speel TimeUp geluid...');
                     setTimerActive(false);
@@ -965,13 +958,7 @@ const VRAGEN = [
                     const alarmTimer = setTimeout(() => {
                         setAlarmTimeLeft(alarmTimeLeft - 1);
                     }, 1000);
-                    return () => {
-                        clearTimeout(alarmTimer);
-                        // Cleanup: stop alarm audio bij unmount
-                        if (alarmClockSound) {
-                            try { alarmClockSound.pause(); } catch (e) {}
-                        }
-                    };
+                    return () => clearTimeout(alarmTimer);
                 } else if (alarmActive && !alarmPaused && alarmTimeLeft === 0) {
                     // ALARM AFGEGAAN!
                     setAlarmActive(false);
