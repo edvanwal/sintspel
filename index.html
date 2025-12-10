@@ -1019,14 +1019,14 @@ const VRAGEN = [
                         paginate(-1);
                     } else if (e.key === 'ArrowRight') {
                         paginate(1);
-                    } else if (e.key === ' ' && !isFlipped) {
+                    } else if (e.key === ' ') {
                         e.preventDefault();
-                        handleFlip();
+                        handleFlip(); // Spacebar togglet nu beide kanten
                     }
                 };
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [paginate, showTransition, isFlipped, gameLocked]);
+            }, [paginate, showTransition, gameLocked]); // isFlipped verwijderd - spacebar werkt nu beide kanten
 
             // WELKOMSTSCHERM - INSTRUCTIES
             if (showWelcome) {
@@ -1134,6 +1134,7 @@ const VRAGEN = [
                     if (players.length >= 2) {
                         setShowPlayerRegistration(false);
                         setCurrentPlayerIndex(0);
+                        setIsFlipped(false); // Reset card to show question side
                     }
                 };
 
@@ -1664,6 +1665,16 @@ const VRAGEN = [
                                             </button>
                                         </div>
 
+                                        {/* Terug naar vraag knop */}
+                                        <button
+                                            onClick={handleFlip}
+                                            className="w-full mt-3 px-6 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-base shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                            onPointerDownCapture={(e) => e.stopPropagation()}
+                                            aria-label="Terug naar vraag"
+                                        >
+                                            ← Terug naar vraag
+                                        </button>
+
                                     </div>
                                 </div>
 
@@ -1758,7 +1769,14 @@ const VRAGEN = [
                                         <div className="flex items-center justify-center gap-3">
                                             <button
                                                 onClick={() => setAlarmMaxTime(Math.max(1, alarmMaxTime - 1))}
-                                                className="px-4 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-xl shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                                disabled={alarmMaxTime <= 1}
+                                                className={`px-4 py-3 rounded-lg font-bold text-xl shadow-lg transition-all ${
+                                                    alarmMaxTime <= 1
+                                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-40'
+                                                        : 'bg-[#8B6F47] text-white hover:bg-[#7A5F3C] hover:scale-105'
+                                                }`}
+                                                title={alarmMaxTime <= 1 ? 'Minimum: 1 minuut' : 'Verminder tijd'}
+                                                aria-label={alarmMaxTime <= 1 ? 'Minimum bereikt' : 'Verminder tijd met 1 minuut'}
                                             >
                                                 −
                                             </button>
@@ -1767,11 +1785,30 @@ const VRAGEN = [
                                             </div>
                                             <button
                                                 onClick={() => setAlarmMaxTime(Math.min(60, alarmMaxTime + 1))}
-                                                className="px-4 py-3 bg-[#8B6F47] text-white rounded-lg font-bold text-xl shadow-lg hover:bg-[#7A5F3C] transition-all"
+                                                disabled={alarmMaxTime >= 60}
+                                                className={`px-4 py-3 rounded-lg font-bold text-xl shadow-lg transition-all ${
+                                                    alarmMaxTime >= 60
+                                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-40'
+                                                        : 'bg-[#8B6F47] text-white hover:bg-[#7A5F3C] hover:scale-105'
+                                                }`}
+                                                title={alarmMaxTime >= 60 ? 'Maximum: 60 minuten (1 uur)' : 'Verhoog tijd'}
+                                                aria-label={alarmMaxTime >= 60 ? 'Maximum bereikt' : 'Verhoog tijd met 1 minuut'}
                                             >
                                                 +
                                             </button>
                                         </div>
+
+                                        {/* Limiet warning messages */}
+                                        {alarmMaxTime <= 1 && (
+                                            <p className="text-sm text-[#A0253B] mt-2 text-center font-semibold">
+                                                ⚠️ Minimum bereikt: Minimaal 1 minuut nodig
+                                            </p>
+                                        )}
+                                        {alarmMaxTime >= 60 && (
+                                            <p className="text-sm text-[#A0253B] mt-2 text-center font-semibold">
+                                                ⚠️ Maximum bereikt: Max. 60 minuten (1 uur)
+                                            </p>
+                                        )}
 
                                         <p className="text-sm text-[#8B6F47] mt-3 text-center">
                                             De wekker gaat af tussen {Math.max(alarmMaxTime - 2, 1)} en {alarmMaxTime} minuten.
@@ -1858,7 +1895,7 @@ const VRAGEN = [
 
     <!-- Versie informatie -->
     <div id="version-info" style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        v15.0 - CDN (Mobile Fix)
+        v15.1 - CDN + Fixes
     </div>
 
 </body>
