@@ -2,6 +2,13 @@
 // AUDIO LOGICA
 // ==========================================
 
+// Import audio files - Vite will bundle these correctly!
+import GoodSoundFile from '../Goed.mp3';
+import WrongSoundFile from '../Fout.mp3';
+import TimerSoundFile from '../Timer.mp3';
+import TimeUpSoundFile from '../TimeUp.mp3';
+import AlarmSoundFile from '../Alarm_clock.mp3';
+
 // Audio setup - Laad geluidsbestanden
 let correctSound = null;
 let wrongSound = null;
@@ -12,11 +19,11 @@ let alarmClockSound = null;
 // Initialiseer audio bestanden
 const initAudio = () => {
     const audioBestandenPaden = {
-        correct: 'Goed.mp3',
-        wrong: 'Fout.mp3',
-        timer: 'Timer.mp3',
-        timeUp: 'TimeUp.mp3',
-        alarm: 'Alarm_clock.mp3'
+        correct: GoodSoundFile,
+        wrong: WrongSoundFile,
+        timer: TimerSoundFile,
+        timeUp: TimeUpSoundFile,
+        alarm: AlarmSoundFile
     };
 
     console.log('🔊 Audio bestanden initialiseren...');
