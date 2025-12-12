@@ -1427,17 +1427,13 @@
 
                                 {/* Start Game Button */}
                                 <div className="text-center">
-                                    {players.length >= 2 ? (
+                                    {players.length >= 2 && (
                                         <button
                                             onClick={handleStartGame}
                                             className="w-full px-6 py-3 bg-[#A0253B] text-white rounded-xl font-bold text-lg shadow-2xl hover:bg-[#8B1538] transition-all transform hover:scale-105"
                                         >
                                             🎮 Start het Spel!
                                         </button>
-                                    ) : (
-                                        <div className="text-center text-[#8B6F47] font-bold text-sm">
-                                            Voeg minimaal 2 spelers toe om te beginnen
-                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -1767,10 +1763,10 @@
                                                 {/* Vraag */}
                                                 <div className="flex-1 flex items-center justify-center mb-4">
                                                     <h2 className={`font-extrabold text-[#3E2723] text-center select-none leading-tight px-1 ${currentQuestion.text.length > 150
-                                                            ? 'text-lg md:text-xl'
-                                                            : currentQuestion.text.length > 100
-                                                                ? 'text-xl md:text-2xl'
-                                                                : 'text-2xl md:text-3xl'
+                                                        ? 'text-lg md:text-xl'
+                                                        : currentQuestion.text.length > 100
+                                                            ? 'text-xl md:text-2xl'
+                                                            : 'text-2xl md:text-3xl'
                                                         }`}>
                                                         {currentQuestion.text}
                                                     </h2>
@@ -1817,12 +1813,12 @@
                                                     <div className="text-center p-5 md:p-6 bg-[#F5E6D3] rounded-xl border-3 border-[#D4A574] shadow-inner">
                                                         <p className="text-xs md:text-sm text-[#8B6F47] uppercase tracking-wide mb-2 font-bold">Antwoord:</p>
                                                         <p className={`text-[#3E2723] font-bold leading-snug ${currentQuestion.answer.length > 150
-                                                                ? 'text-base md:text-lg'
-                                                                : currentQuestion.answer.length > 100
-                                                                    ? 'text-lg md:text-xl'
-                                                                    : currentQuestion.answer.length > 60
-                                                                        ? 'text-xl md:text-2xl'
-                                                                        : 'text-2xl md:text-3xl'
+                                                            ? 'text-base md:text-lg'
+                                                            : currentQuestion.answer.length > 100
+                                                                ? 'text-lg md:text-xl'
+                                                                : currentQuestion.answer.length > 60
+                                                                    ? 'text-xl md:text-2xl'
+                                                                    : 'text-2xl md:text-3xl'
                                                             }`}>
                                                             {currentQuestion.answer}
                                                         </p>
@@ -1939,8 +1935,8 @@
                                                         key={mins}
                                                         onClick={() => setAlarmMaxTime(mins)}
                                                         className={`px-3 py-2 rounded-lg font-bold text-base transition-all ${alarmMaxTime === mins
-                                                                ? 'bg-[#A0253B] text-white shadow-lg scale-105'
-                                                                : 'bg-[#D4A574] text-[#3E2723] hover:bg-[#C49564]'
+                                                            ? 'bg-[#A0253B] text-white shadow-lg scale-105'
+                                                            : 'bg-[#D4A574] text-[#3E2723] hover:bg-[#C49564]'
                                                             }`}
                                                     >
                                                         {mins}
@@ -1954,8 +1950,8 @@
                                                     onClick={() => setAlarmMaxTime(Math.max(1, alarmMaxTime - 1))}
                                                     disabled={alarmMaxTime <= 1}
                                                     className={`px-4 py-3 rounded-lg font-bold text-xl shadow-lg transition-all ${alarmMaxTime <= 1
-                                                            ? 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-40'
-                                                            : 'bg-[#8B6F47] text-white hover:bg-[#7A5F3C] hover:scale-105'
+                                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-40'
+                                                        : 'bg-[#8B6F47] text-white hover:bg-[#7A5F3C] hover:scale-105'
                                                         }`}
                                                     title={alarmMaxTime <= 1 ? 'Minimum: 1 minuut' : 'Verminder tijd'}
                                                     aria-label={alarmMaxTime <= 1 ? 'Minimum bereikt' : 'Verminder tijd met 1 minuut'}
@@ -1969,8 +1965,8 @@
                                                     onClick={() => setAlarmMaxTime(Math.min(60, alarmMaxTime + 1))}
                                                     disabled={alarmMaxTime >= 60}
                                                     className={`px-4 py-3 rounded-lg font-bold text-xl shadow-lg transition-all ${alarmMaxTime >= 60
-                                                            ? 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-40'
-                                                            : 'bg-[#8B6F47] text-white hover:bg-[#7A5F3C] hover:scale-105'
+                                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-40'
+                                                        : 'bg-[#8B6F47] text-white hover:bg-[#7A5F3C] hover:scale-105'
                                                         }`}
                                                     title={alarmMaxTime >= 60 ? 'Maximum: 60 minuten (1 uur)' : 'Verhoog tijd'}
                                                     aria-label={alarmMaxTime >= 60 ? 'Maximum bereikt' : 'Verhoog tijd met 1 minuut'}
@@ -2011,10 +2007,10 @@
                                         {/* Timer display - altijd zichtbaar */}
                                         <div className="flex-1 text-center">
                                             <div className={`inline-block px-6 py-4 rounded-lg font-bold shadow-xl border-2 transition-all ${alarmTimeLeft <= 30
-                                                    ? 'bg-[#A0253B] text-white border-[#A0253B] text-4xl md:text-5xl animate-pulse scale-110'
-                                                    : alarmTimeLeft <= 60
-                                                        ? 'bg-[#A0253B] text-white border-[#A0253B] text-3xl md:text-4xl'
-                                                        : 'bg-[#6B8E23] text-white border-[#6B8E23] text-2xl md:text-3xl'
+                                                ? 'bg-[#A0253B] text-white border-[#A0253B] text-4xl md:text-5xl animate-pulse scale-110'
+                                                : alarmTimeLeft <= 60
+                                                    ? 'bg-[#A0253B] text-white border-[#A0253B] text-3xl md:text-4xl'
+                                                    : 'bg-[#6B8E23] text-white border-[#6B8E23] text-2xl md:text-3xl'
                                                 }`}>
                                                 ⏰ {Math.floor(alarmTimeLeft / 60)}:{String(alarmTimeLeft % 60).padStart(2, '0')}
                                             </div>
@@ -2076,7 +2072,7 @@
     <!-- Versie informatie -->
     <div id="version-info"
         style="position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 11px; color: #F5E6D3; opacity: 0.8; font-family: monospace; z-index: 10; text-align: center;">
-        Versie: 12 dec 2025 - 22:20
+        Versie: 12 dec 2025 - 22:24
     </div>
 
 
